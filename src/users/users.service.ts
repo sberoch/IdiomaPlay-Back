@@ -1,9 +1,12 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
+import { paginate, Pagination } from 'nestjs-typeorm-paginate';
 import { Repository, UpdateResult } from 'typeorm';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
+import { UserParams } from './dto/user.params';
 import { User } from './entities/user.entity';
+import { buildQuery } from './users.query-builder';
 
 @Injectable()
 export class UsersService {
@@ -16,8 +19,12 @@ export class UsersService {
     return this.userRepository.save(new User(createUserDto));
   }
 
-  findAll() {
-    return this.userRepository.find();
+  findAll(params: UserParams): Promise<Pagination<User>> {
+    const { paginationOptions, findOptions, orderOptions } = buildQuery(params);
+    return paginate<User>(this.userRepository, paginationOptions, {
+      where: findOptions,
+      order: orderOptions,
+    });
   }
 
   findOne(id: number) {

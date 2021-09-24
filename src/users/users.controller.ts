@@ -6,11 +6,13 @@ import {
   Patch,
   Param,
   Delete,
+  Query,
 } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { ApiCreatedResponse, ApiOkResponse, ApiTags } from '@nestjs/swagger';
+import { UserParams } from './dto/user.params';
 
 @ApiTags('Users')
 @Controller('users')
@@ -25,8 +27,8 @@ export class UsersController {
 
   @ApiOkResponse()
   @Get()
-  findAll() {
-    return this.usersService.findAll();
+  findAll(@Query() query: UserParams) {
+    return this.usersService.findAll(query);
   }
 
   @ApiOkResponse()
