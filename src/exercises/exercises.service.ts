@@ -1,12 +1,12 @@
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository, UpdateResult } from 'typeorm';
 import { CreateExerciseDto } from './dto/create-exercise.dto';
-import { Exercise } from "./entities/exercise.entity";
-import { ExerciseParams } from "./dto/exercise.params";
+import { Exercise } from './entities/exercise.entity';
+import { ExerciseParams } from './dto/exercise.params';
 import { paginate, Pagination } from 'nestjs-typeorm-paginate';
-import { buildQuery } from "./exercises.query-builder";
-import { UpdateExerciseDto } from "./dto/update-exercise.dto";
+import { buildQuery } from './exercises.query-builder';
+import { UpdateExerciseDto } from './dto/update-exercise.dto';
 
 @Injectable()
 export class ExercisesService {
@@ -14,7 +14,7 @@ export class ExercisesService {
     @InjectRepository(Exercise)
     private exercisesRepository: Repository<Exercise>,
   ) {}
-  
+
   create(createExerciseDto: CreateExerciseDto) {
     return this.exercisesRepository.save(new Exercise(createExerciseDto));
   }
@@ -27,11 +27,16 @@ export class ExercisesService {
     });
   }
 
-  findOne(id: number) {
-    return this.exercisesRepository.findOne(id);
+  async findOne(id: number) {
+    const exercise = await this.exercisesRepository.findOne(id);
+    if (!exercise) throw new BadRequestException('No se encontro el ejercicio');
+    return exercise;
   }
 
-  update(id: number, updateExerciseDto: UpdateExerciseDto): Promise<UpdateResult> {
+  update(
+    id: number,
+    updateExerciseDto: UpdateExerciseDto,
+  ): Promise<UpdateResult> {
     return this.exercisesRepository.update(id, updateExerciseDto);
   }
 

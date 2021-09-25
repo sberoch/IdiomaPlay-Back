@@ -1,9 +1,20 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, UseFilters } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Patch,
+  Param,
+  Delete,
+  UseFilters,
+  Query,
+} from '@nestjs/common';
 import { LessonsService } from './lessons.service';
 import { CreateLessonDto } from './dto/create-lesson.dto';
 import { UpdateLessonDto } from './dto/update-lesson.dto';
 import { ApiCreatedResponse, ApiOkResponse, ApiTags } from '@nestjs/swagger';
 import { QueryFailedExceptionFilter } from 'src/common/filters/queryFailedExceptionFilter';
+import { LessonParams } from './dto/lesson.params';
 
 @ApiTags('Lessons')
 @Controller('lessons')
@@ -19,8 +30,8 @@ export class LessonsController {
 
   @ApiOkResponse()
   @Get()
-  findAll() {
-    return this.lessonsService.findAll();
+  findAll(@Query() query: LessonParams) {
+    return this.lessonsService.findAll(query);
   }
 
   @ApiOkResponse()
