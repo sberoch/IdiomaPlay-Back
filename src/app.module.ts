@@ -6,10 +6,17 @@ import { dbConfig } from './common/config';
 import { LoggerMiddleware } from './common/logger/logger.middleware';
 import { ExercisesModule } from './exercises/exercises.module';
 import { LessonsModule } from './lessons/lessons.module';
-import { ExamnsModule } from './examns/examns.module';
+import { UnitsModule } from './units/units.module';
+import { ExamsModule } from './exams/exams.module';
 
 @Module({
-  imports: [TypeOrmModule.forRoot(dbConfig), ExercisesModule, LessonsModule, ExamnsModule],
+  imports: [
+    TypeOrmModule.forRoot(dbConfig),
+    ExercisesModule,
+    LessonsModule,
+    ExamsModule,
+    UnitsModule,
+  ],
   controllers: [AppController],
   providers: [AppService],
 })

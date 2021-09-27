@@ -1,8 +1,8 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { IsNotEmpty } from 'class-validator';
 
-export class CreateLessonDto {
-  @ApiProperty({ example: 'Test lesson' })
+export class CreateExamDto {
+  @ApiProperty({ example: 'Test' })
   @IsNotEmpty()
   title: string;
 

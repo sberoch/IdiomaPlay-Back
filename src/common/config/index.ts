@@ -2,6 +2,7 @@ import { TypeOrmModuleOptions } from '@nestjs/typeorm';
 
 export const config = {
   jwtSecret: process.env.JWT_SECRET,
+  examTimeInSeconds: 300,
   errorCodes: {
     DUP_KEY: 'DUP_KEY',
     VIO_FK: 'VIO_FK',
