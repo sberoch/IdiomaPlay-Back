@@ -37,7 +37,7 @@ export class ExamsController {
   @ApiOkResponse()
   @Get(':id')
   findOne(@Param('id') id: string) {
-    return this.examsService.findOne(+id);
+    return this.examsService.findOneWithExercises(+id);
   }
 
   @ApiOkResponse()

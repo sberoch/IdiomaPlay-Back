@@ -49,6 +49,14 @@ export class ExamsService {
     return exam;
   }
 
+  findOneWithExercises(id: number) {
+    return this.examsRepository
+      .createQueryBuilder('e')
+      .where('e.id = :id', { id: id })
+      .leftJoinAndSelect('e.exercises', 'exercises')
+      .getOne();
+  }
+
   update(id: number, updateExamDto: UpdateExamDto) {
     return this.examsRepository.update(id, updateExamDto);
   }

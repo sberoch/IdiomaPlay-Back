@@ -42,6 +42,14 @@ export class LessonsService {
     return lesson;
   }
 
+  findOneWithExercises(id: number) {
+    return this.lessonsRepository
+      .createQueryBuilder('l')
+      .where('l.id = :id', { id: id })
+      .leftJoinAndSelect('l.exercises', 'exercises')
+      .getOne();
+  }
+
   update(id: number, updateLessonDto: UpdateLessonDto) {
     return this.lessonsRepository.update(id, updateLessonDto);
   }
