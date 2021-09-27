@@ -8,6 +8,7 @@ import { ExercisesModule } from '../exercises/exercises.module';
 @Module({
   imports: [TypeOrmModule.forFeature([Examn]), ExercisesModule],
   controllers: [ExamnsController],
-  providers: [ExamnsService]
+  providers: [ExamnsService],
+  exports: [ExamnsService]
 })
 export class ExamnsModule {}

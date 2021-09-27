@@ -1,13 +1,15 @@
-import { Module } from '@nestjs/common';
+import { forwardRef, Module } from '@nestjs/common';
 import { LessonsService } from './lessons.service';
 import { LessonsController } from './lessons.controller';
 import { Lesson } from './entities/lesson.entity';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ExercisesModule } from '../exercises/exercises.module';
+import { UnitsModule } from '../units/units.module';
 
 @Module({
   imports: [TypeOrmModule.forFeature([Lesson]), ExercisesModule],
   controllers: [LessonsController],
   providers: [LessonsService],
+  exports: [LessonsService]
 })
 export class LessonsModule {}

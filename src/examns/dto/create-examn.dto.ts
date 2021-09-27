@@ -6,6 +6,6 @@ export class CreateExamnDto {
     @IsNotEmpty()
     title: string;
   
-    @ApiProperty({ type: [Number] })
+    @ApiProperty({ type: [Number], example: [1, 2] })
     exercisesIds: number[];
 }

@@ -1,5 +1,6 @@
-import { Column, Entity, JoinTable, ManyToMany, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, Entity, JoinTable, ManyToMany, OneToMany, OneToOne, PrimaryGeneratedColumn } from 'typeorm';
 import { Exercise } from '../../exercises/entities/exercise.entity';
+import { Unit } from '../../units/entities/unit.entity';
 
 @Entity()
 export class Examn {
@@ -12,6 +13,9 @@ export class Examn {
     @ManyToMany( () => Exercise, (exercise) => exercise.lesson, { cascade:true })
     @JoinTable()
     exercises: Exercise[];
+
+    @OneToOne( () => Unit, (unit) => unit.examn)
+    unit: Unit;
     
     constructor(data: Partial<Examn> = {}) {
       Object.assign(this, data);

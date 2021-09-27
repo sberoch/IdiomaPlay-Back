@@ -37,13 +37,13 @@ export class ExamnsService {
   }
 
   async findOne(id: number) {
-    const lesson = await this.examnsRepository.findOne(id);
-    if (!lesson) throw new BadRequestException('No se encontro el examen');
-    return lesson;
+    const examn = await this.examnsRepository.findOne(id);
+    if (!examn) throw new BadRequestException('No se encontro el examen');
+    return examn;
   }
 
-  update(id: number, updateLessonDto: UpdateExamnDto) {
-    return this.examnsRepository.update(id, updateLessonDto);
+  update(id: number, updateExamnDto: UpdateExamnDto) {
+    return this.examnsRepository.update(id, updateExamnDto);
   }
 
   async remove(id: number): Promise<void> {
