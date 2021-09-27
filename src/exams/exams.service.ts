@@ -9,6 +9,7 @@ import { UpdateExamDto } from './dto/update-exam.dto';
 import { Exam } from './entities/exam.entity';
 import { ExamParams } from './dto/exam.params';
 import { buildQuery } from './exams.query-builder';
+import { config } from '../common/config';
 
 @Injectable()
 export class ExamsService {
@@ -25,7 +26,13 @@ export class ExamsService {
       const exercise: Exercise = await this.exerciseService.findOne(exerciseId);
       exercises.push(exercise);
     }
-    return this.examsRepository.save(new Exam({ exercises, ...rest }));
+    return this.examsRepository.save(
+      new Exam({
+        exercises,
+        ...rest,
+        examTimeInSeconds: config.examTimeInSeconds,
+      }),
+    );
   }
 
   findAll(params: ExamParams): Promise<Pagination<Exam>> {

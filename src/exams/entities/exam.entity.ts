@@ -3,7 +3,6 @@ import {
   Entity,
   JoinTable,
   ManyToMany,
-  OneToMany,
   OneToOne,
   PrimaryGeneratedColumn,
 } from 'typeorm';
@@ -17,6 +16,9 @@ export class Exam {
 
   @Column({ default: 'Test Exam' })
   title: string;
+
+  @Column()
+  examTimeInSeconds: number;
 
   @ManyToMany(() => Exercise, (exercise) => exercise.lesson, { cascade: true })
   @JoinTable()
