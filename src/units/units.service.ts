@@ -2,15 +2,15 @@ import { BadRequestException, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { paginate, Pagination } from 'nestjs-typeorm-paginate';
 import { Repository } from 'typeorm';
-import { ExamnsService } from '../examns/examns.service';
+import { ExamsService } from '../exams/exams.service';
 import { LessonsService } from '../lessons/lessons.service';
 import { CreateUnitDto } from './dto/create-unit.dto';
 import { Unit } from './entities/unit.entity';
-import { UnitParams } from "./dto/unit.params";
-import { buildQuery } from "./units.query-builder";
+import { UnitParams } from './dto/unit.params';
+import { buildQuery } from './units.query-builder';
 import { UpdateUnitDto } from './dto/update-unit.dto';
 import { Lesson } from '../lessons/entities/lesson.entity';
-import { Examn } from '../examns/entities/examn.entity';
+import { Exam } from '../exams/entities/exam.entity';
 
 @Injectable()
 export class UnitsService {
@@ -18,24 +18,23 @@ export class UnitsService {
     @InjectRepository(Unit)
     private unitsRepository: Repository<Unit>,
     private lessonsService: LessonsService,
-    private examnsService: ExamnsService
+    private examsService: ExamsService,
   ) {}
 
   async create(createUnitDto: CreateUnitDto) {
     try {
-      const { lessonsIds, examnId, ...rest } = createUnitDto;
+      const { lessonsIds, examId, ...rest } = createUnitDto;
       const lessons: Lesson[] = [];
       for (const lessonId of lessonsIds) {
         const lesson: Lesson = await this.lessonsService.findOne(lessonId);
         lessons.push(lesson);
-      } 
-      const examn: Examn = await this.examnsService.findOne(examnId);
+      }
+      const exam: Exam = await this.examsService.findOne(examId);
 
-      return this.unitsRepository.save(new Unit({ lessons, examn, ...rest }));
+      return this.unitsRepository.save(new Unit({ lessons, exam, ...rest }));
     } catch (e: unknown) {
-      console.log(e)
+      console.log(e);
     }
-
   }
 
   findAll(params: UnitParams): Promise<Pagination<Unit>> {

@@ -1,37 +1,33 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { getRepositoryToken } from '@nestjs/typeorm';
-import { ExamsService } from '../exams/exams.service';
-import { LessonsService } from '../lessons/lessons.service';
-import { Unit } from './entities/unit.entity';
-import { UnitsService } from './units.service';
+import { ExercisesService } from '../exercises/exercises.service';
+import { Exam } from './entities/exam.entity';
+import { ExamsService } from './exams.service';
 
-describe('UnitsService', () => {
+describe('ExamsService', () => {
   const mockRepository = {
     save: jest
       .fn()
       .mockImplementation((dto) => Promise.resolve({ id: 1, ...dto })),
   };
-  let service: UnitsService;
+  let service: ExamsService;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       providers: [
-        UnitsService,
-        LessonsService,
         ExamsService,
+        ExercisesService,
         {
-          provide: getRepositoryToken(Unit),
+          provide: getRepositoryToken(Exam),
           useValue: mockRepository,
         },
       ],
     })
-      .overrideProvider(LessonsService)
-      .useValue({})
-      .overrideProvider(ExamsService)
+      .overrideProvider(ExercisesService)
       .useValue({})
       .compile();
 
-    service = module.get<UnitsService>(UnitsService);
+    service = module.get<ExamsService>(ExamsService);
   });
 
   it('should be defined', () => {

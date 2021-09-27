@@ -1,11 +1,11 @@
 import { FindConditions, ILike } from 'typeorm';
 import { buildPaginationQuery } from '../common/pagination/pagination-query-builder';
-import { ExamnParams } from "./dto/examn.params";
-import { Examn } from "./entities/examn.entity";
+import { ExamParams } from './dto/exam.params';
+import { Exam } from './entities/exam.entity';
 
-export const buildQuery = (params: ExamnParams) => {
+export const buildQuery = (params: ExamParams) => {
   const { paginationOptions, orderOptions } = buildPaginationQuery(params);
-  const findOptions: FindConditions<Examn> = {};
+  const findOptions: FindConditions<Exam> = {};
   if (params.title) {
     findOptions.title = ILike(`%${params.title}%`);
   }
