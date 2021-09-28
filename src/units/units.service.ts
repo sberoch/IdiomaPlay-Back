@@ -55,4 +55,11 @@ export class UnitsService {
   async remove(id: number): Promise<void> {
     await this.unitsRepository.delete(id);
   }
+
+  async removeAll(): Promise<void> {
+    const units = await this.unitsRepository.find();
+    for (const unit of units) {
+      await this.remove(unit.id);
+    }
+  }
 }

@@ -57,4 +57,11 @@ export class LessonsService {
   async remove(id: number): Promise<void> {
     await this.lessonsRepository.delete(id);
   }
+
+  async removeAll(): Promise<void> {
+    const lessons = await this.lessonsRepository.find();
+    for (const lesson of lessons) {
+      await this.remove(lesson.id);
+    }
+  }
 }

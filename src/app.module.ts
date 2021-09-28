@@ -8,6 +8,7 @@ import { ExercisesModule } from './exercises/exercises.module';
 import { LessonsModule } from './lessons/lessons.module';
 import { UnitsModule } from './units/units.module';
 import { ExamsModule } from './exams/exams.module';
+import { LoaderModule } from "./common/loaders/loader.module";
 
 @Module({
   imports: [
@@ -16,6 +17,7 @@ import { ExamsModule } from './exams/exams.module';
     LessonsModule,
     ExamsModule,
     UnitsModule,
+    LoaderModule
   ],
   controllers: [AppController],
   providers: [AppService],

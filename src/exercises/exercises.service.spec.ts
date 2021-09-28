@@ -33,12 +33,14 @@ describe('ExercisesService', () => {
   it('should create correctly', async () => {
     const dto: CreateExerciseDto = {
       title: 'Test',
+      sentence: 'Sentence',
       options: ['1', '2', '3'],
       correctOption: '1',
       type: ExerciseType.COMPLETE,
     };
     expect(await service.create(dto)).toEqual({
       id: 1,
+      sentence: 'Sentence',
       title: 'Test',
       options: ['1', '2', '3'],
       correctOption: '1',

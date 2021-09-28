@@ -1,211 +1,222 @@
-{
-    "complete": [
-        {
-            "title": "Articles",
-            "sentence": "I like * blue T-shirt over there.", 
-            "options": [
-                "a",
-                "an",
-                "the",
-                "this"
-            ],
-            "correctOption": "the"
-        },
-        {
-            "title": "Articles",
-            "sentence": "Their car does 100 miles * hour.", 
-            "options": [
-                "a",
-                "an",
-                "the",
-                "for"
-            ],
-            "correctOption": "an"
-        },
-        {
-            "title": "Gerunds",
-            "sentence": "My friend is good * playing volleyball.", 
-            "options": [
-                "at",
-                "where",
-                "this",
-                "of"
-            ],
-            "correctOption": "at"
-        },
-        {
-            "title": "Gerunds",
-            "sentence": "He complains * everything.", 
-            "options": [
-                "at",
-                "where",
-                "this",
-                "about"
-            ],
-            "correctOption": "about"
-        },
-        {
-            "title": "Gerunds",
-            "sentence": "Laura dreams * living on a small island.", 
-            "options": [
-                "at",
-                "where",
-                "this",
-                "of"
-            ],
-            "correctOption": "of"
-        },
-        {
-            "title": "Gerunds",
-            "sentence": "I don't agree * hunting.", 
-            "options": [
-                "at",
-                "with",
-                "this",
-                "of"
-            ],
-            "correctOption": "with"
-        },
-        {
-            "title": "Put the verb in the correct form",
-            "sentence": "Santiago's mother * more time for him if he does the washing up.", 
-            "options": [
-                "had",
-                "having",
-                "would have",
-                "will had"
-            ],
-            "correctOption": "will have"
-        },
-        {
-            "title": "Put the verb in the correct form",
-            "sentence": "If you were older, you * to the party.", 
-            "options": [
-                "could go",
-                "would go",
-                "going",
-                "went"
-            ],
-            "correctOption": "could go"
-        },
-        {
-            "title": "Put the verb in the correct form",
-            "sentence": "If Sarah * so much junk food, she could have been in the school hockey team.", 
-            "options": [
-                "wouldn't eat",
-                "had not eaten",
-                "won't eat",
-                "not having eaten"
-            ],
-            "correctOption": "had not eaten"
-        }
-    ],
-    "translate_old_to_new": [
-        {
-            "title": "Traducir del español al ingles.",
-            "sentence": "Fui a correr por la mañana.",
-            "options": [
-                "I had gone for a morning run",
-                "Last night I went for a run",
-                "I went for a run last night,",
-                "Yesterday, I went for a run",
-                "I don't like running",
-                "I went for a morning run"
-            ],
-            "correctOption": "I went for a morning run"
-        },
-        {
-            "title": "Traducir del español al ingles.",
-            "sentence": "Están cocinando pasta ahora mismo.",
-            "options": [
-                "If only they had cooked pasta",
-                "They are cooking pasta now",
-                "They didn't want to cook pasta",
-                "They would have cooked pasta now",
-                "They were cooking pasta",
-                "They are playing games right now"
-            ],
-            "correctOption": "They are cooking pasta now."
-        },
-        {
-            "title": "Traducir del español al ingles.",
-            "sentence": "Estoy leyendo un nuevo libro acerca de Cristobal Colón",
-            "options": [
-                "I was reading a new book about Cristobal Colón",
-                "Last night I read a new book about Cristobal Colón",
-                "I was reading a new book about Cristobal Colón",
-                "I'm reading a new book about Cristobal Colón",
-                "I wanted to read a new book about Cristobal Colón",
-                "I'm reading an old book about Cristobal Colón"
-            ],
-            "correctOption": "I'm reading a new book about Cristobal Colón"
-        },
-        {
-            "title": "Traducir del español al ingles.",
-            "sentence": "Finalmente ellos se pudieron comprar un auto nuevo.",
-            "options": [
-                "Finally they were able to buy a new car",
-                "Finally they weren't able to buy a new car",
-                "Finally they didn't want to buy a new car",
-                "Finally they were posible to buy a new car",
-                "Finally they were given a new car",
-                "Finally they were being buy a new car"
-            ],
-            "correctOption": "Finally they were able to buy a new car"
-        }
-    ],
-    "translate_new_to_old": [
-        {
-            "title": "Traducir del ingles al español.",
-            "sentence": "They used to go to Hawaii every summer",
-            "options": [
-                "Ellos querían ir a Hawaii todos los veranos",
-                "Ellos soñaban con ir a Hawaii todos los veranos",
-                "Ellos solían ir a Hawaii todos los inviernos",
-                "Ellos solían ir a Hawaii todas las primaveras",
-                "Ellos solían ir a Hawaii todos los veranos",
-                "Ellos no querían ir a Hawaii todos los veranos"
-            ],
-            "correctOption": "Ellos solían ir a Hawaii todos los veranos."
-        },
-        {
-            "title": "Traducir del ingles al español.",
-            "sentence": "Carlos did not wash the car yet.",
-            "options": [
-                "Carlos no lavara su auto",
-                "Carlos ya lavo su auto",
-                "Carlos no tiene ganas de lavar su auto",
-                "Carlos quisiera lavar su auto",
-                "Carlos lavara su auto mañana",
-                "Carlos todavia no lavo su auto"
-            ],
-            "correctOption": "Carlos todavia no lavo su auto"
-        },
-        {
-            "title": "Traducir del ingles al español.",
-            "sentence": "They are going to eat pizza tonight",
-            "options": [
-                "Ellos iban a comer pizza esta noche",
-                "Ellos querian a comer pizza esta noche",
-                "Ellos irán a comer pizza mañana a la noche",
-                "Ellos irán a comer pizza esta noche",
-                "Ellos no deberían comer pizza esta noche",
-                "Ellos estaban con ganas de comer pizza esta noche"
-            ],
-            "correctOption": "Ellos irán a comer pizza esta noche"
-        },
-        {
-            "title": "Traducir del ingles al español.",
-            "sentence": "She went to the club last sunday",
-            "options": [
-                "El fue al club el domingo pasado",
-                "Ella fue al club el domingo pasado",
-                "Ellos fueron al club el sabado pasado",
-                "Ella ira al club este domingo",
-                "El fue a un club llamado Domingo",
-                "El se fue del club el domingo pasado"
-            ],
-            "correctOption": "Ella fue al club el domingo pasado"
-        }
-    ]
-}
+[
+    {
+        "title": "Articles",
+        "type": "complete",
+        "sentence": "I like * blue T-shirt over there.", 
+        "options": [
+            "as",
+            "an",
+            "the",
+            "this"
+        ],
+        "correctOption": "the"
+    },
+    {
+        "title": "Articles",
+        "type": "complete",
+        "sentence": "Their car does 100 miles * hour.", 
+        "options": [
+            "a",
+            "an",
+            "the",
+            "for"
+        ],
+        "correctOption": "an"
+    },
+    {
+        "title": "Gerunds",
+        "type": "complete",
+        "sentence": "My friend is good * playing volleyball.", 
+        "options": [
+            "at",
+            "where",
+            "this",
+            "of"
+        ],
+        "correctOption": "at"
+    },
+    {
+        "title": "Gerunds",
+        "type": "complete",
+        "sentence": "He complains * everything.", 
+        "options": [
+            "at",
+            "where",
+            "this",
+            "about"
+        ],
+        "correctOption": "about"
+    },
+    {
+        "title": "Gerunds",
+        "type": "complete",
+        "sentence": "Laura dreams * living on a small island.", 
+        "options": [
+            "at",
+            "where",
+            "this",
+            "of"
+        ],
+        "correctOption": "of"
+    },
+    {
+        "title": "Gerunds",
+        "type": "complete",
+        "sentence": "I don't agree * hunting.", 
+        "options": [
+            "at",
+            "with",
+            "this",
+            "of"
+        ],
+        "correctOption": "with"
+    },
+    {
+        "title": "Put the verb in the correct form",
+        "type": "complete",
+        "sentence": "Santiago's mother * more time for him if he does the washing up.", 
+        "options": [
+            "had",
+            "having",
+            "would have",
+            "will had"
+        ],
+        "correctOption": "will have"
+    },
+    {
+        "title": "Put the verb in the correct form",
+        "type": "complete",
+        "sentence": "If you were older, you * to the party.", 
+        "options": [
+            "could go",
+            "would go",
+            "going",
+            "went"
+        ],
+        "correctOption": "could go"
+    },
+    {
+        "title": "Put the verb in the correct form",
+        "type": "complete",
+        "sentence": "If Sarah * so much junk food, she could have been in the school hockey team.", 
+        "options": [
+            "wouldn't eat",
+            "had not eaten",
+            "won't eat",
+            "not having eaten"
+        ],
+        "correctOption": "had not eaten"
+    },
+    {
+        "title": "Traducir del español al ingles.",
+        "type": "translate_old_to_new",
+        "sentence": "Fui a correr por la mañana.",
+        "options": [
+            "I had gone for a morning run",
+            "Last night I went for a run",
+            "I went for a run last night,",
+            "Yesterday, I went for a run",
+            "I don't like running",
+            "I went for a morning run"
+        ],
+        "correctOption": "I went for a morning run"
+    },
+    {
+        "title": "Traducir del español al ingles.",
+        "type": "translate_old_to_new",
+        "sentence": "Están cocinando pasta ahora mismo.",
+        "options": [
+            "If only they had cooked pasta",
+            "They are cooking pasta now",
+            "They didn't want to cook pasta",
+            "They would have cooked pasta now",
+            "They were cooking pasta",
+            "They are playing games right now"
+        ],
+        "correctOption": "They are cooking pasta now."
+    },
+    {
+        "title": "Traducir del español al ingles.",
+        "type": "translate_old_to_new",
+        "sentence": "Estoy leyendo un nuevo libro acerca de Cristobal Colón",
+        "options": [
+            "I was reading a new book about Cristobal Colón",
+            "Last night I read a new book about Cristobal Colón",
+            "I was reading a new book about Cristobal Colón",
+            "I'm reading a new book about Cristobal Colón",
+            "I wanted to read a new book about Cristobal Colón",
+            "I'm reading an old book about Cristobal Colón"
+        ],
+        "correctOption": "I'm reading a new book about Cristobal Colón"
+    },
+    {
+        "title": "Traducir del español al ingles.",
+        "type": "translate_old_to_new",
+        "sentence": "Finalmente ellos se pudieron comprar un auto nuevo.",
+        "options": [
+            "Finally they were able to buy a new car",
+            "Finally they weren't able to buy a new car",
+            "Finally they didn't want to buy a new car",
+            "Finally they were posible to buy a new car",
+            "Finally they were given a new car",
+            "Finally they were being buy a new car"
+        ],
+        "correctOption": "Finally they were able to buy a new car"
+    },
+    {
+        "title": "Traducir del ingles al español.",
+        "type": "translate_new_to_old",
+        "sentence": "They used to go to Hawaii every summer",
+        "options": [
+            "Ellos querían ir a Hawaii todos los veranos",
+            "Ellos soñaban con ir a Hawaii todos los veranos",
+            "Ellos solían ir a Hawaii todos los inviernos",
+            "Ellos solían ir a Hawaii todas las primaveras",
+            "Ellos solían ir a Hawaii todos los veranos",
+            "Ellos no querían ir a Hawaii todos los veranos"
+        ],
+        "correctOption": "Ellos solían ir a Hawaii todos los veranos."
+    },
+    {
+        "title": "Traducir del ingles al español.",
+        "type": "translate_new_to_old",
+        "sentence": "Carlos did not wash the car yet.",
+        "options": [
+            "Carlos no lavara su auto",
+            "Carlos ya lavo su auto",
+            "Carlos no tiene ganas de lavar su auto",
+            "Carlos quisiera lavar su auto",
+            "Carlos lavara su auto mañana",
+            "Carlos todavia no lavo su auto"
+        ],
+        "correctOption": "Carlos todavia no lavo su auto"
+    },
+    {
+        "title": "Traducir del ingles al español.",
+        "type": "translate_new_to_old",
+        "sentence": "They are going to eat pizza tonight",
+        "options": [
+            "Ellos iban a comer pizza esta noche",
+            "Ellos querian a comer pizza esta noche",
+            "Ellos irán a comer pizza mañana a la noche",
+            "Ellos irán a comer pizza esta noche",
+            "Ellos no deberían comer pizza esta noche",
+            "Ellos estaban con ganas de comer pizza esta noche"
+        ],
+        "correctOption": "Ellos irán a comer pizza esta noche"
+    },
+    {
+        "title": "Traducir del ingles al español.",
+        "type": "translate_new_to_old",
+        "sentence": "She went to the club last sunday",
+        "options": [
+            "El fue al club el domingo pasado",
+            "Ella fue al club el domingo pasado",
+            "Ellos fueron al club el sabado pasado",
+            "Ella ira al club este domingo",
+            "El fue a un club llamado Domingo",
+            "El se fue del club el domingo pasado"
+        ],
+        "correctOption": "Ella fue al club el domingo pasado"
+    }
+]
