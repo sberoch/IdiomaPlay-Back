@@ -8,15 +8,19 @@ export class CreateExerciseDto {
   @IsNotEmpty()
   title: string;
 
-  @ApiProperty({ enum: ExerciseType, example: ExerciseType.LISTEN })
+  @ApiProperty({ example: '* is my sisters.' })
+  @IsNotEmpty()
+  sentence: string;
+
+  @ApiProperty({ enum: ExerciseType, example: ExerciseType.COMPLETE })
   @IsNotEmpty()
   type: ExerciseType;
 
-  @ApiProperty({ type: [String], example: ["opcion1", "opcion2"] })
+  @ApiProperty({ type: [String], example: ["she", "he", "they", "we"] })
   @IsNotEmpty()
   options: string[];
 
-  @ApiProperty({ example: 'opcion1' })
+  @ApiProperty({ example: 'she' })
   @IsNotEmpty()
   correctOption: string;
 }

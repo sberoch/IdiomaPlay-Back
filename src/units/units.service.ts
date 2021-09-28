@@ -22,19 +22,16 @@ export class UnitsService {
   ) {}
 
   async create(createUnitDto: CreateUnitDto) {
-    try {
-      const { lessonsIds, examId, ...rest } = createUnitDto;
-      const lessons: Lesson[] = [];
-      for (const lessonId of lessonsIds) {
-        const lesson: Lesson = await this.lessonsService.findOne(lessonId);
-        lessons.push(lesson);
-      }
-      const exam: Exam = await this.examsService.findOne(examId);
-
-      return this.unitsRepository.save(new Unit({ lessons, exam, ...rest }));
-    } catch (e: unknown) {
-      console.log(e);
+    const { lessonsIds, examId, ...rest } = createUnitDto;
+    const lessons: Lesson[] = [];
+    for (const lessonId of lessonsIds) {
+      const lesson: Lesson = await this.lessonsService.findOne(lessonId);
+      lessons.push(lesson);
     }
+    const exam: Exam = await this.examsService.findOne(examId);
+
+    return this.unitsRepository.save(new Unit({ lessons, exam, ...rest }));
+
   }
 
   findAll(params: UnitParams): Promise<Pagination<Unit>> {

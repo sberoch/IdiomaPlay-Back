@@ -16,6 +16,9 @@ export class Exercise {
   @Column({ default: 'Test' })
   title: string;
 
+  @Column()
+  sentence: string;
+
   @Column({
     type: 'enum',
     enum: ExerciseType,

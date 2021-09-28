@@ -7,13 +7,17 @@ import { ExerciseParams } from './dto/exercise.params';
 import { paginate, Pagination } from 'nestjs-typeorm-paginate';
 import { buildQuery } from './exercises.query-builder';
 import { UpdateExerciseDto } from './dto/update-exercise.dto';
+//import * as exercisesJson from '../../exercises.json'
+
 
 @Injectable()
 export class ExercisesService {
   constructor(
     @InjectRepository(Exercise)
-    private exercisesRepository: Repository<Exercise>,
-  ) {}
+    private exercisesRepository: Repository<Exercise>
+  ) {
+    console.log("Aca estoy")
+  }
 
   create(createExerciseDto: CreateExerciseDto) {
     return this.exercisesRepository.save(new Exercise(createExerciseDto));
