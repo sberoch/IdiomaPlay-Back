@@ -31,7 +31,6 @@ export class UnitsService {
     const exam: Exam = await this.examsService.findOne(examId);
 
     return this.unitsRepository.save(new Unit({ lessons, exam, ...rest }));
-
   }
 
   findAll(params: UnitParams): Promise<Pagination<Unit>> {
@@ -58,8 +57,6 @@ export class UnitsService {
 
   async removeAll(): Promise<void> {
     const units = await this.unitsRepository.find();
-    for (const unit of units) {
-      await this.remove(unit.id);
-    }
+    await this.unitsRepository.remove(units);
   }
 }

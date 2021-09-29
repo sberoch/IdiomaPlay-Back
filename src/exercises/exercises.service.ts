@@ -12,9 +12,8 @@ import { UpdateExerciseDto } from './dto/update-exercise.dto';
 export class ExercisesService {
   constructor(
     @InjectRepository(Exercise)
-    private exercisesRepository: Repository<Exercise>
+    private exercisesRepository: Repository<Exercise>,
   ) {}
-
 
   create(createExerciseDto: CreateExerciseDto) {
     return this.exercisesRepository.save(new Exercise(createExerciseDto));
@@ -47,8 +46,6 @@ export class ExercisesService {
 
   async removeAll(): Promise<void> {
     const exercises = await this.exercisesRepository.find();
-    for (const exercise of exercises) {
-      await this.remove(exercise.id);
-    }
+    await this.exercisesRepository.remove(exercises);
   }
 }

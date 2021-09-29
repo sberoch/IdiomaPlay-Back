@@ -67,8 +67,6 @@ export class ExamsService {
 
   async removeAll(): Promise<void> {
     const exams = await this.examsRepository.find();
-    for (const exam of exams) {
-      await this.remove(exam.id);
-    }
+    await this.examsRepository.remove(exams);
   }
 }
