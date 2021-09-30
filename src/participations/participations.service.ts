@@ -27,15 +27,24 @@ export class ParticipationsService {
     const { userId, examId, lessonId, ...rest } = createParticipationDto;
     if (!(examId || lessonId))
       throw new BadRequestException('Se debe proveer una leccion o un examen');
+    if (examId && lessonId)
+      throw new BadRequestException(
+        'Se debe proveer una leccion o un examen. No ambas',
+      );
     const user = await this.usersService.findOne(userId);
-    const lesson: Lesson | null = lessonId
-      ? await this.lessonsService.findOne(lessonId)
-      : null;
-    const exam: Exam | null = examId
-      ? await this.examsService.findOne(examId)
-      : null;
+    let totalExercises = 0;
+    let lesson: Lesson;
+    if (lessonId) {
+      lesson = await this.lessonsService.findOneWithExercises(lessonId);
+      totalExercises = lesson.exercises.length;
+    }
+    let exam: Exam;
+    if (examId) {
+      exam = await this.examsService.findOneWithExercises(examId);
+      totalExercises = exam.exercises.length;
+    }
     return this.participationsRepository.save(
-      new Participation({ user, lesson, exam, ...rest }),
+      new Participation({ user, lesson, exam, totalExercises, ...rest }),
     );
   }
 
@@ -58,9 +67,7 @@ export class ParticipationsService {
   }
 
   update(id: number, updateParticipationDto: UpdateParticipationDto) {
-    //TODO: change this when updateParticipationDto has update potential.
-    console.log(updateParticipationDto);
-    return this.participationsRepository.update(id, {});
+    return this.participationsRepository.update(id, updateParticipationDto);
   }
 
   async remove(id: number): Promise<void> {

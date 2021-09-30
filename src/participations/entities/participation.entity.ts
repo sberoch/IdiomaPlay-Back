@@ -1,4 +1,5 @@
 import {
+  Column,
   CreateDateColumn,
   Entity,
   ManyToOne,
@@ -14,7 +15,13 @@ export class Participation {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @ManyToOne(() => User, (unit) => unit.participations, { eager: true })
+  @Column()
+  totalExercises: number;
+
+  @Column({ default: 0 })
+  correctExercises: number;
+
+  @ManyToOne(() => User, (user) => user.participations, { eager: true })
   user: User;
 
   @ManyToOne(() => Exam, (exam) => exam.participations, {
