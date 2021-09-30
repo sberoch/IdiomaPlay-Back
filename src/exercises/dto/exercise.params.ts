@@ -3,5 +3,5 @@ import { PaginationParams } from '../../common/pagination/pagination-params';
 
 export class ExerciseParams extends PaginationParams {
   @ApiProperty({ required: false })
-  title: string;
+  title?: string;
 }
