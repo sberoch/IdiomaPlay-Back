@@ -2,6 +2,10 @@ import { BadRequestException, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { paginate } from 'nestjs-typeorm-paginate';
 import { Repository } from 'typeorm';
+import { Exam } from '../exams/entities/exam.entity';
+import { ExamsService } from '../exams/exams.service';
+import { Lesson } from '../lessons/entities/lesson.entity';
+import { LessonsService } from '../lessons/lessons.service';
 import { UsersService } from '../users/users.service';
 import { CreateParticipationDto } from './dto/create-participation.dto';
 import { ParticipationParams } from './dto/participation.params';
@@ -15,13 +19,23 @@ export class ParticipationsService {
     @InjectRepository(Participation)
     private participationsRepository: Repository<Participation>,
     private usersService: UsersService,
+    private lessonsService: LessonsService,
+    private examsService: ExamsService,
   ) {}
 
   async create(createParticipationDto: CreateParticipationDto) {
-    const { userId, ...rest } = createParticipationDto;
+    const { userId, examId, lessonId, ...rest } = createParticipationDto;
+    if (!(examId || lessonId))
+      throw new BadRequestException('Se debe proveer una leccion o un examen');
     const user = await this.usersService.findOne(userId);
+    const lesson: Lesson | null = lessonId
+      ? await this.lessonsService.findOne(lessonId)
+      : null;
+    const exam: Exam | null = examId
+      ? await this.examsService.findOne(examId)
+      : null;
     return this.participationsRepository.save(
-      new Participation({ user, ...rest }),
+      new Participation({ user, lesson, exam, ...rest }),
     );
   }
 

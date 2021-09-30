@@ -4,9 +4,11 @@ import {
   JoinTable,
   ManyToMany,
   ManyToOne,
+  OneToMany,
   PrimaryGeneratedColumn,
 } from 'typeorm';
 import { Exercise } from '../../exercises/entities/exercise.entity';
+import { Participation } from '../../participations/entities/participation.entity';
 import { Unit } from '../../units/entities/unit.entity';
 
 @Entity()
@@ -20,6 +22,11 @@ export class Lesson {
   @ManyToMany(() => Exercise, (exercise) => exercise.lesson, { cascade: true })
   @JoinTable()
   exercises: Exercise[];
+
+  @OneToMany(() => Participation, (participation) => participation.lesson, {
+    cascade: true,
+  })
+  participations: Participation[];
 
   @ManyToOne(() => Unit, (unit) => unit.lessons)
   unit: Unit;

@@ -1,5 +1,7 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { getRepositoryToken } from '@nestjs/typeorm';
+import { ExamsService } from '../exams/exams.service';
+import { LessonsService } from '../lessons/lessons.service';
 import { UsersService } from '../users/users.service';
 import { Participation } from './entities/participation.entity';
 import { ParticipationsService } from './participations.service';
@@ -12,6 +14,8 @@ describe('ParticipationsService', () => {
       providers: [
         ParticipationsService,
         UsersService,
+        LessonsService,
+        ExamsService,
         {
           provide: getRepositoryToken(Participation),
           useValue: {},
@@ -19,6 +23,10 @@ describe('ParticipationsService', () => {
       ],
     })
       .overrideProvider(UsersService)
+      .useValue({})
+      .overrideProvider(ExamsService)
+      .useValue({})
+      .overrideProvider(LessonsService)
       .useValue({})
       .compile();
 
