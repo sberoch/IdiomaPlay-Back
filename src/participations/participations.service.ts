@@ -6,6 +6,7 @@ import { Exam } from '../exams/entities/exam.entity';
 import { ExamsService } from '../exams/exams.service';
 import { Lesson } from '../lessons/entities/lesson.entity';
 import { LessonsService } from '../lessons/lessons.service';
+import { UnitsService } from '../units/units.service';
 import { UsersService } from '../users/users.service';
 import { CreateParticipationDto } from './dto/create-participation.dto';
 import { ParticipationParams } from './dto/participation.params';
@@ -21,10 +22,12 @@ export class ParticipationsService {
     private usersService: UsersService,
     private lessonsService: LessonsService,
     private examsService: ExamsService,
+    private unitsService: UnitsService,
   ) {}
 
   async create(createParticipationDto: CreateParticipationDto) {
-    const { userId, examId, lessonId, ...rest } = createParticipationDto;
+    const { userId, examId, lessonId, unitId, ...rest } =
+      createParticipationDto;
     if (!(examId || lessonId))
       throw new BadRequestException('Se debe proveer una leccion o un examen');
     if (examId && lessonId)
@@ -32,6 +35,7 @@ export class ParticipationsService {
         'Se debe proveer una leccion o un examen. No ambas',
       );
     const user = await this.usersService.findOne(userId);
+    const unit = await this.unitsService.findOne(unitId);
     let totalExercises = 0;
     let lesson: Lesson;
     if (lessonId) {
@@ -44,8 +48,48 @@ export class ParticipationsService {
       totalExercises = exam.exercises.length;
     }
     return this.participationsRepository.save(
-      new Participation({ user, lesson, exam, totalExercises, ...rest }),
+      new Participation({ user, lesson, exam, totalExercises, unit, ...rest }),
     );
+  }
+
+  /**
+   *
+   * @param params params for query. user and unit are required.
+   * @returns array of the following shape [{ lessonId: number, passed: boolean }]
+   */
+  async findPassedLessons(params: ParticipationParams) {
+    if (!(params.unit && params.user))
+      throw new BadRequestException('Se debe proveer una unidad y un usuario');
+    const participations = await this.findUnitParticipationsForUser(
+      params.unit,
+      params.user,
+    );
+    const latest: Participation[] = [];
+    for (const asd of participations) {
+      const elemInLatest = latest.find((it) => it.lesson.id === asd.lesson.id);
+      if (elemInLatest) {
+        latest[latest.findIndex((it) => it === elemInLatest)] =
+          asd.createdAt > elemInLatest.createdAt ? asd : elemInLatest;
+      } else {
+        latest.push(asd);
+      }
+    }
+    return latest.map((it) => ({
+      lessonId: it.lesson.id,
+      passed: it.isPassed,
+    }));
+  }
+
+  private async findUnitParticipationsForUser(unitId: number, userId: number) {
+    return this.participationsRepository
+      .createQueryBuilder('p')
+      .leftJoin('p.unit', 'unit')
+      .where('unit.id = :unitId', { unitId })
+      .leftJoin('p.user', 'user')
+      .where('user.id = :userId', { userId })
+      .leftJoinAndSelect('p.lesson', 'lesson')
+      .where('lesson is not null')
+      .getMany();
   }
 
   findAll(params: ParticipationParams) {

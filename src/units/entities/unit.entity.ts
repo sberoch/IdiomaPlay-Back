@@ -8,6 +8,7 @@ import {
 } from 'typeorm';
 import { Exam } from '../../exams/entities/exam.entity';
 import { Lesson } from '../../lessons/entities/lesson.entity';
+import { Participation } from '../../participations/entities/participation.entity';
 
 @Entity()
 export class Unit {
@@ -23,6 +24,9 @@ export class Unit {
   @OneToOne(() => Exam, (exam) => exam.unit)
   @JoinColumn()
   exam: Exam;
+
+  @OneToMany(() => Participation, (participation) => participation.unit)
+  participations: Participation[];
 
   constructor(data: Partial<Unit> = {}) {
     Object.assign(this, data);

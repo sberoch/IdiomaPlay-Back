@@ -28,6 +28,7 @@ export class UsersService {
   }
 
   async findOne(id: number) {
+    console.log(id);
     const user = await this.usersRepository.findOne(id);
     if (!user) throw new BadRequestException('No se encontro la leccion');
     return user;

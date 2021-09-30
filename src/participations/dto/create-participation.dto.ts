@@ -6,6 +6,10 @@ export class CreateParticipationDto {
   @IsNotEmpty()
   userId: number;
 
+  @ApiProperty({ example: 1 })
+  @IsNotEmpty()
+  unitId: number;
+
   @ApiProperty({ example: 1, required: false })
   lessonId?: number;
 

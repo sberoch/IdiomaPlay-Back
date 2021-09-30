@@ -6,6 +6,7 @@ import { Participation } from './entities/participation.entity';
 import { UsersModule } from '../users/users.module';
 import { LessonsModule } from '../lessons/lessons.module';
 import { ExamsModule } from '../exams/exams.module';
+import { UnitsModule } from '../units/units.module';
 
 @Module({
   imports: [
@@ -13,6 +14,7 @@ import { ExamsModule } from '../exams/exams.module';
     UsersModule,
     LessonsModule,
     ExamsModule,
+    UnitsModule,
   ],
   controllers: [ParticipationsController],
   providers: [ParticipationsService],

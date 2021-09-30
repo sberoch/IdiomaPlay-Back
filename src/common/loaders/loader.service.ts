@@ -13,6 +13,7 @@ import { ExamsService } from '../../exams/exams.service';
 import { Lesson } from '../../lessons/entities/lesson.entity';
 import { Exam } from '../../exams/entities/exam.entity';
 import { User } from '../../users/entities/user.entity';
+import { Unit } from '../../units/entities/unit.entity';
 
 @Injectable()
 export class LoaderService implements OnApplicationBootstrap {
@@ -47,7 +48,11 @@ export class LoaderService implements OnApplicationBootstrap {
     return exercises;
   }
 
-  //TODO: completar estos dos metodos con jsons
+  //TODO: completar estos tres metodos con un json
+  async loadUnits(): Promise<Unit[]> {
+    const units: Unit[] = [];
+    return units;
+  }
   async loadLessons(): Promise<Lesson[]> {
     const lessons: Lesson[] = [];
     return lessons;

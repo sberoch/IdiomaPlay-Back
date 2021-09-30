@@ -31,6 +31,9 @@ export class ParticipationsController {
   @ApiOkResponse()
   @Get()
   findAll(@Query() query: ParticipationParams) {
+    if (query.withPassedLessons === 'true') {
+      return this.participationsService.findPassedLessons(query);
+    }
     return this.participationsService.findAll(query);
   }
 
