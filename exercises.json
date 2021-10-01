@@ -24,6 +24,54 @@
         "correctOption": "an"
     },
     {
+        "title": "Articles",
+        "type": "complete",
+        "sentence": "Is your mother working in * old office building?", 
+        "options": [
+            "a",
+            "an",
+            "the",
+            "for"
+        ],
+        "correctOption": "the"
+    },
+    {
+        "title": "Articles",
+        "type": "complete",
+        "sentence": "The tomatoes are 99 pence * kilo.", 
+        "options": [
+            "a",
+            "an",
+            "the",
+            "for"
+        ],
+        "correctOption": "a"
+    },
+    {
+        "title": "Articles",
+        "type": "complete",
+        "sentence": "Where's * USB drive I lent you last week?", 
+        "options": [
+            "a",
+            "an",
+            "the",
+            "for"
+        ],
+        "correctOption": "the"
+    },
+    {
+        "title": "Articles",
+        "type": "complete",
+        "sentence": "Ben has * terrible headache.", 
+        "options": [
+            "a",
+            "an",
+            "the",
+            "for"
+        ],
+        "correctOption": "a"
+    },
+    {
         "title": "Gerunds",
         "type": "complete",
         "sentence": "My friend is good * playing volleyball.", 

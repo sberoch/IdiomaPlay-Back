@@ -13,7 +13,7 @@ import { LessonsService } from './lessons.service';
 import { CreateLessonDto } from './dto/create-lesson.dto';
 import { UpdateLessonDto } from './dto/update-lesson.dto';
 import { ApiCreatedResponse, ApiOkResponse, ApiTags } from '@nestjs/swagger';
-import { QueryFailedExceptionFilter } from 'src/common/filters/queryFailedExceptionFilter';
+import { QueryFailedExceptionFilter } from '../common/filters/queryFailedExceptionFilter';
 import { LessonParams } from './dto/lesson.params';
 
 @ApiTags('Lessons')

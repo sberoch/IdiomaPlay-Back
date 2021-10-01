@@ -8,7 +8,9 @@ import { ExercisesModule } from './exercises/exercises.module';
 import { LessonsModule } from './lessons/lessons.module';
 import { UnitsModule } from './units/units.module';
 import { ExamsModule } from './exams/exams.module';
-import { LoaderModule } from "./common/loaders/loader.module";
+import { LoaderModule } from './common/loaders/loader.module';
+import { UsersModule } from './users/users.module';
+import { ParticipationsModule } from './participations/participations.module';
 
 @Module({
   imports: [
@@ -17,7 +19,9 @@ import { LoaderModule } from "./common/loaders/loader.module";
     LessonsModule,
     ExamsModule,
     UnitsModule,
-    LoaderModule
+    LoaderModule,
+    UsersModule,
+    ParticipationsModule,
   ],
   controllers: [AppController],
   providers: [AppService],

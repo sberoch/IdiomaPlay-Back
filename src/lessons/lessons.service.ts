@@ -60,8 +60,6 @@ export class LessonsService {
 
   async removeAll(): Promise<void> {
     const lessons = await this.lessonsRepository.find();
-    for (const lesson of lessons) {
-      await this.remove(lesson.id);
-    }
+    await this.lessonsRepository.remove(lessons);
   }
 }

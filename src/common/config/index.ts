@@ -3,6 +3,9 @@ import { TypeOrmModuleOptions } from '@nestjs/typeorm';
 export const config = {
   jwtSecret: process.env.JWT_SECRET,
   examTimeInSeconds: 300,
+  amountOfExercisesPerLesson: 8,
+  amountOfExercisesPerExam: 16,
+  passingPercentage: 0.8,
   errorCodes: {
     DUP_KEY: 'DUP_KEY',
     VIO_FK: 'VIO_FK',

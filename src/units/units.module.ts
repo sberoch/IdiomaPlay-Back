@@ -10,5 +10,6 @@ import { ExamsModule } from '../exams/exams.module';
   imports: [TypeOrmModule.forFeature([Unit]), LessonsModule, ExamsModule],
   controllers: [UnitsController],
   providers: [UnitsService],
+  exports: [UnitsService],
 })
 export class UnitsModule {}
