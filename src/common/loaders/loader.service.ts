@@ -3,6 +3,7 @@ import { ExercisesService } from '../../exercises/exercises.service';
 import * as exercisesJson from '../../../exercises.json';
 import * as lessonsJson from '../../../lessons.json';
 import * as examsJson from '../../../exams.json';
+import * as unitsJson from '../../../units.json';
 import { CreateExerciseDto } from '../../exercises/dto/create-exercise.dto';
 import {
   Exercise,
@@ -19,6 +20,8 @@ import { Unit } from '../../units/entities/unit.entity';
 import { CreateLessonDto } from '../../lessons/dto/create-lesson.dto';
 import { config } from "../config";
 import { CreateExamDto } from '../../exams/dto/create-exam.dto';
+import { UnitsService } from '../../units/units.service';
+import { CreateUnitDto } from '../../units/dto/create-unit.dto';
 
 function getRandomExercisesForExam(exercises){
   //Shuffles the array
@@ -34,6 +37,7 @@ export class LoaderService implements OnApplicationBootstrap {
     private usersService: UsersService,
     private lessonsService: LessonsService,
     private examsService: ExamsService,
+    private unitsService: UnitsService
   ) {}
 
   async onApplicationBootstrap() {
@@ -46,6 +50,9 @@ export class LoaderService implements OnApplicationBootstrap {
     const exams = await this.loadExams();
     console.log(`Loaded ${exams.length} exams`)
 
+    const units = await this.loadUnits();
+    console.log(`Loaded ${units.length} units`)
+    
     const user = await this.loadTestUser();
     console.log(`Loaded test user: ${user.email}`);
   }
@@ -67,10 +74,21 @@ export class LoaderService implements OnApplicationBootstrap {
   }
 
   async loadUnits(): Promise<Unit[]> {
+    const prevUnits = await this.unitsService.findAll({ limit: 1000 });
+    if (prevUnits && prevUnits.meta.totalItems !== 0) {
+      return prevUnits.items;
+    }
+
     const units: Unit[] = [];
+    for (const unit of unitsJson) {
+      const dto: CreateUnitDto = unit as CreateUnitDto;
+      const created = await this.unitsService.create(dto);
+      units.push(created)
+    }
+  
     return units;
   }
-  
+
   async loadLessons(): Promise<Lesson[]> {
     const prevLessons = await this.lessonsService.findAll({ limit: 1000 });
     if (prevLessons && prevLessons.meta.totalItems !== 0) {

@@ -47,6 +47,15 @@ export class UnitsService {
     return unit;
   }
 
+  findOneWithLessonsAndExam(id: number) {
+    return this.unitsRepository
+      .createQueryBuilder('u')
+      .where('u.id = :id', { id: id })
+      .leftJoinAndSelect('u.lessons', 'lessons')
+      .leftJoinAndSelect('u.exam', 'exams')
+      .getOne();
+  }
+
   update(id: number, updateUnitDto: UpdateUnitDto) {
     return this.unitsRepository.update(id, updateUnitDto);
   }

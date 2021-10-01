@@ -6,5 +6,17 @@
     {
         "title": "Translating lesson",
         "exercisesIds": [9, 10, 11, 12, 13, 14, 15, 16]
+    },
+    {
+        "title": "Lesson 3",
+        "exercisesIds": [9, 10, 11, 12, 13, 14, 15, 16]
+    },
+    {
+        "title": "Lesson 4",
+        "exercisesIds": [9, 10, 11, 12, 13, 14, 15, 16]
+    },
+    {
+        "title": "Lesson 5",
+        "exercisesIds": [13, 14, 15, 16, 17, 18, 19, 20]
     }
 ]

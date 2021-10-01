@@ -38,8 +38,9 @@ export class UnitsController {
   @ApiOkResponse()
   @Get(':id')
   findOne(@Param('id') id: string) {
-    return this.unitsService.findOne(+id);
+    return this.unitsService.findOneWithLessonsAndExam(+id);
   }
+
 
   @ApiOkResponse()
   @UseFilters(QueryFailedExceptionFilter)
