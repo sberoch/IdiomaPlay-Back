@@ -1,3 +1,4 @@
+import { config } from '../../common/config';
 import {
   Column,
   CreateDateColumn,
@@ -49,7 +50,7 @@ export class Participation {
   updatedAt: Date;
 
   public get isPassed(): boolean {
-    return this.correctExercises / (this.totalExercises * 1.0) >= 0.8;
+    return this.correctExercises / (this.totalExercises * 1.0) >= config.passingPercentage;
   }
 
   constructor(data: Partial<Participation> = {}) {

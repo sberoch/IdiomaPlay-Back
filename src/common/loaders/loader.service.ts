@@ -1,6 +1,8 @@
 import { Injectable, OnApplicationBootstrap } from '@nestjs/common';
 import { ExercisesService } from '../../exercises/exercises.service';
 import * as exercisesJson from '../../../exercises.json';
+import * as lessonsJson from '../../../lessons.json';
+import * as examsJson from '../../../exams.json';
 import { CreateExerciseDto } from '../../exercises/dto/create-exercise.dto';
 import {
   Exercise,
@@ -14,6 +16,16 @@ import { Lesson } from '../../lessons/entities/lesson.entity';
 import { Exam } from '../../exams/entities/exam.entity';
 import { User } from '../../users/entities/user.entity';
 import { Unit } from '../../units/entities/unit.entity';
+import { CreateLessonDto } from '../../lessons/dto/create-lesson.dto';
+import { config } from "../config";
+import { CreateExamDto } from '../../exams/dto/create-exam.dto';
+
+function getRandomExercisesForExam(exercises){
+  //Shuffles the array
+  const shuffled = exercises.sort(() => 0.5 - Math.random());
+  //Selects the first 16 elements
+  return shuffled.slice(0, config.amountOfExercisesPerExam);
+}
 
 @Injectable()
 export class LoaderService implements OnApplicationBootstrap {
@@ -28,6 +40,13 @@ export class LoaderService implements OnApplicationBootstrap {
     const exercises = await this.loadExercises();
     console.log(`Loaded ${exercises.length} exercises`);
 
+    const exercisesIds = [];
+    for (const actualExercise of exercises){
+      exercisesIds.push(actualExercise.id)
+    }
+
+    const lessons = await this.loadLessons();
+    const exams = await this.loadExams();
     const user = await this.loadTestUser();
     console.log(`Loaded test user: ${user.email}`);
   }
@@ -48,18 +67,39 @@ export class LoaderService implements OnApplicationBootstrap {
     return exercises;
   }
 
-  //TODO: completar estos tres metodos con un json
   async loadUnits(): Promise<Unit[]> {
     const units: Unit[] = [];
     return units;
   }
   async loadLessons(): Promise<Lesson[]> {
+    const prevLessons = await this.lessonsService.findAll({ limit: 1000 });
+    if (prevLessons && prevLessons.meta.totalItems !== 0) {
+      return prevLessons.items;
+    }
+
     const lessons: Lesson[] = [];
+    for (const lesson of lessonsJson) {
+      const dto: CreateLessonDto = lesson as CreateLessonDto;
+      const created = await this.lessonsService.create(dto);
+      lessons.push(created);
+    }
     return lessons;
   }
 
   async loadExams(): Promise<Exam[]> {
+    const prevExams = await this.examsService.findAll({ limit: 1000 });
+    if (prevExams && prevExams.meta.totalItems !== 0) {
+      return prevExams.items;
+    }
+
     const exams: Exam[] = [];
+    for (const exam of examsJson) {
+      const { exercisesFromLessonsIds, ...rest} = exam;
+      const exercisesIds = getRandomExercisesForExam(exercisesFromLessonsIds)
+      const dto: CreateExamDto = {exercisesIds, ...rest}
+      const created = await this.examsService.create(dto)
+      exams.push(created)
+    }
     return exams;
   }
 
