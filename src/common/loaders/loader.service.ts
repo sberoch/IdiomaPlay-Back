@@ -40,13 +40,12 @@ export class LoaderService implements OnApplicationBootstrap {
     const exercises = await this.loadExercises();
     console.log(`Loaded ${exercises.length} exercises`);
 
-    const exercisesIds = [];
-    for (const actualExercise of exercises){
-      exercisesIds.push(actualExercise.id)
-    }
-
     const lessons = await this.loadLessons();
+    console.log(`Loaded ${lessons.length} lessons`);
+
     const exams = await this.loadExams();
+    console.log(`Loaded ${exams.length} exams`)
+
     const user = await this.loadTestUser();
     console.log(`Loaded test user: ${user.email}`);
   }
@@ -71,6 +70,7 @@ export class LoaderService implements OnApplicationBootstrap {
     const units: Unit[] = [];
     return units;
   }
+  
   async loadLessons(): Promise<Lesson[]> {
     const prevLessons = await this.lessonsService.findAll({ limit: 1000 });
     if (prevLessons && prevLessons.meta.totalItems !== 0) {
