@@ -66,10 +66,14 @@ export class ParticipationsService {
     );
     const latest: Participation[] = [];
     for (const participation of participations) {
-      const elemInLatest = latest.find((it) => it.lesson.id === participation.lesson.id);
+      const elemInLatest = latest.find(
+        (it) => it.lesson.id === participation.lesson.id,
+      );
       if (elemInLatest) {
         latest[latest.findIndex((it) => it === elemInLatest)] =
-          participation.createdAt > elemInLatest.createdAt ? participation : elemInLatest;
+          participation.createdAt > elemInLatest.createdAt
+            ? participation
+            : elemInLatest;
       } else {
         latest.push(participation);
       }
