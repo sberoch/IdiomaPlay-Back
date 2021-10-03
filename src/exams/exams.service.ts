@@ -10,6 +10,15 @@ import { Exam } from './entities/exam.entity';
 import { ExamParams } from './dto/exam.params';
 import { buildQuery } from './exams.query-builder';
 import { config } from '../common/config';
+import * as examsJson from "../../exams.json";
+
+function getRandomExercisesForExam(examId){
+  //Shuffles the array
+  const exam = examsJson.find(actualExam => actualExam.examId === examId)
+  const shuffled = exam.exercisesFromLessonsIds.sort(() => 0.5 - Math.random());
+  //Selects the first 16 elements
+  return shuffled.slice(0, config.amountOfExercisesPerExam);
+}
 
 @Injectable()
 export class ExamsService {
@@ -49,12 +58,19 @@ export class ExamsService {
     return exam;
   }
 
-  findOneWithExercises(id: number) {
-    return this.examsRepository
+  async findOneWithExercises(id: number) {
+    const exam = await this.examsRepository
       .createQueryBuilder('e')
       .where('e.id = :id', { id: id })
       .leftJoinAndSelect('e.exercises', 'exercises')
       .getOne();
+    exam.exercises = [];
+    const newExercisesIds = getRandomExercisesForExam(id);
+    for (const exerciseId of newExercisesIds) {
+      const exercise: Exercise = await this.exerciseService.findOne(exerciseId);
+      exam.exercises.push(exercise);
+    }
+    return exam
   }
 
   update(id: number, updateExamDto: UpdateExamDto) {

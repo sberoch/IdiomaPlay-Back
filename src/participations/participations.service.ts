@@ -2,6 +2,7 @@ import { BadRequestException, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { paginate } from 'nestjs-typeorm-paginate';
 import { Repository } from 'typeorm';
+import { config } from '../common/config';
 import { Exam } from '../exams/entities/exam.entity';
 import { ExamsService } from '../exams/exams.service';
 import { Lesson } from '../lessons/entities/lesson.entity';
@@ -45,7 +46,7 @@ export class ParticipationsService {
     let exam: Exam;
     if (examId) {
       exam = await this.examsService.findOneWithExercises(examId);
-      totalExercises = exam.exercises.length;
+      totalExercises = config.amountOfExercisesPerExam;
     }
     return this.participationsRepository.save(
       new Participation({ user, lesson, exam, totalExercises, unit, ...rest }),

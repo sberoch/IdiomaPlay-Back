@@ -200,7 +200,7 @@
     {
         "title": "Traducir del español al ingles.",
         "type": "translate_old_to_new",
-        "sentence": "Finalmente ellos se pudieron comprar un auto nuevo.",
+        "sentence": "Finalmente ellos se pudieron comprar un auto nuevo",
         "options": [
             "Finally they were able to buy a new car",
             "Finally they weren't able to buy a new car",
