@@ -15,4 +15,7 @@ export class CreateParticipationDto {
 
   @ApiProperty({ example: null, required: false })
   examId?: number;
+
+  @ApiProperty({ example: 1 })
+  correctExercises: number;
 }
