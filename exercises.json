@@ -127,7 +127,7 @@
             "had",
             "having",
             "would have",
-            "will had"
+            "will have"
         ],
         "correctOption": "will have"
     },
@@ -181,7 +181,7 @@
             "They were cooking pasta",
             "They are playing games right now"
         ],
-        "correctOption": "They are cooking pasta now."
+        "correctOption": "They are cooking pasta now"
     },
     {
         "title": "Traducir del español al ingles.",
@@ -223,7 +223,7 @@
             "Ellos solían ir a Hawaii todos los veranos",
             "Ellos no querían ir a Hawaii todos los veranos"
         ],
-        "correctOption": "Ellos solían ir a Hawaii todos los veranos."
+        "correctOption": "Ellos solían ir a Hawaii todos los veranos"
     },
     {
         "title": "Traducir del ingles al español.",
