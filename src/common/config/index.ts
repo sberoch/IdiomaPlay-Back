@@ -6,6 +6,8 @@ export const config = {
   amountOfExercisesPerLesson: 8,
   amountOfExercisesPerExam: 16,
   passingPercentage: 0.8,
+  amountOfOptionsPerCompletingExercise: 4,
+  amountOfOptionsPerListeningAndTranslatingExercise: 6,
   errorCodes: {
     DUP_KEY: 'DUP_KEY',
     VIO_FK: 'VIO_FK',

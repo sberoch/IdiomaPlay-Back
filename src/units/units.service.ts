@@ -24,12 +24,12 @@ export class UnitsService {
   async create(createUnitDto: CreateUnitDto) {
     const { lessonsIds, examId, ...rest } = createUnitDto;
     const lessons: Lesson[] = [];
+
     for (const lessonId of lessonsIds) {
       const lesson: Lesson = await this.lessonsService.findOne(lessonId);
       lessons.push(lesson);
     }
     const exam: Exam = await this.examsService.findOne(examId);
-
     return this.unitsRepository.save(new Unit({ lessons, exam, ...rest }));
   }
 
@@ -47,6 +47,7 @@ export class UnitsService {
     return unit;
   }
 
+  //TODO: arreglar la unidad 1 que no devuelve todos los elementos.
   findOneWithLessonsAndExam(id: number) {
     return this.unitsRepository
       .createQueryBuilder('u')

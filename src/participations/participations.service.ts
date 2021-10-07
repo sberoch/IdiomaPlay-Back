@@ -41,7 +41,7 @@ export class ParticipationsService {
     let lesson: Lesson;
     if (lessonId) {
       lesson = await this.lessonsService.findOneWithExercises(lessonId);
-      totalExercises = lesson.exercises.length;
+      totalExercises = config.amountOfExercisesPerLesson;
     }
     let exam: Exam;
     if (examId) {

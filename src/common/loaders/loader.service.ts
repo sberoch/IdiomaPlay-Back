@@ -1,9 +1,9 @@
 import { Injectable, OnApplicationBootstrap } from '@nestjs/common';
 import { ExercisesService } from '../../exercises/exercises.service';
-import * as exercisesJson from '../../../exercises.json';
-import * as lessonsJson from '../../../lessons.json';
-import * as examsJson from '../../../exams.json';
-import * as unitsJson from '../../../units.json';
+import * as exercisesJson from '../jsons/exercises.json';
+import * as lessonsJson from '../jsons/lessons.json';
+import * as examsJson from '../jsons/exams.json';
+import * as unitsJson from '../jsons/units.json';
 import { CreateExerciseDto } from '../../exercises/dto/create-exercise.dto';
 import {
   Exercise,
@@ -85,7 +85,6 @@ export class LoaderService implements OnApplicationBootstrap {
       const created = await this.unitsService.create(dto);
       units.push(created)
     }
-  
     return units;
   }
 
