@@ -20,4 +20,24 @@ describe('UnitsController', () => {
   it('should be defined', () => {
     expect(controller).toBeDefined();
   });
+
+  it('Controller create should be defined', () => {
+    expect(controller.create).toBeDefined();
+  });
+
+  it('Controller find one should be defined', () => {
+    expect(controller.findOne).toBeDefined();
+  });
+
+  it('Controller find one should be defined', () => {
+    expect(controller.findAll).toBeDefined();
+  });
+
+  it('Controller find all should be defined', () => {
+    expect(controller.findAll).toBeDefined();
+  });
+
+  it('Controller find one should be defined', () => {
+    expect(controller.findAll).toBeDefined();
+  });
 });

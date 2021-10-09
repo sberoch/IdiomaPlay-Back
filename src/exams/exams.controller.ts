@@ -44,6 +44,7 @@ export class ExamsController {
   @UseFilters(QueryFailedExceptionFilter)
   @Patch(':id')
   update(@Param('id') id: string, @Body() updateExamDto: UpdateExamDto) {
+    console.log("Update in exam")
     return this.examsService.update(+id, updateExamDto);
   }
 

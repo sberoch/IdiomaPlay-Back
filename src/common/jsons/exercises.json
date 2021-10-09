@@ -200,7 +200,7 @@
     {
         "title": "Traducir del español al ingles.",
         "type": "translate_old_to_new",
-        "sentence": "Finalmente ellos se pudieron comprar un auto nuevo.",
+        "sentence": "Finalmente ellos se pudieron comprar un auto nuevo",
         "options": [
             "Finally they were able to buy a new car",
             "Finally they weren't able to buy a new car",
@@ -266,5 +266,117 @@
             "El se fue del club el domingo pasado"
         ],
         "correctOption": "Ella fue al club el domingo pasado"
+    },
+    {
+        "title": "Escuchar y completar con la opción correcta",
+        "type": "listen",
+        "sentence": "She went to the club last sunday",
+        "options": [
+            "She went to the club last sunday",
+            "She rent the club last monday",
+            "She run to the club last sunday",
+            "He went to the club last sunday",
+            "She lent the club last sunday",
+            "He rented the club last sunday"
+        ],
+        "correctOption": "She went to the club last sunday"
+    },
+    {
+        "title": "Escuchar y completar con la opción correcta",
+        "type": "listen",
+        "sentence": "I forgot to do my homework",
+        "options": [
+            "I forgot to do my homework",
+            "I forget to do my homework",
+            "I followed to do my homework",
+            "I'm formed to do my homework",
+            "He forgot to do his homework",
+            "She forgot to do her homework"
+        ],
+        "correctOption": "I forgot to do my homework"
+    },
+    {
+        "title": "Escuchar y completar con la opción correcta",
+        "type": "listen",
+        "sentence": "This year, the course will run for seven weeks",
+        "options": [
+            "This year, the course will run for six weeks",
+            "This year, the course will run for seven weeks",
+            "This year, the course will run for eight weeks",
+            "This year, the course is to supposed to run for six weeks",
+            "This year, the course will run for seven weeks",
+            "This year, the course will run for eight weeks"
+        ],
+        "correctOption": "This year, the course will run for seven weeks"
+    },
+    {
+        "title": "Escuchar y completar con la opción correcta",
+        "type": "listen",
+        "sentence": "I don’t think it’s fair to force teenagers to spend their summer holidays with eight year olds.  They shouldn’t have to feel responsible for the little ones.",
+        "options": [
+            "Los adolescentes deberan pasar su tiempo con niños de 8 años",
+            "Los adolescentes deberan pasar su tiempo con niños de 9 años",
+            "Los adolescentes son responsables por los mas pequeños",
+            "Los adolescentes no deberían pasar su tiempo con niños de 8 años ya que hay mucha diferencia de edad",
+            "Los adolescentes deberían pasar su tiempo con niños de 8 años porque hay que enseñarles",
+            "Los adolescentes no deberían pasar su tiempo con niños de 8 años ya que no son responsables por los mas pequeños"
+        ],
+        "correctOption": "Los adolescentes no deberían pasar su tiempo con niños de 8 años ya que no son responsables por los mas pequeños"
+    },
+    {
+        "title": "Escuchar y completar con la opción correcta",
+        "type": "listen",
+        "sentence": "It is important for children to play a sport so they can have some physical activity and make friends",
+        "options": [
+            "Los chicos deberían hacer un deporte para tener actividad fisica y hacer amigos",
+            "Los chicos deberían hacer un deporte porque es importante para la salud",
+            "Los chicos no deberían hacer un deporte por la actividad fisica y las amistades",
+            "Los chicos deberían hacer un deporte porque no se pueden quedar en su casa todo el dia",
+            "Los chicos deberían hacer un deporte porque los hace sentir mejor",
+            "Los chicos deberían hacer un deporte para que los padres puedan hacer otras actividades"
+        ],
+        "correctOption": "Los chicos deberían hacer un deporte para tener actividad fisica y hacer amigos"
+    },
+    {
+        "title": "Escuchar y completar con la opción correcta",
+        "type": "listen",
+        "sentence": "Children should not spend so much time playing videogames",
+        "options": [
+            "Esta prohibido que los chicos jueguen a videojuegos",
+            "Es poco recomendable que los chicos jueguen a videojuegos",
+            "Los chicos no quieren jugar a los videojuegos",
+            "Los chicos deberían estar estudiando en vez de estar con videojuegos",
+            "Los chicos no deberían pasar demasiado tiempo con los videojuegos",
+            "Los chicos deberían estar haciendo deporte en vez de estar con videojuegos"
+        ],
+        "correctOption": "Los chicos no deberían pasar demasiado tiempo con los videojuegos"
+    },
+    {
+        "title": "Escuchar y completar con la opción correcta",
+        "type": "listen",
+        "sentence": "We have never received a boy from England in our school, you're the first one.",
+        "options": [
+            "Él es el primer chico de Inglaterra en ser recibido por la escuela",
+            "Ella es el primera chica de Inglaterra en ser recibida por la escuela",
+            "No querían recibir chicos de otros paises",
+            "Los otros chicos de inglaterra no querían ir a esa escuela",
+            "Es la unica vez que se recibe a alguien de Inglaterra en esta escuela",
+            "Ya habían recibido otros chicos de Inglaterra en la escuela"
+        ],
+        "correctOption": "Él es el primer chico de Inglaterra en ser recibido por la escuela"
+    },
+    {
+        "title": "Escuchar y completar con la opción correcta",
+        "type": "listen",
+        "sentence": "This is the last holiday that they will spend together in Brasil because they were mistreated last time",
+        "options": [
+            "Irán mas veces de vacaciones a Brasil porque les gusto el trato que recibieron la ultima vez que fueron",
+            "No irán mas de vacaciones a Brasil porque ya conocen todo el país",
+            "No irán mas de vacaciones a Brasil porque se aburrieron",
+            "Irán una vez mas de vacaciones a Brasil porque les gusto el trato que recibieron la ultima vez que fueron",
+            "No irán mas de vacaciones a Brasil porque se los trato mala manera",
+            "Siempre van de vacaciones a Brasil porque les gusta como los tratan"
+        ],
+        "correctOption": "No irán mas de vacaciones a Brasil porque se los trato mala manera"
     }
 ]
