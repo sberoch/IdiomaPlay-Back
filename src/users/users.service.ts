@@ -28,13 +28,20 @@ export class UsersService {
   }
 
   async findOne(id: number) {
-    console.log(id);
     const user = await this.usersRepository.findOne(id);
     if (!user) throw new BadRequestException('No se encontro la leccion');
     return user;
   }
 
-  update(id: number, updateUserDto: UpdateUserDto) {
+  findOneWithData(id: number) {
+    return this.usersRepository
+      .createQueryBuilder('u')
+      .where('u.id = :id', { id: id })
+      .leftJoinAndSelect('u.challengeParticipation', 'challengeParticipations')
+      .getOne();
+  }
+
+  update(id: number, updateUserDto) {
     return this.usersRepository.update(id, updateUserDto);
   }
 

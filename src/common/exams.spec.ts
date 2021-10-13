@@ -35,7 +35,7 @@ describe('Exams json testing', () => {
     }
   });
 
-  it('It should have an array exercisesFromLessonsIds with lenght greater than 16', () => {
+  it('It should have an array exercisesFromLessonsIds with length greater than 16', () => {
     for (const exam of examsJson) {
         expect(exam.exercisesFromLessonsIds.length).toBeGreaterThanOrEqual(16);
     }

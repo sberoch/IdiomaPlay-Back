@@ -47,7 +47,6 @@ export class UnitsService {
     return unit;
   }
 
-  //TODO: arreglar la unidad 1 que no devuelve todos los elementos.
   findOneWithLessonsAndExam(id: number) {
     return this.unitsRepository
       .createQueryBuilder('u')

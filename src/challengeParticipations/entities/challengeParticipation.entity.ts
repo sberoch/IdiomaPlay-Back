@@ -1,0 +1,28 @@
+import {
+  Entity,
+  ManyToOne,
+  OneToOne,
+  PrimaryGeneratedColumn,
+} from 'typeorm';
+import { Challenge } from '../../challenges/entities/challenge.entity';
+import { User } from '../../users/entities/user.entity';
+
+@Entity()
+export class ChallengeParticipation {
+  @PrimaryGeneratedColumn()
+  id: number;
+
+  @OneToOne(() => User, (user) => user.challengeParticipation, {
+    eager: true,
+  })
+  user: User;
+
+  @ManyToOne(() => Challenge, (challenge) => challenge.challengeParticipations, {
+    eager: true,
+  })
+  challenge: Challenge;
+
+  constructor(data: Partial<ChallengeParticipation> = {}) {
+    Object.assign(this, data);
+  }
+}

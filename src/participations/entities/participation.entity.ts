@@ -11,6 +11,7 @@ import { Exam } from '../../exams/entities/exam.entity';
 import { Lesson } from '../../lessons/entities/lesson.entity';
 import { Unit } from '../../units/entities/unit.entity';
 import { User } from '../../users/entities/user.entity';
+import { Challenge } from '../../challenges/entities/challenge.entity';
 
 @Entity()
 export class Participation {

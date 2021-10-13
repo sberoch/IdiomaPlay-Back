@@ -1,12 +1,33 @@
 [
-    {
-        "examId": 1,
-        "title": "Completing exam",
-        "exercisesFromLessonsIds": [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21]
-    },
-    {
-        "examId": 2,
-        "title": "Another exam",
-        "exercisesFromLessonsIds": [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21]
-    }
+  {
+    "examId": 1,
+    "title": "Beginner level exam",
+    "exercisesFromLessonsIds": [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29]
+  },
+  {
+    "examId": 2,
+    "title": "Elementary level exam",
+    "exercisesFromLessonsIds": [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29]
+  },
+  {
+    "examId": 3,
+    "title": "Intermediate level exam",
+    "exercisesFromLessonsIds": [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29]
+  },
+  {
+    "examId": 4,
+    "title": "Upper-Intermediate level exam",
+    "exercisesFromLessonsIds": [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29]
+
+  },
+  {
+    "examId": 5,
+    "title": "Advanced level exam",
+    "exercisesFromLessonsIds": [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29]
+  },
+  {
+    "examId": 6,
+    "title": "Advanced level exam",
+    "exercisesFromLessonsIds": [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29]
+  }
 ]

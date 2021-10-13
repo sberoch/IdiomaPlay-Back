@@ -4,6 +4,7 @@ import * as exercisesJson from '../jsons/exercises.json';
 import * as lessonsJson from '../jsons/lessons.json';
 import * as examsJson from '../jsons/exams.json';
 import * as unitsJson from '../jsons/units.json';
+import * as challengesJson from '../jsons/challenges.json';
 import { CreateExerciseDto } from '../../exercises/dto/create-exercise.dto';
 import {
   Exercise,
@@ -22,6 +23,9 @@ import { config } from "../config";
 import { CreateExamDto } from '../../exams/dto/create-exam.dto';
 import { UnitsService } from '../../units/units.service';
 import { CreateUnitDto } from '../../units/dto/create-unit.dto';
+import { Challenge } from '../../challenges/entities/challenge.entity';
+import { ChallengesService } from '../../challenges/challenges.service';
+import { CreateChallengeDto } from '../../challenges/dto/create-challenge.dto';
 
 function getRandomExercisesForExam(exercises){
   //Shuffles the array
@@ -37,7 +41,8 @@ export class LoaderService implements OnApplicationBootstrap {
     private usersService: UsersService,
     private lessonsService: LessonsService,
     private examsService: ExamsService,
-    private unitsService: UnitsService
+    private unitsService: UnitsService,
+    private challengesService: ChallengesService
   ) {}
 
   async onApplicationBootstrap() {
@@ -55,6 +60,9 @@ export class LoaderService implements OnApplicationBootstrap {
     
     const user = await this.loadTestUser();
     console.log(`Loaded test user: ${user.email}`);
+
+    const challenges = await this.loadChallenges();
+    console.log(`Loaded ${challenges.length} units`);
   }
 
   async loadExercises(): Promise<Exercise[]> {
@@ -111,13 +119,28 @@ export class LoaderService implements OnApplicationBootstrap {
 
     const exams: Exam[] = [];
     for (const exam of examsJson) {
-      const { exercisesFromLessonsIds, ...rest} = exam;
+      const { exercisesFromLessonsIds, ...rest } = exam;
       const exercisesIds = getRandomExercisesForExam(exercisesFromLessonsIds)
       const dto: CreateExamDto = {exercisesIds, ...rest}
       const created = await this.examsService.create(dto)
       exams.push(created)
     }
     return exams;
+  }
+
+  async loadChallenges(): Promise<Challenge[]> {
+    const prevChallenges = await this.challengesService.findAll({ limit: 1000 });
+    if (prevChallenges && prevChallenges.meta.totalItems !== 0) {
+      return prevChallenges.items;
+    }
+
+    const challenges: Challenge[] = [];
+    for (const challenge of challengesJson) {
+      const dto: CreateChallengeDto = challenge as CreateChallengeDto;
+      const created = await this.challengesService.create(dto);
+      challenges.push(created);
+    }
+    return challenges;
   }
 
   //TODO: Sacar esto cuando se haga el login con google
