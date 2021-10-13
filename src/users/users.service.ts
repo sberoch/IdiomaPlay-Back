@@ -3,7 +3,6 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { paginate } from 'nestjs-typeorm-paginate';
 import { Repository } from 'typeorm';
 import { CreateUserDto } from './dto/create-user.dto';
-import { UpdateUserDto } from './dto/update-user.dto';
 import { UserParams } from './dto/user.params';
 import { User } from './entities/user.entity';
 import { buildQuery } from './users.query-builder';
@@ -41,7 +40,7 @@ export class UsersService {
       .getOne();
   }
 
-  update(id: number, updateUserDto: UpdateUserDto) {
+  update(id: number, updateUserDto) {
     return this.usersRepository.update(id, updateUserDto);
   }
 
