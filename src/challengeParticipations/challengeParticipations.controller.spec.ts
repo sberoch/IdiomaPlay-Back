@@ -9,7 +9,10 @@ describe('ChallengeParticipationController', () => {
     const module: TestingModule = await Test.createTestingModule({
       controllers: [ChallengeParticipationController],
       providers: [ChallengeParticipationService],
-    }).compile();
+    })
+    .overrideProvider(ChallengeParticipationService)
+    .useValue({})
+    .compile();
 
     controller = module.get<ChallengeParticipationController>(ChallengeParticipationController);
   });

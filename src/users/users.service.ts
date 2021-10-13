@@ -41,7 +41,7 @@ export class UsersService {
       .getOne();
   }
 
-  update(id: number, updateUserDto) {
+  update(id: number, updateUserDto: UpdateUserDto) {
     return this.usersRepository.update(id, updateUserDto);
   }
 

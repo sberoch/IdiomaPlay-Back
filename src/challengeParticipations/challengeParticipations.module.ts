@@ -9,6 +9,7 @@ import { ChallengesModule } from '../challenges/challenges.module';
 @Module({
   imports: [TypeOrmModule.forFeature([ChallengeParticipation]), UsersModule, ChallengesModule],
   controllers: [ChallengeParticipationController],
-  providers: [ChallengeParticipationService]
+  providers: [ChallengeParticipationService],
+  exports: [ChallengeParticipationService]
 })
 export class ChallengeParticipationModule {}
