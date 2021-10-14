@@ -32,7 +32,6 @@ export class ChallengeParticipationService {
     return this.challengeParticipationsRepository.save(new ChallengeParticipation({ user, challenge, ...rest }));
   }
 
-  //TODO: ver porque devuelve la información de la challenge pero no del usuario
   findAll(params: ChallengeParticipationParams): Promise<Pagination<ChallengeParticipation>> {
     const { paginationOptions, findOptions, orderOptions } = buildQuery(params);
     return paginate<ChallengeParticipation>(this.challengeParticipationsRepository, paginationOptions, {
@@ -65,12 +64,6 @@ export class ChallengeParticipationService {
     if (!user) throw new BadRequestException('El usuario no existe');
 
     await this.usersService.update(userId, { challengeParticipation: null })
-
-    const { challengeParticipation } = user 
-
-    if (challengeParticipation) {
-      await this.challengeParticipationsRepository.delete(challengeParticipation.id);
-    }
   }
 
   async removeAll(): Promise<void> {

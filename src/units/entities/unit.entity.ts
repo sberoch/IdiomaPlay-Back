@@ -32,7 +32,16 @@ export class Unit {
   participations: Participation[];
 
   @ManyToOne(() => Challenge, (challenge) => challenge.units)
-  challenges: Challenge[];
+  challenge: Challenge;
+
+  public isPassedByUser(userId: number): boolean {
+    for (const participation of this.participations) {
+      if (participation.user.id === userId && participation.exam && participation.isPassed) {
+        return true;
+      }
+    }
+    return false;
+  }
 
   constructor(data: Partial<Unit> = {}) {
     Object.assign(this, data);
