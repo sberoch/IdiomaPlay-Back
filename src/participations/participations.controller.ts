@@ -34,13 +34,13 @@ export class ParticipationsController {
     if (query.withPassedLessons === 'true') {
       return this.participationsService.findPassedLessons(query);
     }
-    return this.participationsService.findAll(query);
+    return this.participationsService.findAllWithData();
   }
 
   @ApiOkResponse()
   @Get(':id')
   findOne(@Param('id') id: string) {
-    return this.participationsService.findOne(+id);
+    return this.participationsService.findOneWithData(+id);
   }
 
   @ApiOkResponse()

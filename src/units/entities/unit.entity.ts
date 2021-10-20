@@ -28,20 +28,11 @@ export class Unit {
   @JoinColumn()
   exam: Exam;
 
-  @OneToMany(() => Participation, (participation) => participation.unit)
+  @OneToMany(() => Participation, (participation) => participation.unit, {})
   participations: Participation[];
 
   @ManyToOne(() => Challenge, (challenge) => challenge.units)
   challenge: Challenge;
-
-  public isPassedByUser(userId: number): boolean {
-    for (const participation of this.participations) {
-      if (participation.user.id === userId && participation.exam && participation.isPassed) {
-        return true;
-      }
-    }
-    return false;
-  }
 
   constructor(data: Partial<Unit> = {}) {
     Object.assign(this, data);

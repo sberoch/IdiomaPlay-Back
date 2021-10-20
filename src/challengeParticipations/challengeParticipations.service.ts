@@ -32,28 +32,26 @@ export class ChallengeParticipationService {
     return this.challengeParticipationsRepository.save(new ChallengeParticipation({ user, challenge, ...rest }));
   }
 
-  findAll(params: ChallengeParticipationParams): Promise<Pagination<ChallengeParticipation>> {
+  async findAll(params: ChallengeParticipationParams): Promise<ChallengeParticipation[]> {
     const { paginationOptions, findOptions, orderOptions } = buildQuery(params);
-    return paginate<ChallengeParticipation>(this.challengeParticipationsRepository, paginationOptions, {
+    const result = await paginate<ChallengeParticipation>(this.challengeParticipationsRepository, paginationOptions, {
       where: findOptions,
       order: orderOptions,
     });
+
+    const challengeParticipations = result.items;
+    for (const challengeParticipation of challengeParticipations) {
+      const { challenge, user } = challengeParticipation
+      challengeParticipation.isPassed = await this.challengesService.isChallengePassedByUser(challenge.id, user.id)
+    }
+    return challengeParticipations
   }
 
   async findOne(id: number) {
     const challengeParticipation = await this.challengeParticipationsRepository.findOne(id);
-    if (!challengeParticipation) throw new BadRequestException('No se encontro la leccion');
+    if (!challengeParticipation) throw new BadRequestException('No se encontro la challenge participation');
     return challengeParticipation;
   }
-
-  // findOneWithLessonsAndExam(id: number) {
-  //   return this.challengeParticipationsRepository
-  //     .createQueryBuilder('u')
-  //     .where('u.id = :id', { id: id })
-  //     .leftJoinAndSelect('u.lessons', 'lessons')
-  //     .leftJoinAndSelect('u.exam', 'exams')
-  //     .getOne();
-  // }
 
   async remove(id: number): Promise<void> {
     await this.challengeParticipationsRepository.delete(id);
@@ -62,7 +60,6 @@ export class ChallengeParticipationService {
   async removeByUserId(userId: number): Promise<void> {
     const user = await this.usersService.findOneWithData(userId)
     if (!user) throw new BadRequestException('El usuario no existe');
-
     await this.usersService.update(userId, { challengeParticipation: null })
   }
 

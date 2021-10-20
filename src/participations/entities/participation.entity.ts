@@ -11,7 +11,6 @@ import { Exam } from '../../exams/entities/exam.entity';
 import { Lesson } from '../../lessons/entities/lesson.entity';
 import { Unit } from '../../units/entities/unit.entity';
 import { User } from '../../users/entities/user.entity';
-import { Challenge } from '../../challenges/entities/challenge.entity';
 
 @Entity()
 export class Participation {
@@ -24,23 +23,25 @@ export class Participation {
   @Column({ default: 0 })
   correctExercises: number;
 
-  @ManyToOne(() => User, (user) => user.participations, { eager: true })
+  @ManyToOne(() => User, (user) => user.participations, {
+    eager: true
+  })
   user: User;
 
   @ManyToOne(() => Unit, (unit) => unit.participations, {
-    eager: true,
+    eager: true
   })
   unit: Unit;
 
   @ManyToOne(() => Exam, (exam) => exam.participations, {
-    nullable: true,
     eager: true,
+    nullable: true,
   })
   exam: Exam;
 
   @ManyToOne(() => Lesson, (lesson) => lesson.participations, {
-    nullable: true,
     eager: true,
+    nullable: true,
   })
   lesson: Lesson;
 

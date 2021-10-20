@@ -44,7 +44,7 @@ export class ChallengesService {
     return challenge;
   }
 
-  findOneWithUnits(id: number) {
+  async findOneWithUnits(id: number) {
     return this.challengeRepository
       .createQueryBuilder('c')
       .where('c.id = :id', { id: id })
@@ -54,6 +54,17 @@ export class ChallengesService {
 
   update(id: number, updateChallengeDto: UpdateChallengeDto) {
     return this.challengeRepository.update(id, updateChallengeDto);
+  }
+
+  async isChallengePassedByUser(challengeId: number, userId: number): Promise<Boolean> {
+    const challenge = await this.findOneWithUnits(challengeId);
+    for (const unit of challenge.units) {
+      const isUnitPassedByUser = await this.unitsService.isUnitPassedByUser(unit.id, userId)
+      if (!isUnitPassedByUser) {
+        return false;
+      }
+    }
+    return true;
   }
 
   async remove(id: number): Promise<void> {
