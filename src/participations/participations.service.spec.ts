@@ -11,7 +11,7 @@ import { UsersService } from '../users/users.service';
 import { CreateParticipationDto } from './dto/create-participation.dto';
 import { Participation } from './entities/participation.entity';
 import { ParticipationsService } from './participations.service';
-import { config } from '../common/config'
+import { config } from '../common/config';
 
 describe('ParticipationsService', () => {
   let service: ParticipationsService;
@@ -21,34 +21,49 @@ describe('ParticipationsService', () => {
     userId: 1,
     unitId: 1,
     lessonId: 1,
-    examId: null
+    examId: null,
+    correctExercises: 0,
   };
 
   const examDto: CreateParticipationDto = {
     userId: 1,
     unitId: 1,
     lessonId: null,
-    examId: 1
+    examId: 1,
+    correctExercises: 0,
   };
 
   const mockRepository = {
+    createQueryBuilder: jest.fn(() => ({
+      leftJoin: jest.fn().mockReturnThis(),
+      where: jest.fn().mockReturnThis(),
+      andWhere: jest.fn().mockReturnThis(),
+      leftJoinAndSelect: jest.fn().mockReturnThis(),
+      getCount: jest.fn().mockResolvedValue(0),
+    })),
     save: jest.fn().mockImplementation((dto) => {
-      const participation = new Participation({ id: 1, ...dto })
-      participations.push(participation)
+      const participation = new Participation({ id: 1, ...dto });
+      participations.push(participation);
       return participation;
     }),
     findOne: jest.fn().mockImplementation((id) => {
-      return participations.find((actualParticipation) => actualParticipation.id === id);
+      return participations.find(
+        (actualParticipation) => actualParticipation.id === id,
+      );
     }),
     find: jest.fn().mockImplementation(() => {
       return participations;
     }),
     delete: jest.fn().mockImplementation((id) => {
-      participations = participations.filter((actualParticipation) => actualParticipation.id !== id)
+      participations = participations.filter(
+        (actualParticipation) => actualParticipation.id !== id,
+      );
     }),
     remove: jest.fn().mockImplementation((_participations) => {
       for (const actualParticipation of _participations) {
-        participations = participations.filter((_participation) => _participation !== actualParticipation);
+        participations = participations.filter(
+          (_participation) => _participation !== actualParticipation,
+        );
       }
     }),
   };
@@ -70,32 +85,32 @@ describe('ParticipationsService', () => {
       .overrideProvider(UsersService)
       .useValue({
         findOne: (userId) => {
-          return new User({ id: userId })
+          return new User({ id: userId });
         },
       })
       .overrideProvider(UnitsService)
       .useValue({
         findOne: (unitId) => {
-          return new Unit({ id: unitId })
+          return new Unit({ id: unitId });
         },
       })
       .overrideProvider(ExamsService)
       .useValue({
         findOne: (examId) => {
-          return new Exam({ id: examId })
+          return new Exam({ id: examId });
         },
         findOneWithExercises: (lessonId) => {
-          return new Exam({ id: lessonId, exercises: [] })
-        }
+          return new Exam({ id: lessonId, exercises: [] });
+        },
       })
       .overrideProvider(LessonsService)
       .useValue({
         findOne: (lessonId) => {
-          return new Lesson({ id: lessonId })
+          return new Lesson({ id: lessonId });
         },
         findOneWithExercises: (lessonId) => {
-          return new Lesson({ id: lessonId, exercises: [] })
-        }
+          return new Lesson({ id: lessonId, exercises: [] });
+        },
       })
       .compile();
 
@@ -110,12 +125,12 @@ describe('ParticipationsService', () => {
     const expected: Participation = new Participation({
       id: 1,
       user: new User({ id: 1 }),
-      unit: new Unit({ id:1 }),
+      unit: new Unit({ id: 1 }),
       lesson: new Lesson({ id: 1, exercises: [] }),
-      exam: undefined,
-      totalExercises: config.amountOfExercisesPerLesson
-    })
-    const created = await service.create(lessonDto) 
+      totalExercises: config.amountOfExercisesPerLesson,
+      correctExercises: 0,
+    });
+    const created = await service.create(lessonDto);
     expect(created).toEqual(expected);
   });
 
@@ -123,12 +138,12 @@ describe('ParticipationsService', () => {
     const expected: Participation = new Participation({
       id: 1,
       user: new User({ id: 1 }),
-      unit: new Unit({ id:1 }),
-      lesson: undefined,
-      exam: new Exam({ id: 1, exercises: []}),
-      totalExercises: config.amountOfExercisesPerExam
-    })
-    const created = await service.create(examDto) 
+      unit: new Unit({ id: 1 }),
+      exam: new Exam({ id: 1, exercises: [] }),
+      totalExercises: config.amountOfExercisesPerExam,
+      correctExercises: 0,
+    });
+    const created = await service.create(examDto);
     expect(created).toEqual(expected);
   });
 

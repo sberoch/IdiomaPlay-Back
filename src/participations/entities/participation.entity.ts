@@ -24,12 +24,12 @@ export class Participation {
   correctExercises: number;
 
   @ManyToOne(() => User, (user) => user.participations, {
-    eager: true
+    eager: true,
   })
   user: User;
 
   @ManyToOne(() => Unit, (unit) => unit.participations, {
-    eager: true
+    eager: true,
   })
   unit: Unit;
 
@@ -52,7 +52,7 @@ export class Participation {
   updatedAt: Date;
 
   @Column({ default: true })
-  isUnitPassed: Boolean;
+  isUnitPassed: boolean;
 
   public get isPassed(): boolean {
     return (

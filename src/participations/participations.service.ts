@@ -140,7 +140,7 @@ export class ParticipationsService {
       .leftJoinAndSelect('p.user', 'users')
       .getMany();
   }
-  
+
   async countFailedExamAttempts(user: User, unit: Unit): Promise<number> {
     return this.participationsRepository
       .createQueryBuilder('p')
