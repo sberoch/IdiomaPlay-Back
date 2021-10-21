@@ -47,7 +47,6 @@ export class UnitsService {
     return unit;
   }
 
-  //TODO: arreglar la unidad 1 que no devuelve todos los elementos.
   findOneWithLessonsAndExam(id: number) {
     return this.unitsRepository
       .createQueryBuilder('u')
@@ -55,6 +54,33 @@ export class UnitsService {
       .leftJoinAndSelect('u.lessons', 'lessons')
       .leftJoinAndSelect('u.exam', 'exams')
       .getOne();
+  }
+
+  async findOneWithExamTriedInUnit(unitId: number, userId: number) {
+    return this.unitsRepository
+    .createQueryBuilder('u')
+    .where('u.id = :id', { unitId })
+    .leftJoinAndSelect('u.lessons', 'lessons')
+    .leftJoinAndSelect('u.exam', 'exams')
+    .leftJoinAndSelect('u.participations', 'participations')
+    .where('participations.user.id = :userId', { userId })
+    .andWhere('participations.exam.id = u.exam')
+    .andWhere('participations.unit.id = :unitId', { unitId })
+    .getOne();
+  }
+
+  async isUnitPassedByUser(unitId: number, userId: number): Promise<Boolean> {
+    const unit = await this.findOneWithExamTriedInUnit(unitId, userId)
+    
+    // If participations for unit exam where found for "userId"
+    if (unit) {
+      for (const participation of unit.participations) {
+        if (participation.isPassed) {
+          return true;
+        }
+      }
+    }
+    return false;
   }
 
   update(id: number, updateUnitDto: UpdateUnitDto) {

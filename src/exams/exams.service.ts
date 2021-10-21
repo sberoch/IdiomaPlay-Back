@@ -58,8 +58,6 @@ export class ExamsService {
     return exam;
   }
 
-
-  //TODO: Cambiar el query builder por un find one
   async findOneWithExercises(id: number) {
     const exam = await this.examsRepository
       .createQueryBuilder('e')

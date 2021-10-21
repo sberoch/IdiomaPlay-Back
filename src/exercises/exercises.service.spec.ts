@@ -18,7 +18,7 @@ describe('ExercisesService', () => {
       return exercises;
     }),
     delete: jest.fn().mockImplementation((id) => {
-      exercises = exercises.splice(id, 1);
+      exercises = exercises.filter((actualExercise) => actualExercise.id !== id)
     }),
     remove: jest.fn().mockImplementation((_exercises) => {
       for (const ex of _exercises) {

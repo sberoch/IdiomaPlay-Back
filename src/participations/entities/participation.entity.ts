@@ -23,23 +23,25 @@ export class Participation {
   @Column({ default: 0 })
   correctExercises: number;
 
-  @ManyToOne(() => User, (user) => user.participations, { eager: true })
+  @ManyToOne(() => User, (user) => user.participations, {
+    eager: true
+  })
   user: User;
 
   @ManyToOne(() => Unit, (unit) => unit.participations, {
-    eager: true,
+    eager: true
   })
   unit: Unit;
 
   @ManyToOne(() => Exam, (exam) => exam.participations, {
-    nullable: true,
     eager: true,
+    nullable: true,
   })
   exam: Exam;
 
   @ManyToOne(() => Lesson, (lesson) => lesson.participations, {
-    nullable: true,
     eager: true,
+    nullable: true,
   })
   lesson: Lesson;
 
@@ -48,6 +50,9 @@ export class Participation {
 
   @UpdateDateColumn()
   updatedAt: Date;
+
+  @Column({ default: true })
+  isUnitPassed: Boolean;
 
   public get isPassed(): boolean {
     return this.correctExercises / (this.totalExercises * 1.0) >= config.passingPercentage;

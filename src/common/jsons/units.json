@@ -1,12 +1,22 @@
 [
-    {
-        "title": "Listen and translate",
-        "lessonsIds": [4, 5, 6],
-        "examId": 1
-    },
-    {
-        "title": "Complete and translate",
-        "lessonsIds": [1, 2, 3],
-        "examId": 2
-    }
+  {
+    "title": "Listen and translate - Beginner",
+    "lessonsIds": [4, 5, 6],
+    "examId": 1
+  },
+  {
+    "title": "Complete and translate - Beginner",
+    "lessonsIds": [1, 2, 3],
+    "examId": 2
+  },
+  {
+    "title": "Listen and translate - Intermediate",
+    "lessonsIds": [7, 8, 9],
+    "examId": 3
+  },
+  {
+    "title": "Complete and translate - Intermediate",
+    "lessonsIds": [10, 11, 12],
+    "examId": 4
+  }
 ]

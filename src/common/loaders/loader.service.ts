@@ -4,6 +4,7 @@ import * as exercisesJson from '../jsons/exercises.json';
 import * as lessonsJson from '../jsons/lessons.json';
 import * as examsJson from '../jsons/exams.json';
 import * as unitsJson from '../jsons/units.json';
+import * as challengesJson from '../jsons/challenges.json';
 import { CreateExerciseDto } from '../../exercises/dto/create-exercise.dto';
 import {
   Exercise,
@@ -22,6 +23,9 @@ import { config } from "../config";
 import { CreateExamDto } from '../../exams/dto/create-exam.dto';
 import { UnitsService } from '../../units/units.service';
 import { CreateUnitDto } from '../../units/dto/create-unit.dto';
+import { Challenge } from '../../challenges/entities/challenge.entity';
+import { ChallengesService } from '../../challenges/challenges.service';
+import { CreateChallengeDto } from '../../challenges/dto/create-challenge.dto';
 
 function getRandomExercisesForExam(exercises){
   //Shuffles the array
@@ -37,7 +41,8 @@ export class LoaderService implements OnApplicationBootstrap {
     private usersService: UsersService,
     private lessonsService: LessonsService,
     private examsService: ExamsService,
-    private unitsService: UnitsService
+    private unitsService: UnitsService,
+    private challengesService: ChallengesService
   ) {}
 
   async onApplicationBootstrap() {
@@ -53,8 +58,11 @@ export class LoaderService implements OnApplicationBootstrap {
     const units = await this.loadUnits();
     console.log(`Loaded ${units.length} units`)
     
-    const user = await this.loadTestUser();
-    console.log(`Loaded test user: ${user.email}`);
+    const users = await this.loadTestUser();
+    console.log(`Loaded ${users.length} users`);
+
+    const challenges = await this.loadChallenges();
+    console.log(`Loaded ${challenges.length} challenges`);
   }
 
   async loadExercises(): Promise<Exercise[]> {
@@ -111,7 +119,7 @@ export class LoaderService implements OnApplicationBootstrap {
 
     const exams: Exam[] = [];
     for (const exam of examsJson) {
-      const { exercisesFromLessonsIds, ...rest} = exam;
+      const { exercisesFromLessonsIds, ...rest } = exam;
       const exercisesIds = getRandomExercisesForExam(exercisesFromLessonsIds)
       const dto: CreateExamDto = {exercisesIds, ...rest}
       const created = await this.examsService.create(dto)
@@ -120,14 +128,32 @@ export class LoaderService implements OnApplicationBootstrap {
     return exams;
   }
 
-  //TODO: Sacar esto cuando se haga el login con google
-  async loadTestUser(): Promise<User> {
-    const prev = await this.usersService.findAll({});
-    if (prev && prev.meta.totalItems !== 0) {
-      return prev.items[0];
+  async loadChallenges(): Promise<Challenge[]> {
+    const prevChallenges = await this.challengesService.findAll({ limit: 1000 });
+    if (prevChallenges && prevChallenges.meta.totalItems !== 0) {
+      return prevChallenges.items;
     }
-    const dto: CreateUserDto = { email: 'test@test.com' };
-    const user = await this.usersService.create(dto);
-    return user;
+
+    const challenges: Challenge[] = [];
+    for (const challenge of challengesJson) {
+      const dto: CreateChallengeDto = challenge as CreateChallengeDto;
+      const created = await this.challengesService.create(dto);
+      challenges.push(created);
+    }
+    return challenges;
+  }
+
+  //TODO: Sacar esto cuando se haga el login con google
+  async loadTestUser(): Promise<User[]> {
+    const prev = await this.usersService.findAll({ limit: 1000 });
+    if (prev && prev.meta.totalItems !== 0) {
+      return prev.items;
+    }
+    const dto1: CreateUserDto = { email: 'test1@test.com' };
+    const user1 = await this.usersService.create(dto1);
+    const dto2: CreateUserDto = { email: 'test2@test.com' };
+    const user2 = await this.usersService.create(dto2);
+    const users = [user1, user2]
+    return users;
   }
 }

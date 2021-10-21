@@ -11,6 +11,8 @@ import { ExamsModule } from './exams/exams.module';
 import { LoaderModule } from './common/loaders/loader.module';
 import { UsersModule } from './users/users.module';
 import { ParticipationsModule } from './participations/participations.module';
+import { ChallengesModule } from './challenges/challenges.module';
+import { ChallengeParticipationModule } from './challengeParticipations/challengeParticipations.module';
 
 @Module({
   imports: [
@@ -22,6 +24,8 @@ import { ParticipationsModule } from './participations/participations.module';
     LoaderModule,
     UsersModule,
     ParticipationsModule,
+    ChallengesModule,
+    ChallengeParticipationModule,
   ],
   controllers: [AppController],
   providers: [AppService],

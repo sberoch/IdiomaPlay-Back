@@ -2,10 +2,13 @@ import {
   Column,
   Entity,
   JoinColumn,
+  ManyToMany,
+  ManyToOne,
   OneToMany,
   OneToOne,
   PrimaryGeneratedColumn,
 } from 'typeorm';
+import { Challenge } from '../../challenges/entities/challenge.entity';
 import { Exam } from '../../exams/entities/exam.entity';
 import { Lesson } from '../../lessons/entities/lesson.entity';
 import { Participation } from '../../participations/entities/participation.entity';
@@ -25,8 +28,11 @@ export class Unit {
   @JoinColumn()
   exam: Exam;
 
-  @OneToMany(() => Participation, (participation) => participation.unit)
+  @OneToMany(() => Participation, (participation) => participation.unit, {})
   participations: Participation[];
+
+  @ManyToOne(() => Challenge, (challenge) => challenge.units)
+  challenge: Challenge;
 
   constructor(data: Partial<Unit> = {}) {
     Object.assign(this, data);

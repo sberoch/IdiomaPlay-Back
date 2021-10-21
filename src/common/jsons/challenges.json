@@ -1,0 +1,12 @@
+[
+  {
+      "challengeId": 1,
+      "title": "Aprendiendo lo básico del inglés - Beginner",
+      "unitsIds": [1, 2]
+  },
+  {
+      "challengeId": 2,
+      "title": "Exercises to solidify your knowledge - Intermediate",
+      "unitsIds": [3, 4]
+  }
+]

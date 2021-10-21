@@ -97,6 +97,8 @@ export class ParticipationsService {
       .getMany();
   }
 
+  // Devuelvo solo el isUnitPassed en los examenes
+
   findAll(params: ParticipationParams) {
     const { paginationOptions, findOptions, orderOptions } = buildQuery(params);
     return paginate<Participation>(
@@ -109,10 +111,31 @@ export class ParticipationsService {
     );
   }
 
+  findAllWithData() {
+    return this.participationsRepository
+      .createQueryBuilder('p')
+      .leftJoinAndSelect('p.lesson', 'lessons')
+      .leftJoinAndSelect('p.exam', 'exams')
+      .leftJoinAndSelect('p.unit', 'units')
+      .leftJoinAndSelect('p.user', 'users')
+      .getMany();
+  }
+
   async findOne(id: number) {
     const lesson = await this.participationsRepository.findOne(id);
     if (!lesson) throw new BadRequestException('No se encontro la leccion');
     return lesson;
+  }
+
+  async findOneWithData(id: number) {
+    return this.participationsRepository
+      .createQueryBuilder('p')
+      .where('p.id = :id', { id: id })
+      .leftJoinAndSelect('p.lesson', 'lessons')
+      .leftJoinAndSelect('p.exam', 'exams')
+      .leftJoinAndSelect('p.unit', 'units')
+      .leftJoinAndSelect('p.user', 'users')
+      .getOne();
   }
 
   update(id: number, updateParticipationDto: UpdateParticipationDto) {

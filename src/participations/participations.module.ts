@@ -18,5 +18,6 @@ import { UnitsModule } from '../units/units.module';
   ],
   controllers: [ParticipationsController],
   providers: [ParticipationsService],
+  exports: [ParticipationsService]
 })
 export class ParticipationsModule {}
