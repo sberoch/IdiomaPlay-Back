@@ -62,7 +62,7 @@ export class LoaderService implements OnApplicationBootstrap {
     console.log(`Loaded ${users.length} users`);
 
     const challenges = await this.loadChallenges();
-    console.log(`Loaded ${challenges.length} units`);
+    console.log(`Loaded ${challenges.length} challenges`);
   }
 
   async loadExercises(): Promise<Exercise[]> {

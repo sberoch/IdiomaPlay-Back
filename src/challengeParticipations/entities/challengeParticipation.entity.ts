@@ -31,7 +31,7 @@ export class ChallengeParticipation {
   @UpdateDateColumn()
   updatedAt: Date;
 
-  @Column({ default: true })
+  @Column({ default: false })
   isPassed: Boolean;
 
   constructor(data: Partial<ChallengeParticipation> = {}) {

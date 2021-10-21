@@ -32,7 +32,7 @@ export class ChallengeParticipationService {
     return this.challengeParticipationsRepository.save(new ChallengeParticipation({ user, challenge, ...rest }));
   }
 
-  async findAll(params: ChallengeParticipationParams): Promise<ChallengeParticipation[]> {
+  async findAll(params: ChallengeParticipationParams) {
     const { paginationOptions, findOptions, orderOptions } = buildQuery(params);
     const result = await paginate<ChallengeParticipation>(this.challengeParticipationsRepository, paginationOptions, {
       where: findOptions,
@@ -44,7 +44,7 @@ export class ChallengeParticipationService {
       const { challenge, user } = challengeParticipation
       challengeParticipation.isPassed = await this.challengesService.isChallengePassedByUser(challenge.id, user.id)
     }
-    return challengeParticipations
+    return { items: challengeParticipations, meta: result.meta}
   }
 
   async findOne(id: number) {

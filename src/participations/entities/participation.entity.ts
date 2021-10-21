@@ -51,6 +51,9 @@ export class Participation {
   @UpdateDateColumn()
   updatedAt: Date;
 
+  @Column({ default: true })
+  isUnitPassed: Boolean;
+
   public get isPassed(): boolean {
     return this.correctExercises / (this.totalExercises * 1.0) >= config.passingPercentage;
   }

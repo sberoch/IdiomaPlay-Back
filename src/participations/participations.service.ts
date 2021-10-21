@@ -97,6 +97,8 @@ export class ParticipationsService {
       .getMany();
   }
 
+  // Devuelvo solo el isUnitPassed en los examenes
+
   findAll(params: ParticipationParams) {
     const { paginationOptions, findOptions, orderOptions } = buildQuery(params);
     return paginate<Participation>(
