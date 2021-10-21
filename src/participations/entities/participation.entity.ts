@@ -55,7 +55,10 @@ export class Participation {
   isUnitPassed: Boolean;
 
   public get isPassed(): boolean {
-    return this.correctExercises / (this.totalExercises * 1.0) >= config.passingPercentage;
+    return (
+      this.correctExercises / (this.totalExercises * 1.0) >=
+      config.passingPercentage
+    );
   }
 
   constructor(data: Partial<Participation> = {}) {

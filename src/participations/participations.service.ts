@@ -7,7 +7,9 @@ import { Exam } from '../exams/entities/exam.entity';
 import { ExamsService } from '../exams/exams.service';
 import { Lesson } from '../lessons/entities/lesson.entity';
 import { LessonsService } from '../lessons/lessons.service';
+import { Unit } from '../units/entities/unit.entity';
 import { UnitsService } from '../units/units.service';
+import { User } from '../users/entities/user.entity';
 import { UsersService } from '../users/users.service';
 import { CreateParticipationDto } from './dto/create-participation.dto';
 import { ParticipationParams } from './dto/participation.params';
@@ -42,15 +44,33 @@ export class ParticipationsService {
     if (lessonId) {
       lesson = await this.lessonsService.findOneWithExercises(lessonId);
       totalExercises = config.amountOfExercisesPerLesson;
+
+      return this.participationsRepository.save(
+        new Participation({ user, lesson, totalExercises, unit, ...rest }),
+      );
     }
     let exam: Exam;
     if (examId) {
       exam = await this.examsService.findOneWithExercises(examId);
+
       totalExercises = config.amountOfExercisesPerExam;
+      console.log('here');
+      const examAttempts = await this.countFailedExamAttempts(user, unit);
+      console.log(examAttempts);
+      const newParticipation = new Participation({
+        user,
+        exam,
+        totalExercises,
+        unit,
+        ...rest,
+      });
+      console.log({ asd: !newParticipation.isPassed && examAttempts >= 2 });
+      if (!newParticipation.isPassed && examAttempts >= 2) {
+        await this.removeMany(user, unit);
+      } else {
+        return this.participationsRepository.save(newParticipation);
+      }
     }
-    return this.participationsRepository.save(
-      new Participation({ user, lesson, exam, totalExercises, unit, ...rest }),
-    );
   }
 
   /**
@@ -91,9 +111,9 @@ export class ParticipationsService {
       .leftJoin('p.unit', 'unit')
       .where('unit.id = :unitId', { unitId })
       .leftJoin('p.user', 'user')
-      .where('user.id = :userId', { userId })
+      .andWhere('user.id = :userId', { userId })
       .leftJoinAndSelect('p.lesson', 'lesson')
-      .where('lesson is not null')
+      .andWhere('lesson is not null')
       .getMany();
   }
 
@@ -120,6 +140,21 @@ export class ParticipationsService {
       .leftJoinAndSelect('p.user', 'users')
       .getMany();
   }
+  
+  async countFailedExamAttempts(user: User, unit: Unit): Promise<number> {
+    return this.participationsRepository
+      .createQueryBuilder('p')
+      .leftJoin('p.unit', 'unit')
+      .where('unit.id = :unitId', { unitId: unit.id })
+      .leftJoin('p.user', 'user')
+      .andWhere('user.id = :userId', { userId: user.id })
+      .leftJoinAndSelect('p.lesson', 'lesson')
+      .andWhere('lesson is null')
+      .andWhere('p.correctExercises * 100 < p.totalExercises * :passAmount', {
+        passAmount: +config.passingPercentage * 100, //No puedo usar isPassed ni floats. Esto lo arreglo rapido
+      })
+      .getCount();
+  }
 
   async findOne(id: number) {
     const lesson = await this.participationsRepository.findOne(id);
@@ -144,6 +179,13 @@ export class ParticipationsService {
 
   async remove(id: number): Promise<void> {
     await this.participationsRepository.delete(id);
+  }
+
+  async removeMany(user: User, unit: Unit) {
+    this.participationsRepository.delete({
+      unit,
+      user,
+    });
   }
 
   async removeAll(): Promise<void> {
