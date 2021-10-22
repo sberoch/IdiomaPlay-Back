@@ -173,7 +173,7 @@ export class ParticipationsService {
       return this.participationsRepository.update(id, {
         correctExercises: dto.correctExercises,
       });
-    } else if (this.shouldAddExamPoints(dto)) {
+    } else if (this.shouldAddExamPoints(dto, participation)) {
       await this.usersService.addExamPoints(dto.userId);
       return this.participationsRepository.update(id, {
         correctExercises: dto.correctExercises,
@@ -198,12 +198,17 @@ export class ParticipationsService {
     await this.participationsRepository.remove(lessons);
   }
 
-  private shouldAddExamPoints(dto: UpdateParticipationDto) {
+  private shouldAddExamPoints(
+    dto: UpdateParticipationDto,
+    participation: Participation,
+  ) {
     return (
       dto.userId &&
       dto.examId &&
       !dto.lessonId &&
       dto.correctExercises >=
+        config.amountOfExercisesPerExam * config.passingPercentage &&
+      participation.correctExercises <
         config.amountOfExercisesPerExam * config.passingPercentage
     );
   }
