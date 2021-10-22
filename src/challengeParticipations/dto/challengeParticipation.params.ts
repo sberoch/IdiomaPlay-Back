@@ -5,6 +5,6 @@ export class ChallengeParticipationParams extends PaginationParams {
   @ApiProperty({ required: false })
   userId?: number;
 
-  @ApiProperty({ required: false})
+  @ApiProperty({ required: false })
   challengeId?: number;
 }

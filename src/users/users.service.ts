@@ -2,6 +2,7 @@ import { BadRequestException, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { paginate } from 'nestjs-typeorm-paginate';
 import { Repository } from 'typeorm';
+import { config } from '../common/config';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { UserParams } from './dto/user.params';
@@ -34,15 +35,27 @@ export class UsersService {
   }
 
   findOneWithData(id: number) {
-    return this.usersRepository
-      .createQueryBuilder('u')
-      .where('u.id = :id', { id: id })
-      .leftJoinAndSelect('u.challengeParticipation', 'challengeParticipations')
-      .getOne();
+    return this.usersRepository.findOne(id, {
+      relations: ['challengeParticipation'],
+    });
   }
 
   update(id: number, updateUserDto: UpdateUserDto) {
     return this.usersRepository.update(id, updateUserDto);
+  }
+
+  async addExamPoints(id: number) {
+    console.log('added points');
+    const user = await this.findOne(id);
+    user.points += config.pointsEarnedByExam;
+    await this.usersRepository.save(user);
+  }
+
+  async addExercisePoints(id: number) {
+    console.log('added epoints');
+    const user = await this.findOne(id);
+    user.points += config.pointsEarnedByExercise;
+    await this.usersRepository.save(user);
   }
 
   async remove(id: number): Promise<void> {

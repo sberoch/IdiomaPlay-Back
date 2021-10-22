@@ -19,7 +19,7 @@ import { Exam } from '../../exams/entities/exam.entity';
 import { User } from '../../users/entities/user.entity';
 import { Unit } from '../../units/entities/unit.entity';
 import { CreateLessonDto } from '../../lessons/dto/create-lesson.dto';
-import { config } from "../config";
+import { config } from '../config';
 import { CreateExamDto } from '../../exams/dto/create-exam.dto';
 import { UnitsService } from '../../units/units.service';
 import { CreateUnitDto } from '../../units/dto/create-unit.dto';
@@ -27,7 +27,7 @@ import { Challenge } from '../../challenges/entities/challenge.entity';
 import { ChallengesService } from '../../challenges/challenges.service';
 import { CreateChallengeDto } from '../../challenges/dto/create-challenge.dto';
 
-function getRandomExercisesForExam(exercises){
+function getRandomExercisesForExam(exercises) {
   //Shuffles the array
   const shuffled = exercises.sort(() => 0.5 - Math.random());
   //Selects the first 16 elements
@@ -42,7 +42,7 @@ export class LoaderService implements OnApplicationBootstrap {
     private lessonsService: LessonsService,
     private examsService: ExamsService,
     private unitsService: UnitsService,
-    private challengesService: ChallengesService
+    private challengesService: ChallengesService,
   ) {}
 
   async onApplicationBootstrap() {
@@ -53,11 +53,11 @@ export class LoaderService implements OnApplicationBootstrap {
     console.log(`Loaded ${lessons.length} lessons`);
 
     const exams = await this.loadExams();
-    console.log(`Loaded ${exams.length} exams`)
+    console.log(`Loaded ${exams.length} exams`);
 
     const units = await this.loadUnits();
-    console.log(`Loaded ${units.length} units`)
-    
+    console.log(`Loaded ${units.length} units`);
+
     const users = await this.loadTestUser();
     console.log(`Loaded ${users.length} users`);
 
@@ -91,7 +91,7 @@ export class LoaderService implements OnApplicationBootstrap {
     for (const unit of unitsJson) {
       const dto: CreateUnitDto = unit as CreateUnitDto;
       const created = await this.unitsService.create(dto);
-      units.push(created)
+      units.push(created);
     }
     return units;
   }
@@ -120,16 +120,18 @@ export class LoaderService implements OnApplicationBootstrap {
     const exams: Exam[] = [];
     for (const exam of examsJson) {
       const { exercisesFromLessonsIds, ...rest } = exam;
-      const exercisesIds = getRandomExercisesForExam(exercisesFromLessonsIds)
-      const dto: CreateExamDto = {exercisesIds, ...rest}
-      const created = await this.examsService.create(dto)
-      exams.push(created)
+      const exercisesIds = getRandomExercisesForExam(exercisesFromLessonsIds);
+      const dto: CreateExamDto = { exercisesIds, ...rest };
+      const created = await this.examsService.create(dto);
+      exams.push(created);
     }
     return exams;
   }
 
   async loadChallenges(): Promise<Challenge[]> {
-    const prevChallenges = await this.challengesService.findAll({ limit: 1000 });
+    const prevChallenges = await this.challengesService.findAll({
+      limit: 1000,
+    });
     if (prevChallenges && prevChallenges.meta.totalItems !== 0) {
       return prevChallenges.items;
     }
@@ -153,7 +155,7 @@ export class LoaderService implements OnApplicationBootstrap {
     const user1 = await this.usersService.create(dto1);
     const dto2: CreateUserDto = { email: 'test2@test.com' };
     const user2 = await this.usersService.create(dto2);
-    const users = [user1, user2]
+    const users = [user1, user2];
     return users;
   }
 }

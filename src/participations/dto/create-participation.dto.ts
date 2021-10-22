@@ -4,11 +4,11 @@ import { IsNotEmpty } from 'class-validator';
 export class CreateParticipationDto {
   @ApiProperty({ example: 1 })
   @IsNotEmpty()
-  userId: number;
+  userId?: number;
 
   @ApiProperty({ example: 1 })
   @IsNotEmpty()
-  unitId: number;
+  unitId?: number;
 
   @ApiProperty({ example: 1, required: false })
   lessonId?: number;
@@ -17,5 +17,5 @@ export class CreateParticipationDto {
   examId?: number;
 
   @ApiProperty({ example: 1 })
-  correctExercises: number;
+  correctExercises?: number;
 }

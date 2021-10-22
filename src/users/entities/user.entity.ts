@@ -23,14 +23,15 @@ export class User {
   @OneToOne(
     () => ChallengeParticipation,
     (challengeParticipation) => challengeParticipation.user,
-    {
-      onDelete: 'CASCADE',
-    },
   )
   @JoinColumn()
   challengeParticipation: ChallengeParticipation;
 
+  @Column()
+  points: number;
+
   constructor(data: Partial<User> = {}) {
     Object.assign(this, data);
+    this.points = 0;
   }
 }

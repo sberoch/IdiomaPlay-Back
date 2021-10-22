@@ -34,7 +34,7 @@ export class ParticipationsController {
     if (query.withPassedLessons === 'true') {
       return this.participationsService.findPassedLessons(query);
     }
-    return this.participationsService.findAllWithData();
+    return this.participationsService.findAll(query);
   }
 
   @ApiOkResponse()
@@ -44,7 +44,6 @@ export class ParticipationsController {
   }
 
   @ApiOkResponse()
-  @UseFilters(QueryFailedExceptionFilter)
   @Patch(':id')
   update(
     @Param('id') id: string,
