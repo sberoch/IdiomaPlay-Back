@@ -219,6 +219,7 @@ export class ParticipationsService {
   ) {
     return (
       participation.correctExercises < dto.correctExercises &&
+      !dto.isRetry &&
       dto.userId &&
       dto.lessonId &&
       !dto.examId
