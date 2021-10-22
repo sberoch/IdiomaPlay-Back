@@ -63,5 +63,10 @@ export class Participation {
 
   constructor(data: Partial<Participation> = {}) {
     Object.assign(this, data);
+    if (this.lesson !== undefined) {
+      this.totalExercises = config.amountOfExercisesPerLesson;
+    } else {
+      this.totalExercises = config.amountOfExercisesPerExam;
+    }
   }
 }

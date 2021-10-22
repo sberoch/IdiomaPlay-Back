@@ -20,26 +20,35 @@ describe('ChallengeParticipationsService', () => {
 
   const mockRepository = {
     save: jest.fn().mockImplementation((dto) => {
-      const challengeParticipation = new ChallengeParticipation({id:1, ...dto})
+      const challengeParticipation = new ChallengeParticipation({
+        id: 1,
+        ...dto,
+      });
       cParticipations.push(challengeParticipation);
       return challengeParticipation;
     }),
     findOne: jest.fn().mockImplementation((id) => {
-      return cParticipations.find((actualCParticipation) => actualCParticipation.id === id);
+      return cParticipations.find(
+        (actualCParticipation) => actualCParticipation.id === id,
+      );
     }),
     find: jest.fn().mockImplementation(() => {
       return cParticipations;
     }),
     delete: jest.fn().mockImplementation((id) => {
-      cParticipations = cParticipations.filter((actualCParticipation) => actualCParticipation.id !== id)
+      cParticipations = cParticipations.filter(
+        (actualCParticipation) => actualCParticipation.id !== id,
+      );
     }),
     remove: jest.fn().mockImplementation((_cParticipations) => {
       for (const actualCParticipation of _cParticipations) {
-        cParticipations = cParticipations.filter((_cParticipation) => _cParticipation !== actualCParticipation);
+        cParticipations = cParticipations.filter(
+          (_cParticipation) => _cParticipation !== actualCParticipation,
+        );
       }
     }),
   };
-  
+
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       providers: [
@@ -49,7 +58,7 @@ describe('ChallengeParticipationsService', () => {
           useValue: mockRepository,
         },
         UsersService,
-        ChallengesService
+        ChallengesService,
       ],
     })
       .overrideProvider(UsersService)
@@ -58,21 +67,23 @@ describe('ChallengeParticipationsService', () => {
           return new User({ id: userId });
         },
         update: (userId, newDto) => {
-          return new User({ id: userId, ...newDto})
-        }
+          return new User({ id: userId, ...newDto });
+        },
       })
       .overrideProvider(ChallengesService)
       .useValue({
         findOne: (challengeId) => {
           return new Challenge({ id: challengeId });
-        }, 
+        },
         isChallengePassedByUser: () => {
-          return false
-        }
+          return false;
+        },
       })
       .compile();
 
-    service = module.get<ChallengeParticipationService>(ChallengeParticipationService);
+    service = module.get<ChallengeParticipationService>(
+      ChallengeParticipationService,
+    );
   });
 
   it('should be defined', () => {
@@ -83,9 +94,9 @@ describe('ChallengeParticipationsService', () => {
     const expected: ChallengeParticipation = new ChallengeParticipation({
       id: 1,
       user: new User({ id: 1 }),
-      challenge: new Challenge({ id: 1 })
-    })
-    const created = await service.create(dto) 
+      challenge: new Challenge({ id: 1 }),
+    });
+    const created = await service.create(dto);
     expect(created).toEqual(expected);
   });
 
@@ -94,7 +105,10 @@ describe('ChallengeParticipationsService', () => {
   });
 
   it('should remove challenge participation from user correctly', async () => {
-    const user = new User({ id:1, challengeParticipation: new ChallengeParticipation()})
+    const user = new User({
+      id: 1,
+      challengeParticipation: new ChallengeParticipation(),
+    });
     service.removeByUserId(1);
     expect(user.challengeParticipation).toEqual({});
   });

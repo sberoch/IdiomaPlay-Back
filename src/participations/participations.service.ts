@@ -39,35 +39,28 @@ export class ParticipationsService {
       );
     const user = await this.usersService.findOne(userId);
     const unit = await this.unitsService.findOne(unitId);
-    let totalExercises = 0;
     let lesson: Lesson;
     if (lessonId) {
       lesson = await this.lessonsService.findOneWithExercises(lessonId);
-      totalExercises = config.amountOfExercisesPerLesson;
-
-      return this.participationsRepository.save(
-        new Participation({ user, lesson, totalExercises, unit, ...rest }),
-      );
+      const participation = new Participation({ user, lesson, unit, ...rest });
+      return this.participationsRepository.save(participation);
     }
     let exam: Exam;
     if (examId) {
       exam = await this.examsService.findOneWithExercises(examId);
-
-      totalExercises = config.amountOfExercisesPerExam;
-      console.log('here');
       const examAttempts = await this.countFailedExamAttempts(user, unit);
-      console.log(examAttempts);
       const newParticipation = new Participation({
         user,
         exam,
-        totalExercises,
         unit,
         ...rest,
       });
-      console.log({ asd: !newParticipation.isPassed && examAttempts >= 2 });
       if (!newParticipation.isPassed && examAttempts >= 2) {
         await this.removeMany(user, unit);
       } else {
+        if (newParticipation.isPassed) {
+          await this.usersService.addExamPoints(user.id);
+        }
         return this.participationsRepository.save(newParticipation);
       }
     }
@@ -173,8 +166,20 @@ export class ParticipationsService {
       .getOne();
   }
 
-  update(id: number, updateParticipationDto: UpdateParticipationDto) {
-    return this.participationsRepository.update(id, updateParticipationDto);
+  async update(id: number, dto: UpdateParticipationDto) {
+    const participation = await this.participationsRepository.findOne(id);
+    if (this.shouldAddExercisePoints(participation, dto)) {
+      await this.usersService.addExercisePoints(dto.userId);
+      return this.participationsRepository.update(id, {
+        correctExercises: dto.correctExercises,
+      });
+    } else if (this.shouldAddExamPoints(dto)) {
+      await this.usersService.addExamPoints(dto.userId);
+      return this.participationsRepository.update(id, {
+        correctExercises: dto.correctExercises,
+      });
+    }
+    return 'Nada que actualizar';
   }
 
   async remove(id: number): Promise<void> {
@@ -191,5 +196,27 @@ export class ParticipationsService {
   async removeAll(): Promise<void> {
     const lessons = await this.participationsRepository.find();
     await this.participationsRepository.remove(lessons);
+  }
+
+  private shouldAddExamPoints(dto: UpdateParticipationDto) {
+    return (
+      dto.userId &&
+      dto.examId &&
+      !dto.lessonId &&
+      dto.correctExercises >=
+        config.amountOfExercisesPerExam * config.passingPercentage
+    );
+  }
+
+  private shouldAddExercisePoints(
+    participation: Participation,
+    dto: UpdateParticipationDto,
+  ) {
+    return (
+      participation.correctExercises < dto.correctExercises &&
+      dto.userId &&
+      dto.lessonId &&
+      !dto.examId
+    );
   }
 }

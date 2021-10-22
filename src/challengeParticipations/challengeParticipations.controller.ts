@@ -1,4 +1,13 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, UseFilters, Query } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Param,
+  Delete,
+  UseFilters,
+  Query,
+} from '@nestjs/common';
 import { ApiCreatedResponse, ApiOkResponse, ApiTags } from '@nestjs/swagger';
 import { QueryFailedExceptionFilter } from '../common/filters/queryFailedExceptionFilter';
 import { ChallengeParticipationService } from './challengeParticipations.service';
@@ -8,13 +17,19 @@ import { CreateChallengeParticipationDto } from './dto/create-challengeParticipa
 @ApiTags('ChallengeParticipations')
 @Controller('challengeParticipations')
 export class ChallengeParticipationController {
-  constructor(private readonly challengeParticipationService: ChallengeParticipationService) {}
+  constructor(
+    private readonly challengeParticipationService: ChallengeParticipationService,
+  ) {}
 
   @ApiCreatedResponse()
   @UseFilters(QueryFailedExceptionFilter)
   @Post()
-  create(@Body() createChallengeParticipationDto: CreateChallengeParticipationDto) {
-    return this.challengeParticipationService.create(createChallengeParticipationDto);
+  create(
+    @Body() createChallengeParticipationDto: CreateChallengeParticipationDto,
+  ) {
+    return this.challengeParticipationService.create(
+      createChallengeParticipationDto,
+    );
   }
 
   @ApiOkResponse()
