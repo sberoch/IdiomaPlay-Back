@@ -8,6 +8,7 @@ import { UpdateUserDto } from './dto/update-user.dto';
 import { UserParams } from './dto/user.params';
 import { User } from './entities/user.entity';
 import { buildQuery } from './users.query-builder';
+import { Api } from '../common/api/Api'
 
 @Injectable()
 export class UsersService {
@@ -16,8 +17,19 @@ export class UsersService {
     private usersRepository: Repository<User>,
   ) {}
 
-  create(createUserDto: CreateUserDto) {
-    return this.usersRepository.save(new User(createUserDto));
+  async create(token: string) {
+    try {
+      const response = await Api.verifyAccessToken(token);
+      
+      const { email } = response.data
+      const user = await this.usersRepository.findOne({ email })
+      // Create if user doesn't exist
+      if (!user) {
+        return this.usersRepository.save(new User({ email }));
+      }
+    } catch (error) {
+      return new BadRequestException(`Token invalido`)
+    }
   }
 
   findAll(params: UserParams) {
