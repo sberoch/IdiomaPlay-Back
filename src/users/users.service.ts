@@ -59,14 +59,12 @@ export class UsersService {
   }
 
   async addExamPoints(id: number) {
-    console.log('added points');
     const user = await this.findOne(id);
     user.points += config.pointsEarnedByExam;
     await this.usersRepository.save(user);
   }
 
   async addExercisePoints(id: number) {
-    console.log('added epoints');
     const user = await this.findOne(id);
     user.points += config.pointsEarnedByExercise;
     await this.usersRepository.save(user);
