@@ -26,6 +26,8 @@ export class UsersService {
       // Create if user doesn't exist
       if (!user) {
         return this.usersRepository.save(new User({ email }));
+      } else {
+        return user;
       }
     } catch (error) {
       return new BadRequestException(`Token invalido`)
