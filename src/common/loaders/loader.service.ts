@@ -58,9 +58,6 @@ export class LoaderService implements OnApplicationBootstrap {
     const units = await this.loadUnits();
     console.log(`Loaded ${units.length} units`);
 
-    const users = await this.loadTestUser();
-    console.log(`Loaded ${users.length} users`);
-
     const challenges = await this.loadChallenges();
     console.log(`Loaded ${challenges.length} challenges`);
   }
@@ -143,19 +140,5 @@ export class LoaderService implements OnApplicationBootstrap {
       challenges.push(created);
     }
     return challenges;
-  }
-
-  //TODO: Sacar esto cuando se haga el login con google
-  async loadTestUser(): Promise<User[]> {
-    const prev = await this.usersService.findAll({ limit: 1000 });
-    if (prev && prev.meta.totalItems !== 0) {
-      return prev.items;
-    }
-    const dto1: CreateUserDto = { email: 'test1@test.com' };
-    const user1 = await this.usersService.create(dto1);
-    const dto2: CreateUserDto = { email: 'test2@test.com' };
-    const user2 = await this.usersService.create(dto2);
-    const users = [user1, user2];
-    return users;
   }
 }
