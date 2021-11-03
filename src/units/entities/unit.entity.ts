@@ -2,7 +2,6 @@ import {
   Column,
   Entity,
   JoinColumn,
-  ManyToMany,
   ManyToOne,
   OneToMany,
   OneToOne,
@@ -24,14 +23,14 @@ export class Unit {
   @OneToMany(() => Lesson, (lesson) => lesson.unit, { cascade: true })
   lessons: Lesson[];
 
-  @OneToOne(() => Exam, (exam) => exam.unit)
+  @OneToOne(() => Exam, (exam) => exam.unit, { eager: true })
   @JoinColumn()
   exam: Exam;
 
-  @OneToMany(() => Participation, (participation) => participation.unit, {})
+  @OneToMany(() => Participation, (participation) => participation.unit)
   participations: Participation[];
 
-  @ManyToOne(() => Challenge, (challenge) => challenge.units)
+  @ManyToOne(() => Challenge, (challenge) => challenge.units, { eager: true })
   challenge: Challenge;
 
   constructor(data: Partial<Unit> = {}) {
