@@ -1,7 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { IsNotEmpty } from 'class-validator';
-import { ExerciseType } from "../entities/exercise.entity";
-
+import { ExerciseType } from '../entities/exercise.entity';
 
 export class CreateExerciseDto {
   @ApiProperty({ example: 'Test' })
@@ -16,7 +15,7 @@ export class CreateExerciseDto {
   @IsNotEmpty()
   type: ExerciseType;
 
-  @ApiProperty({ type: [String], example: ["she", "he", "they", "we"] })
+  @ApiProperty({ type: [String], example: ['she', 'he', 'they', 'we'] })
   @IsNotEmpty()
   options: string[];
 

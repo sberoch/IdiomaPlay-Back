@@ -9,6 +9,12 @@ export const buildQuery = (params: ExerciseParams) => {
   if (params.title) {
     findOptions.title = ILike(`%${params.title}%`);
   }
+  if (params.sentence) {
+    findOptions.sentence = ILike(`%${params.sentence}%`);
+  }
+  if (params.type) {
+    findOptions.type = params.type;
+  }
   return {
     paginationOptions,
     findOptions,
