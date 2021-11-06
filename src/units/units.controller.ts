@@ -41,7 +41,6 @@ export class UnitsController {
     return this.unitsService.findOneWithLessonsAndExam(+id);
   }
 
-
   @ApiOkResponse()
   @UseFilters(QueryFailedExceptionFilter)
   @Patch(':id')

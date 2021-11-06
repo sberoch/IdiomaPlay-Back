@@ -27,7 +27,7 @@ export class ChallengesService {
       units.push(unit);
     }
 
-    return this.challengeRepository.save(new Challenge({ units, ...rest}));
+    return this.challengeRepository.save(new Challenge({ units, ...rest }));
   }
 
   findAll(params: ChallengeParams): Promise<Pagination<Challenge>> {
@@ -40,7 +40,8 @@ export class ChallengesService {
 
   async findOne(id: number) {
     const challenge = await this.challengeRepository.findOne(id);
-    if (!challenge) throw new BadRequestException('No se encontro el challenge');
+    if (!challenge)
+      throw new BadRequestException('No se encontro el challenge');
     return challenge;
   }
 
@@ -56,10 +57,16 @@ export class ChallengesService {
     return this.challengeRepository.update(id, updateChallengeDto);
   }
 
-  async isChallengePassedByUser(challengeId: number, userId: number): Promise<Boolean> {
+  async isChallengePassedByUser(
+    challengeId: number,
+    userId: number,
+  ): Promise<boolean> {
     const challenge = await this.findOneWithUnits(challengeId);
     for (const unit of challenge.units) {
-      const isUnitPassedByUser = await this.unitsService.isUnitPassedByUser(unit.id, userId)
+      const isUnitPassedByUser = await this.unitsService.isUnitPassedByUser(
+        unit.id,
+        userId,
+      );
       if (!isUnitPassedByUser) {
         return false;
       }
@@ -76,5 +83,3 @@ export class ChallengesService {
     await this.challengeRepository.remove(units);
   }
 }
-
-

@@ -28,7 +28,7 @@ export class Lesson {
   })
   participations: Participation[];
 
-  @ManyToOne(() => Unit, (unit) => unit.lessons)
+  @ManyToOne(() => Unit, (unit) => unit.lessons, { eager: true })
   unit: Unit;
 
   constructor(data: Partial<Lesson> = {}) {
