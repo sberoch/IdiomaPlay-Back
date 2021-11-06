@@ -16,6 +16,7 @@ import { UpdateUserDto } from './dto/update-user.dto';
 import { ApiCreatedResponse, ApiOkResponse, ApiTags } from '@nestjs/swagger';
 import { QueryFailedExceptionFilter } from '../common/filters/queryFailedExceptionFilter';
 import { UserParams } from './dto/user.params';
+import { AdminLoginDto } from './dto/admin-login-dto';
 
 @ApiTags('Users')
 @Controller('users')
@@ -27,6 +28,13 @@ export class UsersController {
   @Post()
   create(@Headers('access_token') token) {
     return this.usersService.create(token);
+  }
+
+  @ApiOkResponse()
+  @UseFilters(QueryFailedExceptionFilter)
+  @Post('/login')
+  adminLogin(@Body() adminLoginDto: AdminLoginDto) {
+    return this.usersService.loginAdmin(adminLoginDto);
   }
 
   @ApiOkResponse()

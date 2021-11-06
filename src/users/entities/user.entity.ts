@@ -8,6 +8,7 @@ import {
 } from 'typeorm';
 import { ChallengeParticipation } from '../../challengeParticipations/entities/challengeParticipation.entity';
 import { Participation } from '../../participations/entities/participation.entity';
+import { config } from '../../common/config'
 
 @Entity()
 export class User {
@@ -29,6 +30,12 @@ export class User {
 
   @Column()
   points: number;
+
+  @Column({ default: config.roles.common })
+  role: String
+
+  @Column({ default: null })
+  password: String
 
   constructor(data: Partial<User> = {}) {
     Object.assign(this, data);

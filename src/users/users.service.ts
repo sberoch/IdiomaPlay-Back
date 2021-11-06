@@ -9,6 +9,14 @@ import { UserParams } from './dto/user.params';
 import { User } from './entities/user.entity';
 import { buildQuery } from './users.query-builder';
 import { Api } from '../common/api/Api'
+import { AdminLoginDto } from './dto/admin-login-dto';
+
+const bcrypt = require('bcryptjs');
+
+async function hashIt(password){
+  const salt = await bcrypt.genSalt(6);
+  return await bcrypt.hash(password, salt);
+}  
 
 @Injectable()
 export class UsersService {
@@ -31,6 +39,28 @@ export class UsersService {
       }
     } catch (error) {
       return new BadRequestException(`Token invalido`)
+    }
+  }
+
+  async createAdmin(email, pass) {
+    const user = await this.usersRepository.findOne({ email })
+    const password = await hashIt(pass);
+    // Create if email doesn't exist
+    if (!user) {
+      return this.usersRepository.save(new User({ email, password, role: config.roles.admin }))
+    }
+  }
+
+  async loginAdmin(dto: AdminLoginDto) {
+    const { email, password } = dto;
+    const user = await this.usersRepository.findOne({ email });
+    const validPassword = await bcrypt.compare(password, user.password);
+    const isAdmin = user.role === config.roles.admin; 
+
+    if (isAdmin && validPassword) {
+      return { logged: true };
+    } else {
+      return { logged: false}
     }
   }
 

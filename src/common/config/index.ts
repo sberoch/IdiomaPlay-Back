@@ -15,6 +15,10 @@ export const config = {
     VIO_FK: 'VIO_FK',
     UNK_ERR: 'UNK_ERR',
   },
+  roles: {
+    common: 'common',
+    admin: 'admin'
+  }
 };
 
 const devDatabaseConfig: TypeOrmModuleOptions = {
