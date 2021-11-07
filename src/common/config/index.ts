@@ -17,8 +17,8 @@ export const config = {
   },
   roles: {
     common: 'common',
-    admin: 'admin'
-  }
+    admin: 'admin',
+  },
 };
 
 const devDatabaseConfig: TypeOrmModuleOptions = {

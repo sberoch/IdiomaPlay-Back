@@ -10,11 +10,11 @@ import { Exam } from './entities/exam.entity';
 import { ExamParams } from './dto/exam.params';
 import { buildQuery } from './exams.query-builder';
 import { config } from '../common/config';
-import * as examsJson from "../common/jsons/exams.json";
+import * as examsJson from '../common/jsons/exams.json';
 
-function getRandomExercisesForExam(examId){
+function getRandomExercisesForExam(examId) {
   //Shuffles the array
-  const exam = examsJson.find(actualExam => actualExam.examId === examId)
+  const exam = examsJson.find((actualExam) => actualExam.examId === examId);
   const shuffled = exam.exercisesFromLessonsIds.sort(() => 0.5 - Math.random());
   //Selects the first 16 elements
   return shuffled.slice(0, config.amountOfExercisesPerExam);
@@ -31,17 +31,16 @@ export class ExamsService {
   async create(createExamDto: CreateExamDto) {
     const { exercisesIds, ...rest } = createExamDto;
     const exercises: Exercise[] = [];
+    const exam = new Exam({
+      ...rest,
+      examTimeInSeconds: config.examTimeInSeconds,
+    });
     for (const exerciseId of exercisesIds) {
       const exercise: Exercise = await this.exerciseService.findOne(exerciseId);
       exercises.push(exercise);
     }
-    return this.examsRepository.save(
-      new Exam({
-        exercises,
-        ...rest,
-        examTimeInSeconds: config.examTimeInSeconds,
-      }),
-    );
+    exam.exercises = exercises;
+    return this.examsRepository.save(exam);
   }
 
   findAll(params: ExamParams): Promise<Pagination<Exam>> {
@@ -70,7 +69,7 @@ export class ExamsService {
       const exercise: Exercise = await this.exerciseService.findOne(exerciseId);
       exam.exercises.push(exercise);
     }
-    return exam
+    return exam;
   }
 
   update(id: number, updateExamDto: UpdateExamDto) {

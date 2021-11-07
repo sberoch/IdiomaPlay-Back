@@ -16,13 +16,20 @@ export class ChallengeParticipation {
   id: number;
 
   @OneToOne(() => User, (user) => user.challengeParticipation, {
-    eager: true
+    eager: true,
   })
   user: User;
 
-  @ManyToOne(() => Challenge, (challenge) => challenge.challengeParticipations, {
-    eager: true
-  })
+  @Column()
+  userId: number;
+
+  @ManyToOne(
+    () => Challenge,
+    (challenge) => challenge.challengeParticipations,
+    {
+      eager: true,
+    },
+  )
   challenge: Challenge;
 
   @CreateDateColumn()
@@ -32,7 +39,7 @@ export class ChallengeParticipation {
   updatedAt: Date;
 
   @Column({ default: false })
-  isPassed: Boolean;
+  isPassed: boolean;
 
   constructor(data: Partial<ChallengeParticipation> = {}) {
     Object.assign(this, data);

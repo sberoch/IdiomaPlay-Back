@@ -153,6 +153,9 @@ export class LoaderService implements OnApplicationBootstrap {
       return prevUsers.items[0];
     }
 
-    return await this.usersService.createAdmin("admin@admin.com", "idiomaplayadmin");
+    return await this.usersService.createAdmin(
+      'admin@admin.com',
+      'idiomaplayadmin',
+    );
   }
 }

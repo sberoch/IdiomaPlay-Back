@@ -9,7 +9,6 @@ import { ChallengeParticipationParams } from './dto/challengeParticipation.param
 import { UsersService } from '../users/users.service';
 import { ChallengesService } from '../challenges/challenges.service';
 import { User } from '../users/entities/user.entity';
-import { Challenge } from '../challenges/entities/challenge.entity';
 
 @Injectable()
 export class ChallengeParticipationService {
@@ -22,21 +21,36 @@ export class ChallengeParticipationService {
 
   async create(createChallengeParticipation: CreateChallengeParticipationDto) {
     const { userId, challengeId, ...rest } = createChallengeParticipation;
+    const user = await this.usersService.findOneWithData(userId);
 
-    const user: User = await this.usersService.findOneWithData(userId);
-
-    if (user.challengeParticipation)
+    if (!user.challengeParticipation.isPassed)
       throw new BadRequestException(
         'Usuario ya está participando en una challenge',
       );
-    const challenge: Challenge = await this.challengesService.findOne(
-      challengeId,
-    );
+    const challenge = await this.challengesService.findOne(challengeId);
 
     delete user.challengeParticipation;
     return this.challengeParticipationsRepository.save(
-      new ChallengeParticipation({ user, challenge, ...rest }),
+      new ChallengeParticipation({ user, challenge, userId, ...rest }),
     );
+  }
+
+  async createIfNotExists(userId: number, challengeId: number) {
+    const user = await this.usersService.findOneWithData(userId);
+    const challenge = await this.challengesService.findOne(challengeId);
+    const prev = await this.challengeParticipationsRepository
+      .createQueryBuilder('cp')
+      .leftJoinAndSelect('cp.user', 'user')
+      .leftJoinAndSelect('cp.challenge', 'challenge')
+      .where('user.id = :userId', { userId })
+      .where('challenge.id = :challengeId', { challengeId })
+      .getOne();
+
+    if (!prev) {
+      await this.challengeParticipationsRepository.save(
+        new ChallengeParticipation({ user, userId, challenge }),
+      );
+    }
   }
 
   async findAll(params: ChallengeParticipationParams) {
@@ -52,11 +66,11 @@ export class ChallengeParticipationService {
 
     const challengeParticipations = result.items;
     for (const challengeParticipation of challengeParticipations) {
-      const { challenge, user } = challengeParticipation;
+      const { challenge, userId } = challengeParticipation;
       challengeParticipation.isPassed =
         await this.challengesService.isChallengePassedByUser(
           challenge.id,
-          user.id,
+          userId,
         );
     }
     return { items: challengeParticipations, meta: result.meta };
@@ -80,6 +94,17 @@ export class ChallengeParticipationService {
     const user = await this.usersService.findOneWithData(userId);
     if (!user) throw new BadRequestException('El usuario no existe');
     await this.usersService.update(userId, { challengeParticipation: null });
+  }
+
+  async removeIfCompleted(user: User, challengeId: number) {
+    if (
+      await this.challengesService.isChallengePassedByUser(challengeId, user.id)
+    ) {
+      await this.challengeParticipationsRepository.update(
+        user.challengeParticipation.id,
+        { isPassed: true },
+      );
+    }
   }
 
   async removeAll(): Promise<void> {

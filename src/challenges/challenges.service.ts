@@ -22,12 +22,15 @@ export class ChallengesService {
     const { unitsIds, ...rest } = createChallengeDto;
     const units: Unit[] = [];
 
+    const challenge = new Challenge({ ...rest });
+
     for (const unitId of unitsIds) {
       const unit: Unit = await this.unitsService.findOne(unitId);
+      unit.challenge = challenge;
       units.push(unit);
     }
-
-    return this.challengeRepository.save(new Challenge({ units, ...rest }));
+    challenge.units = units;
+    return this.challengeRepository.save(challenge);
   }
 
   findAll(params: ChallengeParams): Promise<Pagination<Challenge>> {

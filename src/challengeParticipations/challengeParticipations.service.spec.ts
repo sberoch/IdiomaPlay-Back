@@ -64,7 +64,12 @@ describe('ChallengeParticipationsService', () => {
       .overrideProvider(UsersService)
       .useValue({
         findOneWithData: (userId) => {
-          return new User({ id: userId });
+          return new User({
+            id: userId,
+            challengeParticipation: new ChallengeParticipation({
+              isPassed: true,
+            }),
+          });
         },
         update: (userId, newDto) => {
           return new User({ id: userId, ...newDto });
@@ -94,6 +99,7 @@ describe('ChallengeParticipationsService', () => {
     const expected: ChallengeParticipation = new ChallengeParticipation({
       id: 1,
       user: new User({ id: 1 }),
+      userId: 1,
       challenge: new Challenge({ id: 1 }),
     });
     const created = await service.create(dto);

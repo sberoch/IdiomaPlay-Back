@@ -8,15 +8,15 @@ import { UpdateUserDto } from './dto/update-user.dto';
 import { UserParams } from './dto/user.params';
 import { User } from './entities/user.entity';
 import { buildQuery } from './users.query-builder';
-import { Api } from '../common/api/Api'
+import { Api } from '../common/api/Api';
 import { AdminLoginDto } from './dto/admin-login-dto';
 
 const bcrypt = require('bcryptjs');
 
-async function hashIt(password){
+async function hashIt(password) {
   const salt = await bcrypt.genSalt(6);
   return await bcrypt.hash(password, salt);
-}  
+}
 
 @Injectable()
 export class UsersService {
@@ -28,9 +28,9 @@ export class UsersService {
   async create(token: string) {
     try {
       const response = await Api.verifyAccessToken(token);
-      
-      const { email } = response.data
-      const user = await this.usersRepository.findOne({ email })
+
+      const { email } = response.data;
+      const user = await this.usersRepository.findOne({ email });
       // Create if user doesn't exist
       if (!user) {
         return this.usersRepository.save(new User({ email }));
@@ -38,16 +38,18 @@ export class UsersService {
         return user;
       }
     } catch (error) {
-      return new BadRequestException(`Token invalido`)
+      return new BadRequestException(`Token invalido`);
     }
   }
 
   async createAdmin(email, pass) {
-    const user = await this.usersRepository.findOne({ email })
+    const user = await this.usersRepository.findOne({ email });
     const password = await hashIt(pass);
     // Create if email doesn't exist
     if (!user) {
-      return this.usersRepository.save(new User({ email, password, role: config.roles.admin }))
+      return this.usersRepository.save(
+        new User({ email, password, role: config.roles.admin }),
+      );
     }
   }
 
@@ -55,12 +57,12 @@ export class UsersService {
     const { email, password } = dto;
     const user = await this.usersRepository.findOne({ email });
     const validPassword = await bcrypt.compare(password, user.password);
-    const isAdmin = user.role === config.roles.admin; 
+    const isAdmin = user.role === config.roles.admin;
 
     if (isAdmin && validPassword) {
       return { logged: true };
     } else {
-      return { logged: false}
+      return { logged: false };
     }
   }
 
@@ -74,7 +76,7 @@ export class UsersService {
 
   async findOne(id: number) {
     const user = await this.usersRepository.findOne(id);
-    if (!user) throw new BadRequestException('No se encontro la leccion');
+    if (!user) throw new BadRequestException('No se encontro el usuario');
     return user;
   }
 

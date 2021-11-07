@@ -4,17 +4,19 @@ import { ChallengeParticipationService } from './challengeParticipations.service
 
 describe('ChallengeParticipationController', () => {
   let controller: ChallengeParticipationController;
-  
+
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       controllers: [ChallengeParticipationController],
       providers: [ChallengeParticipationService],
     })
-    .overrideProvider(ChallengeParticipationService)
-    .useValue({})
-    .compile();
+      .overrideProvider(ChallengeParticipationService)
+      .useValue({})
+      .compile();
 
-    controller = module.get<ChallengeParticipationController>(ChallengeParticipationController);
+    controller = module.get<ChallengeParticipationController>(
+      ChallengeParticipationController,
+    );
   });
 
   it('should be defined', () => {

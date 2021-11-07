@@ -21,11 +21,13 @@ export class LessonsService {
   async create(createLessonDto: CreateLessonDto) {
     const { exercisesIds, ...rest } = createLessonDto;
     const exercises: Exercise[] = [];
+    const lesson = new Lesson({ ...rest });
     for (const exerciseId of exercisesIds) {
       const exercise: Exercise = await this.exerciseService.findOne(exerciseId);
       exercises.push(exercise);
     }
-    return this.lessonsRepository.save(new Lesson({ exercises, ...rest }));
+    lesson.exercises = exercises;
+    return this.lessonsRepository.save(lesson);
   }
 
   findAll(params: LessonParams): Promise<Pagination<Lesson>> {

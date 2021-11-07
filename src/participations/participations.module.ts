@@ -7,6 +7,7 @@ import { UsersModule } from '../users/users.module';
 import { LessonsModule } from '../lessons/lessons.module';
 import { ExamsModule } from '../exams/exams.module';
 import { UnitsModule } from '../units/units.module';
+import { ChallengeParticipationModule } from '../challengeParticipations/challengeParticipations.module';
 
 @Module({
   imports: [
@@ -15,9 +16,10 @@ import { UnitsModule } from '../units/units.module';
     LessonsModule,
     ExamsModule,
     UnitsModule,
+    ChallengeParticipationModule,
   ],
   controllers: [ParticipationsController],
   providers: [ParticipationsService],
-  exports: [ParticipationsService]
+  exports: [ParticipationsService],
 })
 export class ParticipationsModule {}

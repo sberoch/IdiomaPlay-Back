@@ -2,6 +2,7 @@ import { BadRequestException, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { paginate } from 'nestjs-typeorm-paginate';
 import { Repository } from 'typeorm';
+import { ChallengeParticipationService } from '../challengeParticipations/challengeParticipations.service';
 import { config } from '../common/config';
 import { Exam } from '../exams/entities/exam.entity';
 import { ExamsService } from '../exams/exams.service';
@@ -22,6 +23,7 @@ export class ParticipationsService {
   constructor(
     @InjectRepository(Participation)
     private participationsRepository: Repository<Participation>,
+    private challengeParticipationsService: ChallengeParticipationService,
     private usersService: UsersService,
     private lessonsService: LessonsService,
     private examsService: ExamsService,
@@ -37,8 +39,12 @@ export class ParticipationsService {
       throw new BadRequestException(
         'Se debe proveer una leccion o un examen. No ambas',
       );
-    const user = await this.usersService.findOne(userId);
+    const user = await this.usersService.findOneWithData(userId);
     const unit = await this.unitsService.findOne(unitId);
+    await this.challengeParticipationsService.createIfNotExists(
+      userId,
+      unit.challenge.id,
+    );
     let lesson: Lesson;
     if (lessonId) {
       lesson = await this.lessonsService.findOneWithExercises(lessonId);
@@ -61,7 +67,12 @@ export class ParticipationsService {
         if (newParticipation.isPassed) {
           await this.usersService.addExamPoints(user.id);
         }
-        return this.participationsRepository.save(newParticipation);
+        const res = await this.participationsRepository.save(newParticipation);
+        await this.challengeParticipationsService.removeIfCompleted(
+          user,
+          unit.challenge.id,
+        );
+        return res;
       }
     }
   }

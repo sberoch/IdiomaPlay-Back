@@ -12,6 +12,9 @@ import { CreateParticipationDto } from './dto/create-participation.dto';
 import { Participation } from './entities/participation.entity';
 import { ParticipationsService } from './participations.service';
 import { config } from '../common/config';
+import { ChallengeParticipationService } from '../challengeParticipations/challengeParticipations.service';
+import { Challenge } from '../challenges/entities/challenge.entity';
+import { ChallengeParticipation } from '../challengeParticipations/entities/challengeParticipation.entity';
 
 describe('ParticipationsService', () => {
   let service: ParticipationsService;
@@ -76,6 +79,7 @@ describe('ParticipationsService', () => {
         LessonsService,
         ExamsService,
         UnitsService,
+        ChallengeParticipationService,
         {
           provide: getRepositoryToken(Participation),
           useValue: mockRepository,
@@ -84,14 +88,27 @@ describe('ParticipationsService', () => {
     })
       .overrideProvider(UsersService)
       .useValue({
-        findOne: (userId) => {
-          return new User({ id: userId });
+        findOneWithData: (userId) => {
+          return new User({
+            id: userId,
+            challengeParticipation: new ChallengeParticipation({
+              isPassed: true,
+            }),
+          });
         },
+      })
+      .overrideProvider(ChallengeParticipationService)
+      .useValue({
+        createIfNotExists: jest.fn().mockReturnValue(1),
+        removeIfCompleted: jest.fn().mockReturnValue(1),
       })
       .overrideProvider(UnitsService)
       .useValue({
         findOne: (unitId) => {
-          return new Unit({ id: unitId });
+          return new Unit({
+            id: unitId,
+            challenge: new Challenge({ title: 'asd', id: 1 }),
+          });
         },
       })
       .overrideProvider(ExamsService)
@@ -124,8 +141,16 @@ describe('ParticipationsService', () => {
   it('should create lesson participation correctly', async () => {
     const expected: Participation = new Participation({
       id: 1,
-      user: new User({ id: 1 }),
-      unit: new Unit({ id: 1 }),
+      user: new User({
+        id: 1,
+        challengeParticipation: new ChallengeParticipation({
+          isPassed: true,
+        }),
+      }),
+      unit: new Unit({
+        id: 1,
+        challenge: new Challenge({ id: 1, title: 'asd' }),
+      }),
       lesson: new Lesson({ id: 1, exercises: [] }),
       totalExercises: config.amountOfExercisesPerLesson,
       correctExercises: 0,
@@ -137,8 +162,16 @@ describe('ParticipationsService', () => {
   it('should create exam participation correctly', async () => {
     const expected: Participation = new Participation({
       id: 1,
-      user: new User({ id: 1 }),
-      unit: new Unit({ id: 1 }),
+      user: new User({
+        id: 1,
+        challengeParticipation: new ChallengeParticipation({
+          isPassed: true,
+        }),
+      }),
+      unit: new Unit({
+        id: 1,
+        challenge: new Challenge({ id: 1, title: 'asd' }),
+      }),
       exam: new Exam({ id: 1, exercises: [] }),
       totalExercises: config.amountOfExercisesPerExam,
       correctExercises: 0,

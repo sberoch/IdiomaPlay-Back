@@ -24,13 +24,18 @@ export class UnitsService {
   async create(createUnitDto: CreateUnitDto) {
     const { lessonsIds, examId, ...rest } = createUnitDto;
     const lessons: Lesson[] = [];
-
+    const unit = new Unit({ ...rest });
     for (const lessonId of lessonsIds) {
       const lesson: Lesson = await this.lessonsService.findOne(lessonId);
+      lesson.unit = unit;
       lessons.push(lesson);
     }
     const exam: Exam = await this.examsService.findOne(examId);
-    return this.unitsRepository.save(new Unit({ lessons, exam, ...rest }));
+    exam.unit = unit;
+
+    unit.lessons = lessons;
+    unit.exam = exam;
+    return this.unitsRepository.save(unit);
   }
 
   findAll(params: UnitParams): Promise<Pagination<Unit>> {
@@ -74,8 +79,8 @@ export class UnitsService {
 
     // If participations for unit exam where found for "userId"
     if (unit) {
-      for (const participation of unit.participations) {
-        if (participation.isPassed) {
+      for (const examParticipation of unit.participations) {
+        if (examParticipation.isPassed) {
           return true;
         }
       }
