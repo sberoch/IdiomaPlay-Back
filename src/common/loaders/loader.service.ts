@@ -62,7 +62,7 @@ export class LoaderService implements OnApplicationBootstrap {
     console.log(`Loaded ${challenges.length} challenges`);
 
     const admin = await this.loadAdminUser();
-    console.log(`Loaded ${admin} as admin`);
+    console.log(`Loaded ${admin.email} as admin`);
   }
 
   async loadExercises(): Promise<Exercise[]> {
@@ -152,10 +152,13 @@ export class LoaderService implements OnApplicationBootstrap {
     if (prevUsers && prevUsers.meta.totalItems !== 0) {
       return prevUsers.items[0];
     }
-
-    return await this.usersService.createAdmin(
+    const user = await this.usersService.createAdmin(
       'admin@admin.com',
       'idiomaplayadmin',
     );
+    await this.usersService.createTestUser('sberoch@fi.uba.ar', 'asd');
+    await this.usersService.createTestUser('airibarren@fi.uba.ar', 'asd');
+    await this.usersService.createTestUser('sberoch@gmail.com', 'asd');
+    return user;
   }
 }

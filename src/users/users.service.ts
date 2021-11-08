@@ -53,6 +53,17 @@ export class UsersService {
     }
   }
 
+  async createTestUser(email, pass) {
+    const user = await this.usersRepository.findOne({ email });
+    const password = await hashIt(pass);
+    // Create if email doesn't exist
+    if (!user) {
+      return this.usersRepository.save(
+        new User({ email, password, role: config.roles.common }),
+      );
+    }
+  }
+
   async loginAdmin(dto: AdminLoginDto) {
     const { email, password } = dto;
     const user = await this.usersRepository.findOne({ email });
