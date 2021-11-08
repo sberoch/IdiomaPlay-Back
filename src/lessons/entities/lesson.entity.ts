@@ -25,10 +25,14 @@ export class Lesson {
 
   @OneToMany(() => Participation, (participation) => participation.lesson, {
     cascade: true,
+    onDelete: 'SET NULL',
   })
   participations: Participation[];
 
-  @ManyToOne(() => Unit, (unit) => unit.lessons, { eager: true })
+  @ManyToOne(() => Unit, (unit) => unit.lessons, {
+    eager: true,
+    onDelete: 'SET NULL',
+  })
   unit: Unit;
 
   constructor(data: Partial<Lesson> = {}) {

@@ -22,7 +22,10 @@ export class Exam {
   @Column()
   examTimeInSeconds: number;
 
-  @ManyToMany(() => Exercise, (exercise) => exercise.lesson, { cascade: true })
+  @ManyToMany(() => Exercise, (exercise) => exercise.lesson, {
+    cascade: true,
+    onDelete: 'SET NULL',
+  })
   @JoinTable()
   exercises: Exercise[];
 
@@ -31,7 +34,7 @@ export class Exam {
   })
   participations: Participation[];
 
-  @OneToOne(() => Unit, (unit) => unit.exam)
+  @OneToOne(() => Unit, (unit) => unit.exam, { onDelete: 'SET NULL' })
   unit: Unit;
 
   constructor(data: Partial<Exam> = {}) {

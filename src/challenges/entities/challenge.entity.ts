@@ -12,6 +12,7 @@ export class Challenge {
 
   @OneToMany(() => Unit, (unit) => unit.challenge, {
     cascade: true,
+    onDelete: 'SET NULL',
   })
   units: Unit[];
 
@@ -20,6 +21,7 @@ export class Challenge {
     (challengeParticipation) => challengeParticipation.challenge,
     {
       cascade: true,
+      onDelete: 'SET NULL',
     },
   )
   challengeParticipations: ChallengeParticipation[];

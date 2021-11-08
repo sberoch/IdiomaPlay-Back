@@ -100,12 +100,22 @@ export class UnitsService {
     return false;
   }
 
-  update(id: number, updateUnitDto: UpdateUnitDto) {
-    return this.unitsRepository.update(id, updateUnitDto);
+  async update(id: number, updateUnitDto: UpdateUnitDto) {
+    if (updateUnitDto.lessons) {
+      delete updateUnitDto.lessons;
+    }
+    if (updateUnitDto.exam) {
+      delete updateUnitDto.exam;
+    }
+    const unit = await this.unitsRepository.findOne(id);
+    Object.assign(unit, updateUnitDto);
+    return this.unitsRepository.save(unit);
   }
 
-  async remove(id: number): Promise<void> {
+  async remove(id: number) {
+    const removed = await this.unitsRepository.findOne(id);
     await this.unitsRepository.delete(id);
+    return removed;
   }
 
   async removeAll(): Promise<void> {

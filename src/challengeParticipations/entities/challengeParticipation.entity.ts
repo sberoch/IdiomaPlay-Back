@@ -28,6 +28,7 @@ export class ChallengeParticipation {
     (challenge) => challenge.challengeParticipations,
     {
       eager: true,
+      onDelete: 'SET NULL',
     },
   )
   challenge: Challenge;

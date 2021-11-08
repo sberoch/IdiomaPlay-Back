@@ -68,8 +68,13 @@ export class ChallengesService {
       .getOne();
   }
 
-  update(id: number, updateChallengeDto: UpdateChallengeDto) {
-    return this.challengeRepository.update(id, updateChallengeDto);
+  async update(id: number, updateChallengeDto: UpdateChallengeDto) {
+    if (updateChallengeDto.units) {
+      delete updateChallengeDto.units;
+    }
+    const challenge = await this.challengeRepository.findOne(id);
+    challenge.title = updateChallengeDto.title;
+    return this.challengeRepository.save(challenge);
   }
 
   async isChallengePassedByUser(
@@ -89,8 +94,10 @@ export class ChallengesService {
     return true;
   }
 
-  async remove(id: number): Promise<void> {
+  async remove(id: number) {
+    const removed = await this.challengeRepository.findOne(id);
     await this.challengeRepository.delete(id);
+    return removed;
   }
 
   async removeAll(): Promise<void> {

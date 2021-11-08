@@ -4,7 +4,6 @@ import { paginate, Pagination } from 'nestjs-typeorm-paginate';
 import { Repository } from 'typeorm';
 import { Exercise } from '../exercises/entities/exercise.entity';
 import { ExercisesService } from '../exercises/exercises.service';
-import { Unit } from '../units/entities/unit.entity';
 import { CreateLessonDto } from './dto/create-lesson.dto';
 import { LessonParams } from './dto/lesson.params';
 import { UpdateLessonDto } from './dto/update-lesson.dto';
@@ -70,12 +69,20 @@ export class LessonsService {
     }
     return exercisesIds;
   }
-  update(id: number, updateLessonDto: UpdateLessonDto) {
-    return this.lessonsRepository.update(id, updateLessonDto);
+
+  async update(id: number, updateLessonDto: UpdateLessonDto) {
+    if (updateLessonDto.exercises) {
+      delete updateLessonDto.exercises;
+    }
+    const lesson = await this.lessonsRepository.findOne(id);
+    Object.assign(lesson, updateLessonDto);
+    return this.lessonsRepository.save(lesson);
   }
 
-  async remove(id: number): Promise<void> {
+  async remove(id: number) {
+    const removed = await this.lessonsRepository.findOne(id);
     await this.lessonsRepository.delete(id);
+    return removed;
   }
 
   async removeAll(): Promise<void> {

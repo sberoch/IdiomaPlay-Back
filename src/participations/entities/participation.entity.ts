@@ -36,12 +36,14 @@ export class Participation {
   @ManyToOne(() => Exam, (exam) => exam.participations, {
     eager: true,
     nullable: true,
+    onDelete: 'SET NULL',
   })
   exam: Exam;
 
   @ManyToOne(() => Lesson, (lesson) => lesson.participations, {
     eager: true,
     nullable: true,
+    onDelete: 'SET NULL',
   })
   lesson: Lesson;
 

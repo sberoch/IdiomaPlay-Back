@@ -20,17 +20,26 @@ export class Unit {
   @Column({ default: 'Test Unit' })
   title: string;
 
-  @OneToMany(() => Lesson, (lesson) => lesson.unit, { cascade: true })
+  @OneToMany(() => Lesson, (lesson) => lesson.unit, {
+    cascade: true,
+    onDelete: 'SET NULL',
+  })
   lessons: Lesson[];
 
-  @OneToOne(() => Exam, (exam) => exam.unit, { eager: true })
+  @OneToOne(() => Exam, (exam) => exam.unit, {
+    eager: true,
+    onDelete: 'SET NULL',
+  })
   @JoinColumn()
   exam: Exam;
 
   @OneToMany(() => Participation, (participation) => participation.unit)
   participations: Participation[];
 
-  @ManyToOne(() => Challenge, (challenge) => challenge.units, { eager: true })
+  @ManyToOne(() => Challenge, (challenge) => challenge.units, {
+    eager: true,
+    onDelete: 'SET NULL',
+  })
   challenge: Challenge;
 
   constructor(data: Partial<Unit> = {}) {

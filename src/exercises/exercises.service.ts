@@ -1,6 +1,6 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository, UpdateResult } from 'typeorm';
+import { Repository } from 'typeorm';
 import { CreateExerciseDto } from './dto/create-exercise.dto';
 import { Exercise } from './entities/exercise.entity';
 import { ExerciseParams } from './dto/exercise.params';
@@ -33,15 +33,16 @@ export class ExercisesService {
     return exercise;
   }
 
-  update(
-    id: number,
-    updateExerciseDto: UpdateExerciseDto,
-  ): Promise<UpdateResult> {
-    return this.exercisesRepository.update(id, updateExerciseDto);
+  async update(id: number, updateExerciseDto: UpdateExerciseDto) {
+    const exercise = await this.exercisesRepository.findOne(id);
+    Object.assign(exercise, updateExerciseDto);
+    return this.exercisesRepository.save(exercise);
   }
 
-  async remove(id: number): Promise<void> {
+  async remove(id: number) {
+    const removed = await this.exercisesRepository.findOne(id);
     await this.exercisesRepository.delete(id);
+    return removed;
   }
 
   async removeAll(): Promise<void> {
