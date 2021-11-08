@@ -100,6 +100,7 @@ export class ChallengeParticipationService {
     if (
       await this.challengesService.isChallengePassedByUser(challengeId, user.id)
     ) {
+      await this.usersService.addChallengePoints(user.id);
       await this.challengeParticipationsRepository.update(
         user.challengeParticipation.id,
         { isPassed: true },

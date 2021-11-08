@@ -10,14 +10,14 @@ import { Exam } from './entities/exam.entity';
 import { ExamParams } from './dto/exam.params';
 import { buildQuery } from './exams.query-builder';
 import { config } from '../common/config';
-import * as examsJson from '../common/jsons/exams.json';
 
-function getRandomExercisesForExam(examId) {
-  //Shuffles the array
-  const exam = examsJson.find((actualExam) => actualExam.examId === examId);
-  const shuffled = exam.exercisesFromLessonsIds.sort(() => 0.5 - Math.random());
-  //Selects the first 16 elements
-  return shuffled.slice(0, config.amountOfExercisesPerExam);
+function getRandomExercisesForExam(exercises: Exercise[]) {
+  const shuffled = exercises.sort(() => 0.5 - Math.random());
+  const max =
+    exercises.length > config.amountOfExercisesPerExam
+      ? exercises.length
+      : config.amountOfExercisesPerExam;
+  return shuffled.slice(0, max);
 }
 
 @Injectable()
@@ -63,12 +63,7 @@ export class ExamsService {
       .where('e.id = :id', { id: id })
       .leftJoinAndSelect('e.exercises', 'exercises')
       .getOne();
-    exam.exercises = [];
-    const newExercisesIds = getRandomExercisesForExam(id);
-    for (const exerciseId of newExercisesIds) {
-      const exercise: Exercise = await this.exerciseService.findOne(exerciseId);
-      exam.exercises.push(exercise);
-    }
+    exam.exercises = getRandomExercisesForExam(exam.exercises);
     return exam;
   }
 

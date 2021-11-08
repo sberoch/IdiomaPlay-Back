@@ -102,6 +102,13 @@ export class UsersService {
     await this.usersRepository.save(user);
   }
 
+  async addChallengePoints(id: number) {
+    console.log('as');
+    const user = await this.findOne(id);
+    user.points += config.pointsEarnedByChallenge;
+    await this.usersRepository.save(user);
+  }
+
   async remove(id: number): Promise<void> {
     await this.usersRepository.delete(id);
   }
