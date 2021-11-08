@@ -8,7 +8,14 @@ import { UsersModule } from '../../users/users.module';
 import { LoaderService } from './loader.service';
 
 @Module({
-  imports: [ExercisesModule, UsersModule, LessonsModule, ExamsModule, UnitsModule, ChallengesModule],
+  imports: [
+    ExercisesModule,
+    UsersModule,
+    LessonsModule,
+    ExamsModule,
+    UnitsModule,
+    ChallengesModule,
+  ],
   providers: [LoaderService],
 })
 export class LoaderModule {}
