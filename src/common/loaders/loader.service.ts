@@ -139,7 +139,7 @@ export class LoaderService implements OnApplicationBootstrap {
     const challenges: Challenge[] = [];
     for (const challenge of challengesJson) {
       const dto: CreateChallengeDto = challenge as CreateChallengeDto;
-      const created = await this.challengesService.create(dto);
+      const created = await this.challengesService.createFromLoader(dto);
       challenges.push(created);
     }
     return challenges;

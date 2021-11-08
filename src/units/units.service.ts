@@ -27,14 +27,26 @@ export class UnitsService {
     const unit = new Unit({ ...rest });
     for (const lessonId of lessonsIds) {
       const lesson: Lesson = await this.lessonsService.findOne(lessonId);
-      lesson.unit = unit;
+      delete lesson.unit;
       lessons.push(lesson);
     }
-    const exam: Exam = await this.examsService.findOne(examId);
-    exam.unit = unit;
-
-    unit.lessons = lessons;
-    unit.exam = exam;
+    let exam: Exam;
+    if (examId) {
+      exam = await this.examsService.findOne(examId);
+      unit.lessons = lessons;
+      unit.exam = exam;
+    } else {
+      const exercisesIds = await this.lessonsService.findExercisesIds(
+        lessonsIds.map((l) => +l),
+      );
+      exam = await this.examsService.create({
+        title: `Exam: ${unit.title}`,
+        exercisesIds,
+      });
+      delete exam.exercises;
+      unit.exam = exam;
+      unit.lessons = lessons;
+    }
     return this.unitsRepository.save(unit);
   }
 

@@ -6,8 +6,8 @@ export class CreateUnitDto {
   @IsNotEmpty()
   title: string;
 
-  @ApiProperty({ example: 1 })
-  examId: number;
+  @ApiProperty({ example: 1, required: false })
+  examId?: number;
 
   @ApiProperty({ type: [Number], example: [1, 2] })
   lessonsIds: number[];
