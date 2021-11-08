@@ -103,7 +103,6 @@ export class UsersService {
   }
 
   async addChallengePoints(id: number) {
-    console.log('as');
     const user = await this.findOne(id);
     user.points += config.pointsEarnedByChallenge;
     await this.usersRepository.save(user);
