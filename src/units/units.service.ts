@@ -2,15 +2,18 @@ import { BadRequestException, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { paginate, Pagination } from 'nestjs-typeorm-paginate';
 import { Repository } from 'typeorm';
+import { config } from '../common/config';
+import { Exam } from '../exams/entities/exam.entity';
 import { ExamsService } from '../exams/exams.service';
+import { CreateExerciseDto } from '../exercises/dto/create-exercise.dto';
+import { Exercise } from '../exercises/entities/exercise.entity';
+import { Lesson } from '../lessons/entities/lesson.entity';
 import { LessonsService } from '../lessons/lessons.service';
 import { CreateUnitDto } from './dto/create-unit.dto';
-import { Unit } from './entities/unit.entity';
 import { UnitParams } from './dto/unit.params';
-import { buildQuery } from './units.query-builder';
 import { UpdateUnitDto } from './dto/update-unit.dto';
-import { Lesson } from '../lessons/entities/lesson.entity';
-import { Exam } from '../exams/entities/exam.entity';
+import { Unit } from './entities/unit.entity';
+import { buildQuery } from './units.query-builder';
 
 @Injectable()
 export class UnitsService {
@@ -22,32 +25,22 @@ export class UnitsService {
   ) {}
 
   async create(createUnitDto: CreateUnitDto) {
-    const { lessonsIds, examId, ...rest } = createUnitDto;
-    const lessons: Lesson[] = [];
+    const { lessons, ...rest } = createUnitDto;
+    const createdLessons: Lesson[] = [];
+    let exercises: CreateExerciseDto[] = [];
     const unit = new Unit({ ...rest });
-    for (const lessonId of lessonsIds) {
-      const lesson: Lesson = await this.lessonsService.findOne(lessonId);
-      delete lesson.unit;
-      lessons.push(lesson);
+    for (const lesson of lessons) {
+      const createdLesson = await this.lessonsService.create(lesson);
+      createdLessons.push(createdLesson);
+      exercises = exercises.concat(lesson.exercises);
     }
-    let exam: Exam;
-    if (examId) {
-      exam = await this.examsService.findOne(examId);
-      unit.lessons = lessons;
-      unit.exam = exam;
-    } else {
-      const exercisesIds = await this.lessonsService.findExercisesIds(
-        lessonsIds.map((l) => +l),
-      );
-      exam = await this.examsService.create({
-        title: `Exam: ${unit.title}`,
-        exercisesIds,
-      });
-      delete exam.exercises;
-      unit.exam = exam;
-      unit.lessons = lessons;
-    }
-    return this.unitsRepository.save(unit);
+    unit.lessons = createdLessons;
+    unit.exam = new Exam({
+      title: `Exam - ${rest.title}`,
+      exercises: exercises.map((e) => new Exercise(e)),
+      examTimeInSeconds: config.examTimeInSeconds,
+    });
+    return unit;
   }
 
   findAll(params: UnitParams): Promise<Pagination<Unit>> {

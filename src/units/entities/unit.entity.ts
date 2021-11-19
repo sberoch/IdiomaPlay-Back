@@ -28,6 +28,7 @@ export class Unit {
 
   @OneToOne(() => Exam, (exam) => exam.unit, {
     eager: true,
+    cascade: true,
     onDelete: 'SET NULL',
   })
   @JoinColumn()

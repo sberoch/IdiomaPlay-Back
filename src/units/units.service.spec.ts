@@ -12,7 +12,7 @@ describe('UnitsService', () => {
   let units: Unit[] = [];
 
   const unitDto: CreateUnitDto = {
-    lessonsIds: [1, 2],
+    lessons: [],
     title: 'Test',
   };
 

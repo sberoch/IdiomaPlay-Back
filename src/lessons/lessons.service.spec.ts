@@ -11,7 +11,7 @@ describe('LessonsService', () => {
   let lessons: Lesson[] = [];
   const lessonDto: CreateLessonDto = {
     title: 'Test',
-    exercisesIds: [1, 2],
+    exercises: [],
   };
 
   const mockRepository = {

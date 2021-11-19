@@ -11,7 +11,7 @@ describe('ChallengesService', () => {
   let challenges: Challenge[] = [];
   const lessonDto: CreateChallengeDto = {
     title: 'Test',
-    unitsIds: [1, 2],
+    units: [],
   };
   const mockRepository = {
     save: jest

@@ -18,31 +18,16 @@ export class ChallengesService {
     private unitsService: UnitsService,
   ) {}
 
-  async createFromLoader(createChallengeDto: CreateChallengeDto) {
-    const { unitsIds, ...rest } = createChallengeDto;
-    const units: Unit[] = [];
-
-    const challenge = new Challenge({ ...rest });
-
-    for (const unitId of unitsIds) {
-      const unit: Unit = await this.unitsService.findOne(unitId);
-      unit.challenge = challenge;
-      units.push(unit);
-    }
-    challenge.units = units;
-    return this.challengeRepository.save(challenge);
-  }
-
   async create(createChallengeDto: CreateChallengeDto) {
-    const { unitsIds, ...rest } = createChallengeDto;
-    const units: Unit[] = [];
-    for (const unitId of unitsIds) {
-      const unit: Unit = await this.unitsService.findOne(unitId);
-      delete unit.challenge;
-      units.push(unit);
+    const { units, ...rest } = createChallengeDto;
+    const createdUnits: Unit[] = [];
+    const challenge = new Challenge({ ...rest });
+    for (const unit of units) {
+      const createdUnit = await this.unitsService.create(unit);
+      createdUnits.push(createdUnit);
     }
-    const challenge = new Challenge({ ...rest, units });
-    return this.challengeRepository.save(challenge);
+    challenge.units = createdUnits;
+    return await this.challengeRepository.save(challenge);
   }
 
   findAll(params: ChallengeParams): Promise<Pagination<Challenge>> {

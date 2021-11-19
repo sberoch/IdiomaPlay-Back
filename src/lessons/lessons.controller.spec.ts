@@ -1,5 +1,4 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { Exercise } from '../exercises/entities/exercise.entity';
 import { Unit } from '../units/entities/unit.entity';
 import { CreateLessonDto } from './dto/create-lesson.dto';
 import { UpdateLessonDto } from './dto/update-lesson.dto';
@@ -10,16 +9,16 @@ import { LessonsService } from './lessons.service';
 describe('ExercisesController', () => {
   let controller: LessonsController;
 
-  let elements: Lesson[] = [];
+  const elements: Lesson[] = [];
   const dto: CreateLessonDto = {
-    title: "Articles",
-    exercisesIds: [1, 2, 3, 4, 5, 6, 7, 8]
-  }
+    title: 'Articles',
+    exercises: [],
+  };
 
   const newDto: UpdateLessonDto = {
-    title: "Translating exercises",
-    exercisesIds: [14, 15, 16, 17, 18, 19, 20, 21]
-  }
+    title: 'Translating exercises',
+    exercises: [],
+  };
 
   const lesson: Lesson = new Lesson({
     id: 1,
@@ -27,7 +26,7 @@ describe('ExercisesController', () => {
     exercises: [],
     participations: [],
     unit: new Unit(),
-  })
+  });
 
   const newLesson: Lesson = new Lesson({
     id: 1,
@@ -35,8 +34,7 @@ describe('ExercisesController', () => {
     exercises: [],
     participations: [],
     unit: new Unit(),
-  })
-
+  });
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
@@ -45,27 +43,35 @@ describe('ExercisesController', () => {
     })
       .overrideProvider(LessonsService)
       .useValue({
-        create: jest.fn().mockImplementation( (dto: CreateLessonDto) => {
-          elements.push(lesson)
+        create: jest.fn().mockImplementation((dto: CreateLessonDto) => {
+          elements.push(lesson);
           return lesson;
         }),
-        findOne: jest.fn().mockImplementation( (id) => {
-          return elements.find(actualElement => actualElement.id === id)
+        findOne: jest.fn().mockImplementation((id) => {
+          return elements.find((actualElement) => actualElement.id === id);
         }),
-        findOneWithExercises: jest.fn().mockImplementation( (id) => {
-          return elements.find(actualElement => actualElement.id === id)
+        findOneWithExercises: jest.fn().mockImplementation((id) => {
+          return elements.find((actualElement) => actualElement.id === id);
         }),
-        findAll: jest.fn().mockImplementation( (query) => {
-          return elements
+        findAll: jest.fn().mockImplementation((query) => {
+          return elements;
         }),
-        update: jest.fn().mockImplementation( (id, newDto: UpdateLessonDto) => {
-          const index = elements.findIndex(actualElement => actualElement.id === id);
-          elements[index] = { id, exercises: [], unit: new Unit(), participations: [], title: newDto.title}
-          return elements[index]
+        update: jest.fn().mockImplementation((id, newDto: UpdateLessonDto) => {
+          const index = elements.findIndex(
+            (actualElement) => actualElement.id === id,
+          );
+          elements[index] = {
+            id,
+            exercises: [],
+            unit: new Unit(),
+            participations: [],
+            title: newDto.title,
+          };
+          return elements[index];
         }),
-        remove: jest.fn().mockImplementation( (id) => {
-          return elements.find(actualElement => actualElement.id === id)
-        })  
+        remove: jest.fn().mockImplementation((id) => {
+          return elements.find((actualElement) => actualElement.id === id);
+        }),
       })
       .compile();
 
@@ -89,7 +95,7 @@ describe('ExercisesController', () => {
   });
 
   it('Controller find one returns one element ', async () => {
-    expect(await controller.findOne("1")).toEqual(lesson);
+    expect(await controller.findOne('1')).toEqual(lesson);
   });
 
   it('Controller find all should be defined', () => {
@@ -97,7 +103,7 @@ describe('ExercisesController', () => {
   });
 
   it('Controller find all returns an array of elements', async () => {
-    const expectedReturn = [lesson]
+    const expectedReturn = [lesson];
     expect(await controller.findAll({})).toEqual(expectedReturn);
   });
 
@@ -106,8 +112,14 @@ describe('ExercisesController', () => {
   });
 
   it('Controller update should change dto', async () => {
-    const expectedReturn = { id: 1, exercises: [], unit: new Unit(), participations: [], title: newDto.title}
-    expect(await controller.update("1", newDto)).toEqual(expectedReturn);
+    const expectedReturn = {
+      id: 1,
+      exercises: [],
+      unit: new Unit(),
+      participations: [],
+      title: newDto.title,
+    };
+    expect(await controller.update('1', newDto)).toEqual(expectedReturn);
   });
 
   it('Controller remove should be defined', () => {
@@ -115,6 +127,6 @@ describe('ExercisesController', () => {
   });
 
   it('Controller remove should delete element', async () => {
-    expect(await controller.remove("1")).toEqual(newLesson);
+    expect(await controller.remove('1')).toEqual(newLesson);
   });
 });

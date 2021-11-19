@@ -19,15 +19,15 @@ export class LessonsService {
   ) {}
 
   async create(createLessonDto: CreateLessonDto) {
-    const { exercisesIds, ...rest } = createLessonDto;
-    const exercises: Exercise[] = [];
+    const { exercises, ...rest } = createLessonDto;
+    const createdExercises: Exercise[] = [];
     const lesson = new Lesson({ ...rest });
-    for (const exerciseId of exercisesIds) {
-      const exercise: Exercise = await this.exerciseService.findOne(exerciseId);
-      exercises.push(exercise);
+    for (const exercise of exercises) {
+      const createdExercise = new Exercise(exercise);
+      createdExercises.push(createdExercise);
     }
-    lesson.exercises = exercises;
-    return this.lessonsRepository.save(lesson);
+    lesson.exercises = createdExercises;
+    return lesson;
   }
 
   findAll(params: LessonParams): Promise<Pagination<Lesson>> {

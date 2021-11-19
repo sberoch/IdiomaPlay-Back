@@ -22,7 +22,7 @@ export class Exam {
   @Column()
   examTimeInSeconds: number;
 
-  @ManyToMany(() => Exercise, (exercise) => exercise.lesson, {
+  @ManyToMany(() => Exercise, (exercise) => exercise.exam, {
     cascade: true,
     onDelete: 'SET NULL',
   })

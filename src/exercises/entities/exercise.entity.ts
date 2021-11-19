@@ -1,4 +1,5 @@
 import { Column, Entity, ManyToMany, PrimaryGeneratedColumn } from 'typeorm';
+import { Exam } from '../../exams/entities/exam.entity';
 import { Lesson } from '../../lessons/entities/lesson.entity';
 
 export enum ExerciseType {
@@ -34,6 +35,9 @@ export class Exercise {
 
   @ManyToMany(() => Lesson, (lesson) => lesson.exercises)
   lesson: Lesson[];
+
+  @ManyToMany(() => Exam, (exam) => exam.exercises)
+  exam: Exam[];
 
   constructor(data: Partial<Exercise> = {}) {
     Object.assign(this, data);
