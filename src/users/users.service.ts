@@ -3,7 +3,6 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { paginate } from 'nestjs-typeorm-paginate';
 import { Repository } from 'typeorm';
 import { config } from '../common/config';
-import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { UserParams } from './dto/user.params';
 import { User } from './entities/user.entity';
@@ -11,6 +10,7 @@ import { buildQuery } from './users.query-builder';
 import { Api } from '../common/api/Api';
 import { AdminLoginDto } from './dto/admin-login-dto';
 
+// eslint-disable-next-line @typescript-eslint/no-var-requires
 const bcrypt = require('bcryptjs');
 
 async function hashIt(password) {

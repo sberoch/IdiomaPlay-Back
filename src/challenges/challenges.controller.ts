@@ -31,7 +31,7 @@ export class ChallengesController {
   @ApiOkResponse()
   @Get()
   findAll(@Query() query: ChallengeParams) {
-    return this.challengesService.findAllEnabledChallenges(query);
+    return this.challengesService.findAll(query);
   }
 
   @ApiOkResponse()

@@ -1,4 +1,5 @@
 import { FindConditions, ILike } from 'typeorm';
+import { config } from '../common/config';
 import { buildPaginationQuery } from '../common/pagination/pagination-query-builder';
 import { UserParams } from './dto/user.params';
 import { User } from './entities/user.entity';
@@ -9,6 +10,9 @@ export const buildQuery = (params: UserParams) => {
   if (params.email) {
     findOptions.email = ILike(`%${params.email}%`);
   }
+
+  findOptions.role = config.roles.common;
+
   return {
     paginationOptions,
     findOptions,

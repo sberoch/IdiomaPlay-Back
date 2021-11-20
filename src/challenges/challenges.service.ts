@@ -38,15 +38,6 @@ export class ChallengesService {
     });
   }
 
-  // eslint-disable-next-line prettier/prettier
-  findAllEnabledChallenges(params: ChallengeParams): Promise<Pagination<Challenge>> {
-    const { paginationOptions, findOptions, orderOptions } = buildQuery(params);
-    return paginate<Challenge>(this.challengeRepository, paginationOptions, {
-      where: findOptions,
-      order: orderOptions,
-    });
-  }
-
   async findOne(id: number) {
     const challenge = await this.challengeRepository.findOne(id);
     if (!challenge)
