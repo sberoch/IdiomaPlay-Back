@@ -2,7 +2,7 @@ import { BadRequestException, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { paginate, Pagination } from 'nestjs-typeorm-paginate';
 import { Repository } from 'typeorm';
-import { buildQuery } from '../exercises/exercises.query-builder';
+import { buildQuery } from './challenges.query-builder';
 import { Unit } from '../units/entities/unit.entity';
 import { UnitsService } from '../units/units.service';
 import { ChallengeParams } from './dto/challenge.params';
@@ -31,6 +31,15 @@ export class ChallengesService {
   }
 
   findAll(params: ChallengeParams): Promise<Pagination<Challenge>> {
+    const { paginationOptions, findOptions, orderOptions } = buildQuery(params);
+    return paginate<Challenge>(this.challengeRepository, paginationOptions, {
+      where: findOptions,
+      order: orderOptions,
+    });
+  }
+
+  // eslint-disable-next-line prettier/prettier
+  findAllEnabledChallenges(params: ChallengeParams): Promise<Pagination<Challenge>> {
     const { paginationOptions, findOptions, orderOptions } = buildQuery(params);
     return paginate<Challenge>(this.challengeRepository, paginationOptions, {
       where: findOptions,
@@ -77,6 +86,12 @@ export class ChallengesService {
       }
     }
     return true;
+  }
+
+  async enableOrDisable(id: number) {
+    const challenge = await this.challengeRepository.findOne(id);
+    challenge.enabled = !challenge.enabled;
+    return this.challengeRepository.save(challenge);
   }
 
   async remove(id: number) {

@@ -26,6 +26,9 @@ export class Challenge {
   )
   challengeParticipations: ChallengeParticipation[];
 
+  @Column({ default: true })
+  enabled: boolean;
+
   constructor(data: Partial<Challenge> = {}) {
     Object.assign(this, data);
   }

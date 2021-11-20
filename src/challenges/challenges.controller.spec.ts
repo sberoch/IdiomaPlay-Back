@@ -10,9 +10,9 @@ describe('ChallengesController', () => {
       controllers: [ChallengesController],
       providers: [ChallengesService],
     })
-    .overrideProvider(ChallengesService)
-    .useValue({})
-    .compile();
+      .overrideProvider(ChallengesService)
+      .useValue({})
+      .compile();
 
     controller = module.get<ChallengesController>(ChallengesController);
   });

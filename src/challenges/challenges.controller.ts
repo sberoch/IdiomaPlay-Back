@@ -31,7 +31,7 @@ export class ChallengesController {
   @ApiOkResponse()
   @Get()
   findAll(@Query() query: ChallengeParams) {
-    return this.challengesService.findAll(query);
+    return this.challengesService.findAllEnabledChallenges(query);
   }
 
   @ApiOkResponse()
@@ -48,6 +48,12 @@ export class ChallengesController {
     @Body() updateChallengeDto: UpdateChallengeDto,
   ) {
     return this.challengesService.update(+id, updateChallengeDto);
+  }
+
+  @ApiOkResponse()
+  @Post(':id/enableOrDisable')
+  enableOrDisable(@Param('id') id: string) {
+    return this.challengesService.enableOrDisable(+id);
   }
 
   @ApiOkResponse()
