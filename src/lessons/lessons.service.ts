@@ -4,6 +4,7 @@ import { paginate, Pagination } from 'nestjs-typeorm-paginate';
 import { Repository } from 'typeorm';
 import { Exercise } from '../exercises/entities/exercise.entity';
 import { ExercisesService } from '../exercises/exercises.service';
+import { Unit } from '../units/entities/unit.entity';
 import { CreateLessonDto } from './dto/create-lesson.dto';
 import { LessonParams } from './dto/lesson.params';
 import { UpdateLessonDto } from './dto/update-lesson.dto';
@@ -71,12 +72,34 @@ export class LessonsService {
   }
 
   async update(id: number, updateLessonDto: UpdateLessonDto) {
-    if (updateLessonDto.exercises) {
-      delete updateLessonDto.exercises;
-    }
     const lesson = await this.lessonsRepository.findOne(id);
+    const updatedExercises: Exercise[] = [];
+    for (const exercise of updateLessonDto.exercises) {
+      const updated = await this.exerciseService.upsert(exercise);
+      updatedExercises.push(updated);
+    }
+    lesson.exercises = updatedExercises;
     Object.assign(lesson, updateLessonDto);
     return this.lessonsRepository.save(lesson);
+  }
+
+  async upsert(unit: Unit, dto: CreateLessonDto) {
+    const lesson = await this.lessonsRepository.findOne(
+      { title: dto.title, unit },
+      { relations: ['unit'] },
+    );
+    if (!lesson) {
+      return await this.create(dto);
+    } else {
+      const updatedExercises: Exercise[] = [];
+      for (const exercise of dto.exercises) {
+        const updated = await this.exerciseService.upsert(exercise);
+        updatedExercises.push(updated);
+      }
+      lesson.exercises = updatedExercises;
+      Object.assign(lesson, dto);
+      return lesson;
+    }
   }
 
   async remove(id: number) {

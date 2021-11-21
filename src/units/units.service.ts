@@ -2,6 +2,7 @@ import { BadRequestException, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { paginate, Pagination } from 'nestjs-typeorm-paginate';
 import { Repository } from 'typeorm';
+import { Challenge } from '../challenges/entities/challenge.entity';
 import { config } from '../common/config';
 import { Exam } from '../exams/entities/exam.entity';
 import { ExamsService } from '../exams/exams.service';
@@ -93,14 +94,33 @@ export class UnitsService {
     return false;
   }
 
+  async upsert(challenge: Challenge, dto: CreateUnitDto) {
+    const unit = await this.unitsRepository.findOne(
+      { title: dto.title, challenge },
+      { relations: ['challenge'] },
+    );
+    if (!unit) {
+      return await this.create(dto);
+    } else {
+      const upsertedLessons: Lesson[] = [];
+      for (const lesson of dto.lessons) {
+        const updated = await this.lessonsService.upsert(unit, lesson);
+        upsertedLessons.push(updated);
+      }
+      unit.lessons = upsertedLessons;
+      Object.assign(unit, dto);
+      return unit;
+    }
+  }
+
   async update(id: number, updateUnitDto: UpdateUnitDto) {
-    if (updateUnitDto.lessons) {
-      delete updateUnitDto.lessons;
-    }
-    if (updateUnitDto.exam) {
-      delete updateUnitDto.exam;
-    }
     const unit = await this.unitsRepository.findOne(id);
+    const upsertedLessons: Lesson[] = [];
+    for (const lesson of updateUnitDto.lessons) {
+      const updated = await this.lessonsService.upsert(unit, lesson);
+      upsertedLessons.push(updated);
+    }
+    unit.lessons = upsertedLessons;
     Object.assign(unit, updateUnitDto);
     return this.unitsRepository.save(unit);
   }

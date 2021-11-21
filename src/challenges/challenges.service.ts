@@ -54,11 +54,14 @@ export class ChallengesService {
   }
 
   async update(id: number, updateChallengeDto: UpdateChallengeDto) {
-    if (updateChallengeDto.units) {
-      delete updateChallengeDto.units;
-    }
     const challenge = await this.challengeRepository.findOne(id);
-    challenge.title = updateChallengeDto.title;
+    const upsertedUnits: Unit[] = [];
+    for (const unit of updateChallengeDto.units) {
+      const updated = await this.unitsService.upsert(challenge, unit);
+      upsertedUnits.push(updated);
+    }
+    Object.assign(challenge, updateChallengeDto);
+    challenge.units = upsertedUnits;
     return this.challengeRepository.save(challenge);
   }
 

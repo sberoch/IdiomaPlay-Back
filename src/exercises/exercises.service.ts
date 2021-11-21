@@ -1,12 +1,12 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
+import { paginate, Pagination } from 'nestjs-typeorm-paginate';
 import { Repository } from 'typeorm';
 import { CreateExerciseDto } from './dto/create-exercise.dto';
-import { Exercise } from './entities/exercise.entity';
 import { ExerciseParams } from './dto/exercise.params';
-import { paginate, Pagination } from 'nestjs-typeorm-paginate';
-import { buildQuery } from './exercises.query-builder';
 import { UpdateExerciseDto } from './dto/update-exercise.dto';
+import { Exercise } from './entities/exercise.entity';
+import { buildQuery } from './exercises.query-builder';
 
 @Injectable()
 export class ExercisesService {
@@ -37,6 +37,19 @@ export class ExercisesService {
     const exercise = await this.exercisesRepository.findOne(id);
     Object.assign(exercise, updateExerciseDto);
     return this.exercisesRepository.save(exercise);
+  }
+
+  async upsert(dto: CreateExerciseDto) {
+    const exercise = await this.exercisesRepository.findOne({
+      title: dto.title,
+      sentence: dto.sentence,
+    });
+    if (!exercise) {
+      return await this.create(dto);
+    } else {
+      Object.assign(exercise, dto);
+      return exercise;
+    }
   }
 
   async remove(id: number) {
