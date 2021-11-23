@@ -40,7 +40,7 @@ export class ParticipationsController {
   @ApiOkResponse()
   @Get(':id')
   findOne(@Param('id') id: string) {
-    return this.participationsService.findOneWithData(+id);
+    return this.participationsService.findOne(+id);
   }
 
   @ApiOkResponse()
