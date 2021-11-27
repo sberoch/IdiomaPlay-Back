@@ -9,12 +9,22 @@ import {
   UseFilters,
   Query,
 } from '@nestjs/common';
-import { ApiCreatedResponse, ApiOkResponse, ApiTags } from '@nestjs/swagger';
+import {
+  ApiCreatedResponse,
+  ApiOkResponse,
+  ApiProperty,
+  ApiTags,
+} from '@nestjs/swagger';
 import { QueryFailedExceptionFilter } from '../common/filters/queryFailedExceptionFilter';
 import { ChallengesService } from './challenges.service';
 import { CreateChallengeDto } from './dto/create-challenge.dto';
 import { UpdateChallengeDto } from './dto/update-challenge.dto';
 import { ChallengeParams } from './dto/challenge.params';
+
+class GetOneParams {
+  @ApiProperty({ required: false, example: false })
+  full?: string;
+}
 
 @ApiTags('Challenges')
 @Controller('challenges')
@@ -36,7 +46,10 @@ export class ChallengesController {
 
   @ApiOkResponse()
   @Get(':id')
-  findOne(@Param('id') id: string) {
+  findOne(@Param('id') id: string, @Query() query: GetOneParams) {
+    if (query.full === 'true') {
+      return this.challengesService.findFull(+id);
+    }
     return this.challengesService.findOneWithUnits(+id);
   }
 

@@ -53,6 +53,16 @@ export class ChallengesService {
       .getOne();
   }
 
+  async findFull(id: number) {
+    return this.challengeRepository
+      .createQueryBuilder('c')
+      .where('c.id = :id', { id: id })
+      .leftJoinAndSelect('c.units', 'units')
+      .leftJoinAndSelect('units.lessons', 'lessons')
+      .leftJoinAndSelect('lessons.exercises', 'exercises')
+      .getOne();
+  }
+
   async update(id: number, updateChallengeDto: UpdateChallengeDto) {
     const challenge = await this.challengeRepository.findOne(id);
     const upsertedUnits: Unit[] = [];
