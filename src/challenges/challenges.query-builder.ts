@@ -9,7 +9,9 @@ export const buildQuery = (params: ChallengeParams) => {
   if (params.title) {
     findOptions.title = ILike(`%${params.title}%`);
   }
-  findOptions.enabled = true;
+  if (params.enabled) {
+    findOptions.enabled = params.enabled;
+  }
   return {
     paginationOptions,
     findOptions,
