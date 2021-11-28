@@ -1,4 +1,4 @@
-import { Any, FindConditions, ILike } from 'typeorm';
+import { FindConditions, ILike } from 'typeorm';
 import { buildPaginationQuery } from '../common/pagination/pagination-query-builder';
 import { ExerciseParams } from './dto/exercise.params';
 import { Exercise } from './entities/exercise.entity';
