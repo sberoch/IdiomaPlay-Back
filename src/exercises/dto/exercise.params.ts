@@ -14,4 +14,7 @@ export class ExerciseParams extends PaginationParams {
     enum: ExerciseType,
   })
   type?: ExerciseType;
+
+  @ApiProperty({ required: false, example: 1 })
+  lesson?: number;
 }

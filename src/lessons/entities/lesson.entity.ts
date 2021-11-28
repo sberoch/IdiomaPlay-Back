@@ -19,8 +19,11 @@ export class Lesson {
   @Column({ default: 'Test lesson' })
   title: string;
 
-  @ManyToMany(() => Exercise, (exercise) => exercise.lesson, { cascade: true })
-  @JoinTable()
+  @OneToMany(() => Exercise, (exercise) => exercise.lesson, {
+    eager: true,
+    cascade: true,
+    onDelete: 'SET NULL',
+  })
   exercises: Exercise[];
 
   @OneToMany(() => Participation, (participation) => participation.lesson, {

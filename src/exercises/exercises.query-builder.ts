@@ -1,4 +1,4 @@
-import { FindConditions, ILike } from 'typeorm';
+import { Any, FindConditions, ILike } from 'typeorm';
 import { buildPaginationQuery } from '../common/pagination/pagination-query-builder';
 import { ExerciseParams } from './dto/exercise.params';
 import { Exercise } from './entities/exercise.entity';
@@ -14,6 +14,9 @@ export const buildQuery = (params: ExerciseParams) => {
   }
   if (params.type) {
     findOptions.type = params.type;
+  }
+  if (params.lesson) {
+    findOptions.lesson = params.lesson as FindConditions<Exercise>;
   }
   return {
     paginationOptions,

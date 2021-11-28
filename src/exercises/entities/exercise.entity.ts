@@ -1,4 +1,4 @@
-import { Column, Entity, ManyToMany, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, Entity, ManyToMany, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
 import { Exam } from '../../exams/entities/exam.entity';
 import { Lesson } from '../../lessons/entities/lesson.entity';
 
@@ -33,8 +33,10 @@ export class Exercise {
   @Column()
   correctOption: string;
 
-  @ManyToMany(() => Lesson, (lesson) => lesson.exercises)
-  lesson: Lesson[];
+  @ManyToOne(() => Lesson, (lesson) => lesson.exercises, {
+    onDelete: 'SET NULL',
+  })
+  lesson: Lesson;
 
   @ManyToMany(() => Exam, (exam) => exam.exercises)
   exam: Exam[];
