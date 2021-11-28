@@ -15,8 +15,8 @@ function getRandomExercisesForExam(exercises: Exercise[]) {
   const shuffled = exercises.sort(() => 0.5 - Math.random());
   const max =
     exercises.length > config.amountOfExercisesPerExam
-      ? exercises.length
-      : config.amountOfExercisesPerExam;
+      ? config.amountOfExercisesPerExam
+      : exercises.length;
   return shuffled.slice(0, max);
 }
 
