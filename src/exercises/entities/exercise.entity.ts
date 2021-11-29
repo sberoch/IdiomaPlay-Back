@@ -20,7 +20,7 @@ export class Exercise {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Column({ default: 'Test' })
+  @Column({ default: 'Tests' })
   title: string;
 
   @Column()
