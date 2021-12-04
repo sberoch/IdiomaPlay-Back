@@ -15,6 +15,7 @@ import { config } from '../common/config';
 import { ChallengeParticipationService } from '../challengeParticipations/challengeParticipations.service';
 import { Challenge } from '../challenges/entities/challenge.entity';
 import { ChallengeParticipation } from '../challengeParticipations/entities/challengeParticipation.entity';
+import { StatsService } from '../stats/stats.service';
 
 describe('ParticipationsService', () => {
   let service: ParticipationsService;
@@ -79,6 +80,7 @@ describe('ParticipationsService', () => {
         LessonsService,
         ExamsService,
         UnitsService,
+        StatsService,
         ChallengeParticipationService,
         {
           provide: getRepositoryToken(Participation),
@@ -86,6 +88,8 @@ describe('ParticipationsService', () => {
         },
       ],
     })
+      .overrideProvider(StatsService)
+      .useValue({})
       .overrideProvider(UsersService)
       .useValue({
         findOneWithData: (userId) => {

@@ -18,4 +18,11 @@ export class CreateParticipationDto {
 
   @ApiProperty({ example: 1 })
   correctExercises?: number;
+
+  @ApiProperty({
+    example: 110,
+    description: 'Time to solve the exam in seconds',
+    required: false,
+  })
+  examTime?: number;
 }

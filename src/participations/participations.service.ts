@@ -8,6 +8,7 @@ import { Exam } from '../exams/entities/exam.entity';
 import { ExamsService } from '../exams/exams.service';
 import { Lesson } from '../lessons/entities/lesson.entity';
 import { LessonsService } from '../lessons/lessons.service';
+import { StatsService } from '../stats/stats.service';
 import { Unit } from '../units/entities/unit.entity';
 import { UnitsService } from '../units/units.service';
 import { User } from '../users/entities/user.entity';
@@ -28,10 +29,11 @@ export class ParticipationsService {
     private lessonsService: LessonsService,
     private examsService: ExamsService,
     private unitsService: UnitsService,
+    private statsService: StatsService,
   ) {}
 
   async create(createParticipationDto: CreateParticipationDto) {
-    const { userId, examId, lessonId, unitId, ...rest } =
+    const { userId, examId, lessonId, unitId, examTime, ...rest } =
       createParticipationDto;
     if (!(examId || lessonId))
       throw new BadRequestException('Se debe proveer una leccion o un examen');
@@ -66,6 +68,8 @@ export class ParticipationsService {
       } else {
         if (newParticipation.isPassed) {
           await this.usersService.addExamPoints(user.id);
+          await this.statsService.createExamStat({ examTime: examTime });
+          await this.statsService.increasePassedUnits();
         }
         const res = await this.participationsRepository.save(newParticipation);
         await this.challengeParticipationsService.removeIfCompleted(

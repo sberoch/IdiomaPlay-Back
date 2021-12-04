@@ -13,6 +13,7 @@ import { UsersModule } from './users/users.module';
 import { ParticipationsModule } from './participations/participations.module';
 import { ChallengesModule } from './challenges/challenges.module';
 import { ChallengeParticipationModule } from './challengeParticipations/challengeParticipations.module';
+import { StatsModule } from './stats/stats.module';
 
 @Module({
   imports: [
@@ -26,6 +27,7 @@ import { ChallengeParticipationModule } from './challengeParticipations/challeng
     ParticipationsModule,
     ChallengesModule,
     ChallengeParticipationModule,
+    StatsModule,
   ],
   controllers: [AppController],
   providers: [AppService],
