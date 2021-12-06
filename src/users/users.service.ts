@@ -26,7 +26,7 @@ export class UsersService {
     @InjectRepository(User)
     private usersRepository: Repository<User>,
     private statsService: StatsService,
-  ) { }
+  ) {}
 
   async create(token: string) {
     try {
@@ -37,21 +37,20 @@ export class UsersService {
       // Create if user doesn't exist
       if (!user) {
         const newUser = await this.usersRepository.save(new User({ email }));
-        const dto: CreateUserStatDto = { 
+        const dto: CreateUserStatDto = {
           userId: newUser.id,
-          exercisesDone: 0
-        }
+          exercisesDone: 0,
+        };
         this.statsService.createUserStat(dto);
         return newUser;
       } else {
-        const dto: CreateUserStatDto = { 
+        const dto: CreateUserStatDto = {
           userId: user.id,
-          exercisesDone: 0
-        }
+          exercisesDone: 0,
+        };
         this.statsService.createUserStat(dto);
         return user;
       }
-
     } catch (error) {
       return new BadRequestException(`Token invalido`);
     }
