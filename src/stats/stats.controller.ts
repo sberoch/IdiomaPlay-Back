@@ -1,5 +1,7 @@
-import { Controller, Get, Query } from '@nestjs/common';
-import { ApiOkResponse, ApiTags } from '@nestjs/swagger';
+import { Body, Controller, Delete, Get, Param, Post, Query, UseFilters } from '@nestjs/common';
+import { ApiCreatedResponse, ApiOkResponse, ApiOperation, ApiTags } from '@nestjs/swagger';
+import { QueryFailedExceptionFilter } from '../common/filters/queryFailedExceptionFilter';
+import { CreateUserStatDto } from './dto/create-user-stat.dto';
 import { StatsParams } from './dto/stats.params';
 import { StatsService } from './stats.service';
 
@@ -27,8 +29,24 @@ export class StatsController {
   }
 
   @ApiOkResponse()
+  @ApiOperation({ summary: 'Devuelve el ultimo login de cada usuario con su categoria' })
   @Get('/access-frecuency')
   getAccessFrecuency(@Query() query: StatsParams) {
     return this.statsService.getAccessFrecuency(query);
+  }
+
+  //TODO: remove
+  @ApiCreatedResponse()
+  @UseFilters(QueryFailedExceptionFilter)
+  @Post()
+  create(@Body() createUserStatDto: CreateUserStatDto) {
+    return this.statsService.createUserStat(createUserStatDto);
+  }
+
+  //TODO: remove
+  @ApiOkResponse()
+  @Delete(':id')
+  remove(@Param('id') id: string) {
+    return this.statsService.remove(+id);
   }
 }

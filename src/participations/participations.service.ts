@@ -8,6 +8,7 @@ import { Exam } from '../exams/entities/exam.entity';
 import { ExamsService } from '../exams/exams.service';
 import { Lesson } from '../lessons/entities/lesson.entity';
 import { LessonsService } from '../lessons/lessons.service';
+import { CreateUserStatDto } from '../stats/dto/create-user-stat.dto';
 import { StatsService } from '../stats/stats.service';
 import { Unit } from '../units/entities/unit.entity';
 import { UnitsService } from '../units/units.service';
@@ -185,6 +186,11 @@ export class ParticipationsService {
     const participation = await this.participationsRepository.findOne(id);
     if (this.shouldAddExercisePoints(participation, dto)) {
       await this.usersService.addExercisePoints(dto.userId);
+      const userStat = {
+        userId: participation.user.id, 
+        exercisesDone: dto.correctExercises
+      }
+      await this.statsService.createUserStat(userStat as CreateUserStatDto)
       return this.participationsRepository.update(id, {
         correctExercises: dto.correctExercises,
       });

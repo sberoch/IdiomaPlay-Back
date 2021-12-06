@@ -9,6 +9,8 @@ import { User } from './entities/user.entity';
 import { buildQuery } from './users.query-builder';
 import { Api } from '../common/api/Api';
 import { AdminLoginDto } from './dto/admin-login-dto';
+import { StatsService } from '../stats/stats.service';
+import { CreateUserStatDto } from '../stats/dto/create-user-stat.dto';
 
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const bcrypt = require('bcryptjs');
@@ -23,7 +25,8 @@ export class UsersService {
   constructor(
     @InjectRepository(User)
     private usersRepository: Repository<User>,
-  ) {}
+    private statsService: StatsService,
+  ) { }
 
   async create(token: string) {
     try {
@@ -33,10 +36,22 @@ export class UsersService {
       const user = await this.usersRepository.findOne({ email });
       // Create if user doesn't exist
       if (!user) {
-        return this.usersRepository.save(new User({ email }));
+        const newUser = await this.usersRepository.save(new User({ email }));
+        const dto: CreateUserStatDto = { 
+          userId: newUser.id,
+          exercisesDone: 0
+        }
+        this.statsService.createUserStat(dto);
+        return newUser;
       } else {
+        const dto: CreateUserStatDto = { 
+          userId: user.id,
+          exercisesDone: 0
+        }
+        this.statsService.createUserStat(dto);
         return user;
       }
+
     } catch (error) {
       return new BadRequestException(`Token invalido`);
     }
