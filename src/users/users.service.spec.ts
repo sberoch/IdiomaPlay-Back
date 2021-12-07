@@ -1,6 +1,8 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { getRepositoryToken } from '@nestjs/typeorm';
 import { config } from '../common/config';
+import { UserStat } from '../stats/entities/user-stat.entity';
+import { StatsService } from '../stats/stats.service';
 import { User } from './entities/user.entity';
 import { UsersService } from './users.service';
 
@@ -35,8 +37,12 @@ describe('UsersService', () => {
           provide: getRepositoryToken(User),
           useValue: mockRepository,
         },
+        StatsService,
       ],
-    }).compile();
+    })
+      .overrideProvider(StatsService)
+      .useValue({})
+      .compile();
 
     service = module.get<UsersService>(UsersService);
     users = [];

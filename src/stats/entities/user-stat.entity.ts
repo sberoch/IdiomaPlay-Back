@@ -16,6 +16,7 @@ export class UserStat {
 
   constructor(data: Partial<UserStat> = {}) {
     this.createdDate = new Date(new Date().setHours(0, 0, 0, 0));
+    // this.createdDate = new Date('12/4/20');
     Object.assign(this, data);
   }
 }

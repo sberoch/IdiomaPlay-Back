@@ -2,6 +2,7 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { getRepositoryToken } from '@nestjs/typeorm';
 import { ExamStat } from './entities/exam-stat.entity';
 import { UnitStat } from './entities/unit-stat.entity';
+import { UserStat } from './entities/user-stat.entity';
 import { StatsService } from './stats.service';
 
 describe('StatsService', () => {
@@ -17,6 +18,10 @@ describe('StatsService', () => {
         },
         {
           provide: getRepositoryToken(ExamStat),
+          useValue: {},
+        },
+        {
+          provide: getRepositoryToken(UserStat),
           useValue: {},
         },
       ],

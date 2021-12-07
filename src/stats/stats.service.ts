@@ -26,6 +26,16 @@ interface RecentUserEntry {
   category: string;
 }
 
+interface UsersByCategory {
+  category: string;
+  amountOfUsers: number;
+}
+
+function dateDiffInDays(date1, date2) {
+  const diffInMs = date1.getTime() - date2.getTime();
+  return diffInMs / (1000 * 60 * 60 * 24);
+}
+
 function addValueToMap(map, key, value) {
   map[key] = map[key] || [];
   map[key].push(value);
@@ -61,18 +71,70 @@ function getCategory(diffInDays) {
 
 function convertDatesToCategory(recentUsersLogins: RecentUserEntry[]) {
   const today = new Date(new Date().setHours(0, 0, 0, 0));
-  for (const login of recentUsersLogins) {
-    const diffInMs = today.getTime() - login.date.getTime();
-    const diffInDays = diffInMs / (1000 * 60 * 60 * 24);
-    login.category = getCategory(diffInDays);
+  for (const loginEntry of recentUsersLogins) {
+    const diffInDays = dateDiffInDays(today, loginEntry.date);
+    loginEntry.category = getCategory(diffInDays);
   }
+
+  const dailyCategory: UsersByCategory = {
+    category: categories.daily,
+    amountOfUsers: 0,
+  };
+  const weeklyCategory: UsersByCategory = {
+    category: categories.weekly,
+    amountOfUsers: 0,
+  };
+  const monthlyCategory: UsersByCategory = {
+    category: categories.monthly,
+    amountOfUsers: 0,
+  };
+  const anualCategory: UsersByCategory = {
+    category: categories.anualy,
+    amountOfUsers: 0,
+  };
+
+  const usersByCategories: UsersByCategory[] = [
+    dailyCategory,
+    weeklyCategory,
+    monthlyCategory,
+    anualCategory,
+  ];
+
+  for (const recentUserLogin of recentUsersLogins) {
+    for (const userByCategory of usersByCategories) {
+      if (userByCategory.category === recentUserLogin.category) {
+        userByCategory.amountOfUsers++;
+      }
+    }
+  }
+
+  return usersByCategories;
 }
 
-// function addDays(date, days) {
-//   const result = new Date(date);
-//   result.setDate(result.getDate() + days);
-//   return result;
-// }
+function getSevenDaysBackFromDate(date) {
+  const result = new Date(date);
+  result.setDate(result.getDate() - 7);
+  return result;
+}
+
+function getDates(from, to) {
+  const today = new Date(new Date().setHours(0, 0, 0, 0));
+  from = new Date(from);
+  to = new Date(to);
+
+  if (!from && !to) {
+    to = today;
+    from = getSevenDaysBackFromDate(today);
+  }
+
+  return { from, to };
+}
+
+function addDays(date, days) {
+  const result = new Date(date);
+  result.setDate(result.getDate() + days);
+  return result;
+}
 
 @Injectable()
 export class StatsService {
@@ -89,9 +151,11 @@ export class StatsService {
     return await this.examStatsRepository.save(new ExamStat(createExamStatDto));
   }
 
-  //Creates new entry if user didn't was not active today. If he was, it adds up to the amount of exercises
+  //Creates new entry if user didn't was not active today.
+  //If he was, it adds up to the amount of exercises
   async createUserStat(createUserStatDto: CreateUserStatDto) {
     const today = new Date(new Date().setHours(0, 0, 0, 0));
+    // today = addDays(today, 1);
     const userDataFromToday = await this.userStatsRepository.findOne({
       where: {
         createdDate: today,
@@ -143,9 +207,15 @@ export class StatsService {
 
   async getDailyActiveUsers(params: StatsParams) {
     const dateQuery = this.buildQuery(params);
-
+    const today = new Date(new Date().setHours(0, 0, 0, 0));
     const activeUsersByDate = new Map<Date, Array<UserStat>>();
     const allStats = await this.userStatsRepository.find(dateQuery);
+    const dates: any = getDates(params.from, params.to);
+
+    for (let i = 0; i < dateDiffInDays(dates.to, dates.from); i++) {
+      const newDate = addDays(today, i);
+      addValueToMap(activeUsersByDate, newDate, {});
+    }
 
     for (const stat of allStats) {
       if (stat.exercisesDone > 0)
@@ -157,17 +227,17 @@ export class StatsService {
     for (const dateKey in activeUsersByDate) {
       const actualValues = activeUsersByDate[dateKey];
       const entry: ActiveUserEntry = {
-        date: actualValues[0].createdDate,
+        date: new Date(dateKey),
         amountOfUsers: actualValues.length,
       };
       listOfActiveUsers.push(entry);
     }
+
     return listOfActiveUsers;
   }
 
-  async getAccessFrecuency(params: StatsParams) {
-    const dateQuery = this.buildQuery(params);
-    const allStats = await this.userStatsRepository.find(dateQuery);
+  async getAccessFrecuency() {
+    const allStats = await this.userStatsRepository.find();
     console.log(allStats);
     const recentUsersLogins: RecentUserEntry[] = [];
 
@@ -192,8 +262,8 @@ export class StatsService {
       }
     }
 
-    convertDatesToCategory(recentUsersLogins);
-    return recentUsersLogins;
+    const usersByCategories = convertDatesToCategory(recentUsersLogins);
+    return usersByCategories;
   }
 
   async getDailyCompletedUnits(params: StatsParams) {
