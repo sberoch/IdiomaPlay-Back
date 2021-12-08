@@ -11,7 +11,7 @@ export class ExamStat {
   id: number;
 
   @CreateDateColumn()
-  createdDate: Date;
+  date: Date;
 
   @Column()
   examTime: number;

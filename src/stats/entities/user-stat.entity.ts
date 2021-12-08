@@ -6,7 +6,7 @@ export class UserStat {
   id: number;
 
   @Column({ type: 'timestamptz' })
-  createdDate: Date;
+  date: Date;
 
   @Column()
   userId: number;
@@ -15,7 +15,7 @@ export class UserStat {
   exercisesDone: number;
 
   constructor(data: Partial<UserStat> = {}, date: Date) {
-    this.createdDate = date;
+    this.date = date;
     Object.assign(this, data);
   }
 }

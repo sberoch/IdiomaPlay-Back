@@ -1,13 +1,14 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Between, FindOperator, LessThan, MoreThan, Repository } from 'typeorm';
+import { Between, FindOperator, MoreThan, Repository } from 'typeorm';
 import { CreateExamStatDto } from './dto/create-stat.dto';
+import { CreateUserStatDto } from './dto/create-user-stat.dto';
 import { StatsParams } from './dto/stats.params';
 import { ExamStat } from './entities/exam-stat.entity';
 import { UnitStat } from './entities/unit-stat.entity';
 import { UserStat } from './entities/user-stat.entity';
-import { CreateUserStatDto } from './dto/create-user-stat.dto';
 
+const MAX_DAYS_DIFF = 90;
 const categories = {
   daily: 'Diariamente',
   weekly: 'Semanalmente',
@@ -226,7 +227,7 @@ export class StatsService {
     //Adding the ones that have users
     for (const stat of allStats) {
       if (stat.exercisesDone > 0)
-        addValueToMap(activeUsersByDate, stat.createdDate, stat);
+        addValueToMap(activeUsersByDate, stat.date, stat);
     }
 
     const listOfActiveUsers: ActiveUserEntry[] = [];
@@ -254,19 +255,15 @@ export class StatsService {
       if (!isUserInArray(recentUsersLogins, stat.userId)) {
         const newEntry: RecentUserEntry = {
           userId: stat.userId,
-          date: stat.createdDate,
+          date: stat.date,
           category: ' ',
         };
         recentUsersLogins.push(newEntry);
       } else if (
         isUserInArray(recentUsersLogins, stat.userId) &&
-        dateIsNotTheMostRecent(recentUsersLogins, stat.userId, stat.createdDate)
+        dateIsNotTheMostRecent(recentUsersLogins, stat.userId, stat.date)
       ) {
-        updateDateToTheMostRecent(
-          recentUsersLogins,
-          stat.userId,
-          stat.createdDate,
-        );
+        updateDateToTheMostRecent(recentUsersLogins, stat.userId, stat.date);
       }
     }
 
@@ -284,16 +281,31 @@ export class StatsService {
 
   private buildQuery(params: StatsParams) {
     let dateQuery: FindOperator<Date>;
-    if (params.from) {
-      dateQuery = MoreThan(params.from);
-    }
-    if (params.to) {
-      dateQuery = LessThan(params.to);
-    }
     if (params.from && params.to) {
+      const diff = Math.floor(
+        (new Date(params.to).getTime() - new Date(params.from).getTime()) /
+          86400000,
+      );
+      if (diff > MAX_DAYS_DIFF) {
+        const maxTimeBefore = new Date(params.to);
+        maxTimeBefore.setDate(maxTimeBefore.getDate() - MAX_DAYS_DIFF);
+        params.from = maxTimeBefore;
+      }
       dateQuery = Between(params.from, params.to);
+    } else {
+      if (params.from) {
+        dateQuery = MoreThan(params.from);
+      }
+      if (params.to) {
+        //If "from" not provided, get a week before "to"
+        const weekBefore = new Date(params.to);
+        weekBefore.setDate(weekBefore.getDate() - 7);
+        params.from = weekBefore;
+        dateQuery = Between(params.from, params.to);
+      }
     }
+
     if (!dateQuery) return {};
-    return { where: { createdDate: dateQuery } };
+    return { where: { date: dateQuery } };
   }
 }
