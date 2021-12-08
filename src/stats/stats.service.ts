@@ -203,7 +203,7 @@ export class StatsService {
   }
 
   async getMeanTimeForExams(params: StatsParams) {
-    const dateQuery = this.buildQuery(params);
+    const { dateQuery } = this.buildQuery(params);
     const examStats = await this.examStatsRepository.find(dateQuery);
     const sum = examStats.map((e) => e.examTime).reduce((a, b) => a + b, 0);
     if (examStats.length === 0) {
@@ -213,7 +213,7 @@ export class StatsService {
   }
 
   async getDailyActiveUsers(params: StatsParams) {
-    const dateQuery = this.buildQuery(params);
+    const { dateQuery } = this.buildQuery(params);
     const activeUsersByDate = new Map<Date, Array<UserStat>>();
     const allStats = await this.userStatsRepository.find(dateQuery);
     const dates: any = getDates(params.from, params.to);
@@ -272,11 +272,26 @@ export class StatsService {
   }
 
   async getDailyCompletedUnits(params: StatsParams) {
-    const dateQuery = this.buildQuery(params);
-    return (await this.unitStatsRepository.find(dateQuery)).map((u) => ({
-      date: u.date,
-      dailyPassedUnits: u.dailyPassedUnits,
+    const { dateQuery, modifiedParams } = this.buildQuery(params);
+    const asd = (await this.unitStatsRepository.find(dateQuery)).map((u) => ({
+      [u.date.toISOString()]: u.dailyPassedUnits,
     }));
+
+    const transformed = [];
+    for (
+      let i = new Date(modifiedParams.from);
+      i.getTime() < new Date(modifiedParams.to).getTime();
+      i.setDate(i.getDate() + 1)
+    ) {
+      if (!asd[i.toISOString()]) {
+        asd[i.toISOString()] = 0;
+      }
+      transformed.push({
+        date: i.toISOString(),
+        dailyPassedUnits: asd[i.toISOString()],
+      });
+    }
+    return transformed;
   }
 
   private buildQuery(params: StatsParams) {
@@ -305,7 +320,17 @@ export class StatsService {
       }
     }
 
-    if (!dateQuery) return {};
-    return { where: { date: dateQuery } };
+    if (!dateQuery) {
+      //Default: last week
+      params.to = new Date();
+      const weekBefore = new Date();
+      weekBefore.setDate(weekBefore.getDate() - 7);
+      params.from = weekBefore;
+      dateQuery = Between(params.from, params.to);
+    }
+    return {
+      dateQuery: { where: { date: dateQuery } },
+      modifiedParams: params,
+    };
   }
 }
