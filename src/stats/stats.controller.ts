@@ -56,7 +56,13 @@ export class StatsController {
   @UseFilters(QueryFailedExceptionFilter)
   @Post()
   create(@Body() createUserStatDto: CreateUserStatDto) {
-    return this.statsService.createUserStat(createUserStatDto);
+    return this.statsService.createUserStat(createUserStatDto, null);
+  }
+
+  @ApiOkResponse()
+  @Get()
+  findAll() {
+    return this.statsService.findAll();
   }
 
   //TODO: remove

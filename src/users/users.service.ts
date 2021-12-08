@@ -41,14 +41,14 @@ export class UsersService {
           userId: newUser.id,
           exercisesDone: 0,
         };
-        this.statsService.createUserStat(dto);
+        this.statsService.createUserStat(dto, null);
         return newUser;
       } else {
         const dto: CreateUserStatDto = {
           userId: user.id,
           exercisesDone: 0,
         };
-        this.statsService.createUserStat(dto);
+        this.statsService.createUserStat(dto, null);
         return user;
       }
     } catch (error) {

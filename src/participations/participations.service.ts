@@ -187,10 +187,13 @@ export class ParticipationsService {
     if (this.shouldAddExercisePoints(participation, dto)) {
       await this.usersService.addExercisePoints(dto.userId);
       const userStat = {
-        userId: participation.user.id, 
-        exercisesDone: dto.correctExercises
-      }
-      await this.statsService.createUserStat(userStat as CreateUserStatDto)
+        userId: participation.user.id,
+        exercisesDone: dto.correctExercises,
+      };
+      await this.statsService.createUserStat(
+        userStat as CreateUserStatDto,
+        null,
+      );
       return this.participationsRepository.update(id, {
         correctExercises: dto.correctExercises,
       });

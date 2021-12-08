@@ -14,9 +14,8 @@ export class UserStat {
   @Column()
   exercisesDone: number;
 
-  constructor(data: Partial<UserStat> = {}) {
-    this.createdDate = new Date(new Date().setHours(0, 0, 0, 0));
-    // this.createdDate = new Date('12/4/20');
+  constructor(data: Partial<UserStat> = {}, date: Date) {
+    this.createdDate = date;
     Object.assign(this, data);
   }
 }

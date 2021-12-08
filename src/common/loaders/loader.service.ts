@@ -5,10 +5,19 @@ import { Challenge } from '../../challenges/entities/challenge.entity';
 import { ExamsService } from '../../exams/exams.service';
 import { ExercisesService } from '../../exercises/exercises.service';
 import { LessonsService } from '../../lessons/lessons.service';
+import { CreateUserStatDto } from '../../stats/dto/create-user-stat.dto';
+import { UserStat } from '../../stats/entities/user-stat.entity';
+import { StatsService } from '../../stats/stats.service';
 import { UnitsService } from '../../units/units.service';
 import { User } from '../../users/entities/user.entity';
 import { UsersService } from '../../users/users.service';
 import * as challengesJson from '../jsons/challenges.json';
+
+function getDaysBackFromDate(date, amountOfDays) {
+  const result = new Date(date);
+  result.setDate(result.getDate() - amountOfDays);
+  return result;
+}
 
 @Injectable()
 export class LoaderService implements OnApplicationBootstrap {
@@ -19,6 +28,7 @@ export class LoaderService implements OnApplicationBootstrap {
     private examsService: ExamsService,
     private unitsService: UnitsService,
     private challengesService: ChallengesService,
+    private statsService: StatsService,
   ) {}
 
   async onApplicationBootstrap() {
@@ -27,6 +37,9 @@ export class LoaderService implements OnApplicationBootstrap {
 
     const admin = await this.loadAdminUser();
     console.log(`Loaded ${admin.email} as admin`);
+
+    const userStats = await this.loadUserStats();
+    console.log(`Loaded ${userStats.length} user stats`);
   }
 
   async loadChallenges(): Promise<Challenge[]> {
@@ -61,5 +74,40 @@ export class LoaderService implements OnApplicationBootstrap {
     await this.usersService.createTestUser('airibarren@fi.uba.ar', 'asd');
     await this.usersService.createTestUser('sberoch@gmail.com', 'asd');
     return user;
+  }
+
+  async loadUserStats(): Promise<UserStat[]> {
+    const prevStats = await this.statsService.findAll();
+    if (prevStats && prevStats.length !== 0) {
+      return prevStats;
+    }
+    const today = new Date(new Date().setHours(0, 0, 0, 0));
+
+    const userStatsCreated: UserStat[] = [];
+
+    for (let i = 0; i < 7; i++) {
+      const dto: CreateUserStatDto = {
+        userId: 800 + i,
+        exercisesDone: 1,
+      };
+      const createdStat = await this.statsService.createUserStat(
+        dto,
+        getDaysBackFromDate(today, i),
+      );
+      userStatsCreated.push(createdStat);
+
+      if (i % 2 === 0) {
+        const anotherDto: CreateUserStatDto = {
+          userId: 900 + i,
+          exercisesDone: 1,
+        };
+        const anotherCreated = await this.statsService.createUserStat(
+          anotherDto,
+          getDaysBackFromDate(today, i),
+        );
+        userStatsCreated.push(anotherCreated);
+      }
+    }
+    return userStatsCreated;
   }
 }

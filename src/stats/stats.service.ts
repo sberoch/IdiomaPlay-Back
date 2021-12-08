@@ -38,7 +38,7 @@ function dateDiffInDays(date1, date2) {
 
 function addValueToMap(map, key, value) {
   map[key] = map[key] || [];
-  map[key].push(value);
+  if (value !== null) map[key].push(value);
 }
 
 function isUserInArray(array, userId) {
@@ -119,8 +119,8 @@ function getSevenDaysBackFromDate(date) {
 
 function getDates(from, to) {
   const today = new Date(new Date().setHours(0, 0, 0, 0));
-  from = new Date(from);
-  to = new Date(to);
+  from = new Date(new Date(from).setHours(0, 0, 0, 0));
+  to = new Date(new Date(to).setHours(0, 0, 0, 0));
 
   if (!from && !to) {
     to = today;
@@ -147,30 +147,36 @@ export class StatsService {
     private userStatsRepository: Repository<UserStat>,
   ) {}
 
+  async findAll(): Promise<UserStat[]> {
+    return await this.userStatsRepository.find();
+  }
+
   async createExamStat(createExamStatDto: CreateExamStatDto) {
     return await this.examStatsRepository.save(new ExamStat(createExamStatDto));
   }
 
   //Creates new entry if user didn't was not active today.
   //If he was, it adds up to the amount of exercises
-  async createUserStat(createUserStatDto: CreateUserStatDto) {
-    const today = new Date(new Date().setHours(0, 0, 0, 0));
-    // today = addDays(today, 1);
+  async createUserStat(createUserStatDto: CreateUserStatDto, date: Date) {
+    if (!date) {
+      date = new Date(new Date().setHours(0, 0, 0, 0));
+    }
     const userDataFromToday = await this.userStatsRepository.findOne({
       where: {
-        createdDate: today,
+        createdDate: date,
         userId: createUserStatDto.userId,
       },
     });
-    if (!userDataFromToday)
+    if (!userDataFromToday) {
       return await this.userStatsRepository.save(
-        new UserStat(createUserStatDto),
+        new UserStat(createUserStatDto, date),
       );
-    else {
-      return await this.userStatsRepository.update(userDataFromToday.id, {
+    } else {
+      await this.userStatsRepository.update(userDataFromToday.id, {
         exercisesDone:
           userDataFromToday.exercisesDone + createUserStatDto.exercisesDone,
       });
+      return this.userStatsRepository.findOne(userDataFromToday.id);
     }
   }
 
@@ -207,16 +213,17 @@ export class StatsService {
 
   async getDailyActiveUsers(params: StatsParams) {
     const dateQuery = this.buildQuery(params);
-    const today = new Date(new Date().setHours(0, 0, 0, 0));
     const activeUsersByDate = new Map<Date, Array<UserStat>>();
     const allStats = await this.userStatsRepository.find(dateQuery);
     const dates: any = getDates(params.from, params.to);
 
+    //Adding the empty ones
     for (let i = 0; i < dateDiffInDays(dates.to, dates.from); i++) {
-      const newDate = addDays(today, i);
-      addValueToMap(activeUsersByDate, newDate, {});
+      const newDate = addDays(dates.from, i);
+      addValueToMap(activeUsersByDate, newDate, null);
     }
 
+    //Adding the ones that have users
     for (const stat of allStats) {
       if (stat.exercisesDone > 0)
         addValueToMap(activeUsersByDate, stat.createdDate, stat);
@@ -226,6 +233,7 @@ export class StatsService {
 
     for (const dateKey in activeUsersByDate) {
       const actualValues = activeUsersByDate[dateKey];
+      console.log(actualValues);
       const entry: ActiveUserEntry = {
         date: new Date(dateKey),
         amountOfUsers: actualValues.length,
