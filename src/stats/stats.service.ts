@@ -112,9 +112,9 @@ function convertDatesToCategory(recentUsersLogins: RecentUserEntry[]) {
   return usersByCategories;
 }
 
-function getSevenDaysBackFromDate(date) {
+function getDaysBackFromDate(date: Date, days: number) {
   const result = new Date(date);
-  result.setDate(result.getDate() - 7);
+  result.setDate(result.getDate() - days);
   return result;
 }
 
@@ -125,7 +125,7 @@ function getDates(from, to) {
 
   if (!from && !to) {
     to = today;
-    from = getSevenDaysBackFromDate(today);
+    from = getDaysBackFromDate(today, 7);
   }
 
   return { from, to };
@@ -202,9 +202,18 @@ export class StatsService {
     }
   }
 
-  async getMeanTimeForExams(params: StatsParams) {
+  async getPassedAndFailedExamsCount(params: StatsParams) {
     const { dateQuery } = this.buildQuery(params);
     const examStats = await this.examStatsRepository.find(dateQuery);
+    const passed = examStats.filter((e) => e.passed);
+    return { passed: passed.length, failed: examStats.length - passed.length };
+  }
+
+  async getMeanTimeForExams(params: StatsParams) {
+    const { dateQuery } = this.buildQuery(params);
+    const examStats = await this.examStatsRepository.find({
+      where: { ...dateQuery.where, passed: true },
+    });
     const sum = examStats.map((e) => e.examTime).reduce((a, b) => a + b, 0);
     if (examStats.length === 0) {
       return 0;
@@ -234,7 +243,6 @@ export class StatsService {
 
     for (const dateKey in activeUsersByDate) {
       const actualValues = activeUsersByDate[dateKey];
-      console.log(actualValues);
       const entry: ActiveUserEntry = {
         date: new Date(dateKey),
         amountOfUsers: actualValues.length,
@@ -247,7 +255,6 @@ export class StatsService {
 
   async getAccessFrecuency() {
     const allStats = await this.userStatsRepository.find();
-    console.log(allStats);
     const recentUsersLogins: RecentUserEntry[] = [];
 
     for (const stat of allStats) {
@@ -273,9 +280,11 @@ export class StatsService {
 
   async getDailyCompletedUnits(params: StatsParams) {
     const { dateQuery, modifiedParams } = this.buildQuery(params);
-    const asd = (await this.unitStatsRepository.find(dateQuery)).map((u) => ({
-      [u.date.toISOString()]: u.dailyPassedUnits,
-    }));
+    const dailyUnits = (await this.unitStatsRepository.find(dateQuery)).map(
+      (u) => ({
+        [u.date.toISOString()]: u.dailyPassedUnits,
+      }),
+    );
 
     const transformed = [];
     for (
@@ -283,12 +292,12 @@ export class StatsService {
       i.getTime() < new Date(modifiedParams.to).getTime();
       i.setDate(i.getDate() + 1)
     ) {
-      if (!asd[i.toISOString()]) {
-        asd[i.toISOString()] = 0;
+      if (!dailyUnits[i.toISOString()]) {
+        dailyUnits[i.toISOString()] = 0;
       }
       transformed.push({
         date: i.toISOString(),
-        dailyPassedUnits: asd[i.toISOString()],
+        dailyPassedUnits: dailyUnits[i.toISOString()],
       });
     }
     return transformed;
@@ -302,9 +311,7 @@ export class StatsService {
           86400000,
       );
       if (diff > MAX_DAYS_DIFF) {
-        const maxTimeBefore = new Date(params.to);
-        maxTimeBefore.setDate(maxTimeBefore.getDate() - MAX_DAYS_DIFF);
-        params.from = maxTimeBefore;
+        params.from = getDaysBackFromDate(new Date(params.to), MAX_DAYS_DIFF);
       }
       dateQuery = Between(params.from, params.to);
     } else {
@@ -312,20 +319,14 @@ export class StatsService {
         dateQuery = MoreThan(params.from);
       }
       if (params.to) {
-        //If "from" not provided, get a week before "to"
-        const weekBefore = new Date(params.to);
-        weekBefore.setDate(weekBefore.getDate() - 7);
-        params.from = weekBefore;
+        params.from = getDaysBackFromDate(new Date(params.to), 7);
         dateQuery = Between(params.from, params.to);
       }
     }
-
     if (!dateQuery) {
       //Default: last week
       params.to = new Date();
-      const weekBefore = new Date();
-      weekBefore.setDate(weekBefore.getDate() - 7);
-      params.from = weekBefore;
+      params.from = getDaysBackFromDate(new Date(), 7);
       dateQuery = Between(params.from, params.to);
     }
     return {

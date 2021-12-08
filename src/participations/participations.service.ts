@@ -66,11 +66,23 @@ export class ParticipationsService {
       });
       if (!newParticipation.isPassed && examAttempts >= 2) {
         await this.removeMany(user, unit);
+        await this.statsService.createExamStat({
+          examTime: examTime,
+          passed: false,
+        });
       } else {
         if (newParticipation.isPassed) {
           await this.usersService.addExamPoints(user.id);
-          await this.statsService.createExamStat({ examTime: examTime });
+          await this.statsService.createExamStat({
+            examTime: examTime,
+            passed: true,
+          });
           await this.statsService.increasePassedUnits();
+        } else {
+          await this.statsService.createExamStat({
+            examTime: examTime,
+            passed: false,
+          });
         }
         const res = await this.participationsRepository.save(newParticipation);
         await this.challengeParticipationsService.removeIfCompleted(

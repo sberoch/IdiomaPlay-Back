@@ -4,7 +4,7 @@ function getToday() {
   return new Date(new Date().setHours(0, 0, 0, 0));
 }
 
-function getSevenDaysBackFromDate(date) {
+function getSevenDaysBackFromDate(date: Date) {
   const result = new Date(date);
   result.setDate(result.getDate() - 7);
   return result;

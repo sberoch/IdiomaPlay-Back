@@ -31,6 +31,12 @@ export class StatsController {
   }
 
   @ApiOkResponse()
+  @Get('/passed-exams')
+  getPassedAndFailedExamsCount(@Query() query: StatsParams) {
+    return this.statsService.getPassedAndFailedExamsCount(query);
+  }
+
+  @ApiOkResponse()
   @Get('/daily-active-users')
   getDailyActiveUsers(@Query() query: StatsParams): any {
     return this.statsService.getDailyActiveUsers(query);

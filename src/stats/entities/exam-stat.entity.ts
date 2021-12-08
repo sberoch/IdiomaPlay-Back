@@ -16,6 +16,9 @@ export class ExamStat {
   @Column()
   examTime: number;
 
+  @Column()
+  passed: boolean;
+
   constructor(data: Partial<ExamStat> = {}) {
     Object.assign(this, data);
   }
