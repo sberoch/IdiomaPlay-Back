@@ -89,7 +89,9 @@ describe('ParticipationsService', () => {
       ],
     })
       .overrideProvider(StatsService)
-      .useValue({})
+      .useValue({
+        createExamStat: jest.fn().mockReturnThis(),
+      })
       .overrideProvider(UsersService)
       .useValue({
         findOneWithData: (userId) => {
