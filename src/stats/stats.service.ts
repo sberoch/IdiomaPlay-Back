@@ -13,8 +13,8 @@ const MAX_DAYS_DIFF = 90;
 const categories = {
   daily: 'Diariamente',
   weekly: 'Semanalmente',
-  monthly: 'Mensual',
-  anualy: 'Anual',
+  monthly: 'Mensualmente',
+  anualy: 'Anualmente',
 };
 
 interface ActiveUserEntry {
@@ -236,7 +236,10 @@ export class StatsService {
     const { dateQuery } = this.buildQuery(params);
     const examStats = await this.examStatsRepository.find(dateQuery);
     const passed = examStats.filter((e) => e.passed);
-    return { passed: passed.length, failed: examStats.length - passed.length };
+    return {
+      Aprobado: passed.length,
+      Desaprobado: examStats.length - passed.length,
+    };
   }
 
   async getMeanTimeForExams(params: StatsParams) {
