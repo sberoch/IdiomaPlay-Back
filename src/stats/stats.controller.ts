@@ -66,9 +66,15 @@ export class StatsController {
   }
 
   @ApiOkResponse()
-  @Get()
-  findAll() {
-    return this.statsService.findAll();
+  @Get('/userStats')
+  findAllUserStats() {
+    return this.statsService.findAllUserStats();
+  }
+
+  @ApiOkResponse()
+  @Get('/unitStats')
+  findAllUnitStats() {
+    return this.statsService.findAllUnitStats();
   }
 
   //TODO: remove

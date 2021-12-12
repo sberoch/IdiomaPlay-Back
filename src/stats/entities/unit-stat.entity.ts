@@ -11,7 +11,8 @@ export class UnitStat {
   @Column()
   dailyPassedUnits: number;
 
-  constructor(data: Partial<UnitStat> = {}) {
+  constructor(data: Partial<UnitStat> = {}, date: Date) {
     Object.assign(this, data);
+    this.date = date;
   }
 }

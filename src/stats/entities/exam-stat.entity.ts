@@ -10,7 +10,7 @@ export class ExamStat {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @CreateDateColumn()
+  @Column({ type: 'timestamptz' })
   date: Date;
 
   @Column()

@@ -67,6 +67,7 @@ export class ParticipationsService {
       if (!newParticipation.isPassed && examAttempts >= 2) {
         await this.removeMany(user, unit);
         await this.statsService.createExamStat({
+          date: new Date(new Date().setHours(0, 0, 0, 0)),
           examTime: examTime,
           passed: false,
         });
@@ -74,12 +75,14 @@ export class ParticipationsService {
         if (newParticipation.isPassed) {
           await this.usersService.addExamPoints(user.id);
           await this.statsService.createExamStat({
+            date: new Date(new Date().setHours(0, 0, 0, 0)),
             examTime: examTime,
             passed: true,
           });
           await this.statsService.increasePassedUnits();
         } else {
           await this.statsService.createExamStat({
+            date: new Date(new Date().setHours(0, 0, 0, 0)),
             examTime: examTime,
             passed: false,
           });

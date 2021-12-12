@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Between, FindOperator, MoreThan, Repository } from 'typeorm';
 import { CreateExamStatDto } from './dto/create-stat.dto';
+import { CreateUnitStatDto } from './dto/create-unit-stat.dto';
 import { CreateUserStatDto } from './dto/create-user-stat.dto';
 import { StatsParams } from './dto/stats.params';
 import { ExamStat } from './entities/exam-stat.entity';
@@ -118,7 +119,7 @@ function getDaysBackFromDate(date: Date, days: number) {
   return result;
 }
 
-function getDates(from, to) {
+function getDates(from: Date, to: Date) {
   const today = new Date(new Date().setHours(0, 0, 0, 0));
   from = new Date(new Date(from).setHours(0, 0, 0, 0));
   to = new Date(new Date(to).setHours(0, 0, 0, 0));
@@ -148,12 +149,41 @@ export class StatsService {
     private userStatsRepository: Repository<UserStat>,
   ) {}
 
-  async findAll(): Promise<UserStat[]> {
+  async findAllUserStats(): Promise<UserStat[]> {
     return await this.userStatsRepository.find();
+  }
+
+  async findAllUnitStats(): Promise<UnitStat[]> {
+    return await this.unitStatsRepository.find();
+  }
+
+  async findAllExamStats(): Promise<ExamStat[]> {
+    return await this.examStatsRepository.find();
   }
 
   async createExamStat(createExamStatDto: CreateExamStatDto) {
     return await this.examStatsRepository.save(new ExamStat(createExamStatDto));
+  }
+
+  async createUnitStat(createUnitStatDto: CreateUnitStatDto, date: Date) {
+    if (!date) {
+      date = new Date(new Date().setHours(0, 0, 0, 0));
+    }
+    const unitStatsFromToday = await this.unitStatsRepository.findOne({
+      where: {
+        date: date,
+      },
+    });
+
+    if (!unitStatsFromToday) {
+      return await this.unitStatsRepository.save(
+        new UnitStat(createUnitStatDto, date),
+      );
+    } else {
+      await this.unitStatsRepository.update(unitStatsFromToday.id, {
+        dailyPassedUnits: unitStatsFromToday.dailyPassedUnits + 1,
+      });
+    }
   }
 
   //Creates new entry if user didn't was not active today.
@@ -164,7 +194,7 @@ export class StatsService {
     }
     const userDataFromToday = await this.userStatsRepository.findOne({
       where: {
-        createdDate: date,
+        date: date,
         userId: createUserStatDto.userId,
       },
     });
@@ -280,27 +310,26 @@ export class StatsService {
 
   async getDailyCompletedUnits(params: StatsParams) {
     const { dateQuery, modifiedParams } = this.buildQuery(params);
-    const dailyUnits = (await this.unitStatsRepository.find(dateQuery)).map(
-      (u) => ({
-        [u.date.toISOString()]: u.dailyPassedUnits,
-      }),
-    );
+    const dailyUnits = await this.unitStatsRepository.find(dateQuery);
 
-    const transformed = [];
-    for (
-      let i = new Date(modifiedParams.from);
-      i.getTime() < new Date(modifiedParams.to).getTime();
-      i.setDate(i.getDate() + 1)
-    ) {
-      if (!dailyUnits[i.toISOString()]) {
-        dailyUnits[i.toISOString()] = 0;
-      }
-      transformed.push({
-        date: i.toISOString(),
-        dailyPassedUnits: dailyUnits[i.toISOString()],
+    const { from, to } = getDates(modifiedParams.from, modifiedParams.to);
+
+    const finalStats = [];
+    for (let i = 0; i <= dateDiffInDays(to, from); i++) {
+      const newDate = addDays(from, i);
+      const actualDailyUnit = dailyUnits.find(
+        (actual) =>
+          new Date(actual.date).getTime() === new Date(newDate).getTime(),
+      );
+
+      finalStats.push({
+        date: newDate,
+        dailyPassedUnits: actualDailyUnit
+          ? actualDailyUnit.dailyPassedUnits
+          : 0,
       });
     }
-    return transformed;
+    return finalStats;
   }
 
   private buildQuery(params: StatsParams) {

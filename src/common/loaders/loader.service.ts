@@ -5,7 +5,11 @@ import { Challenge } from '../../challenges/entities/challenge.entity';
 import { ExamsService } from '../../exams/exams.service';
 import { ExercisesService } from '../../exercises/exercises.service';
 import { LessonsService } from '../../lessons/lessons.service';
+import { CreateExamStatDto } from '../../stats/dto/create-stat.dto';
+import { CreateUnitStatDto } from '../../stats/dto/create-unit-stat.dto';
 import { CreateUserStatDto } from '../../stats/dto/create-user-stat.dto';
+import { ExamStat } from '../../stats/entities/exam-stat.entity';
+import { UnitStat } from '../../stats/entities/unit-stat.entity';
 import { UserStat } from '../../stats/entities/user-stat.entity';
 import { StatsService } from '../../stats/stats.service';
 import { UnitsService } from '../../units/units.service';
@@ -40,6 +44,12 @@ export class LoaderService implements OnApplicationBootstrap {
 
     const userStats = await this.loadUserStats();
     console.log(`Loaded ${userStats.length} user stats`);
+
+    const unitStats = await this.loadUnitStats();
+    console.log(`Loaded ${unitStats.length} unit stats`);
+
+    const examStats = await this.loadExamStats();
+    console.log(`Loaded ${examStats.length} exam stats`);
   }
 
   async loadChallenges(): Promise<Challenge[]> {
@@ -76,8 +86,60 @@ export class LoaderService implements OnApplicationBootstrap {
     return user;
   }
 
+  async loadUnitStats(): Promise<UnitStat[]> {
+    const prevStats = await this.statsService.findAllUnitStats();
+    if (prevStats && prevStats.length !== 0) {
+      return prevStats;
+    }
+    const today = new Date(new Date().setHours(0, 0, 0, 0));
+
+    const unitStatsCreated: UnitStat[] = [];
+    for (let i = 0; i < 7; i++) {
+      const dto: CreateUnitStatDto = {
+        dailyPassedUnits: 5 + i,
+      };
+      const createdStat = await this.statsService.createUnitStat(
+        dto,
+        getDaysBackFromDate(today, i),
+      );
+      unitStatsCreated.push(createdStat);
+    }
+    return unitStatsCreated;
+  }
+
+  async loadExamStats(): Promise<ExamStat[]> {
+    const prevStats = await this.statsService.findAllExamStats();
+    if (prevStats && prevStats.length !== 0) {
+      return prevStats;
+    }
+    const today = new Date(new Date().setHours(0, 0, 0, 0));
+
+    const unitStatsCreated: ExamStat[] = [];
+    for (let i = 0; i < 6; i++) {
+      const dto: CreateExamStatDto = {
+        date: getDaysBackFromDate(today, i),
+        examTime: 100 + 10 * i,
+        passed: false,
+      };
+      const createdStat = await this.statsService.createExamStat(dto);
+      unitStatsCreated.push(createdStat);
+    }
+
+    for (let i = 0; i < 8; i++) {
+      const dto: CreateExamStatDto = {
+        date: getDaysBackFromDate(today, i),
+        examTime: 50 + 10 * i,
+        passed: true,
+      };
+      const createdStat = await this.statsService.createExamStat(dto);
+      unitStatsCreated.push(createdStat);
+    }
+
+    return unitStatsCreated;
+  }
+
   async loadUserStats(): Promise<UserStat[]> {
-    const prevStats = await this.statsService.findAll();
+    const prevStats = await this.statsService.findAllUserStats();
     if (prevStats && prevStats.length !== 0) {
       return prevStats;
     }
