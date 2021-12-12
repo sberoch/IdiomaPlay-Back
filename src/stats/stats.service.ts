@@ -33,7 +33,7 @@ interface UsersByCategory {
   amountOfUsers: number;
 }
 
-function dateDiffInDays(date1, date2) {
+function dateDiffInDays(date1: Date, date2: Date) {
   const diffInMs = date1.getTime() - date2.getTime();
   return diffInMs / (1000 * 60 * 60 * 24);
 }
@@ -64,7 +64,7 @@ function updateDateToTheMostRecent(
   }
 }
 
-function getCategory(diffInDays) {
+function getCategory(diffInDays: number) {
   if (diffInDays < 1) return categories.daily;
   else if (diffInDays >= 1 && diffInDays <= 7) return categories.weekly;
   else if (diffInDays > 7 && diffInDays <= 30) return categories.monthly;
@@ -132,7 +132,7 @@ function getDates(from: Date, to: Date) {
   return { from, to };
 }
 
-function addDays(date, days) {
+function addDays(date: Date, days: number) {
   const result = new Date(date);
   result.setDate(result.getDate() + days);
   return result;
