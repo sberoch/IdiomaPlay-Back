@@ -23,6 +23,10 @@ function getDaysBackFromDate(date, amountOfDays) {
   return result;
 }
 
+function getRandomInt(max: number) {
+  return Math.floor(Math.random() * max);
+}
+
 @Injectable()
 export class LoaderService implements OnApplicationBootstrap {
   constructor(
@@ -94,9 +98,10 @@ export class LoaderService implements OnApplicationBootstrap {
     const today = new Date(new Date().setHours(0, 0, 0, 0));
 
     const unitStatsCreated: UnitStat[] = [];
-    for (let i = 0; i < 7; i++) {
+    for (let i = 0; i < 100; i++) {
+      const num = getRandomInt(100);
       const dto: CreateUnitStatDto = {
-        dailyPassedUnits: 5 + i,
+        dailyPassedUnits: num,
       };
       const createdStat = await this.statsService.createUnitStat(
         dto,
@@ -115,26 +120,25 @@ export class LoaderService implements OnApplicationBootstrap {
     const today = new Date(new Date().setHours(0, 0, 0, 0));
 
     const unitStatsCreated: ExamStat[] = [];
-    for (let i = 0; i < 6; i++) {
+    for (let i = 0; i < 105; i++) {
+      const num = getRandomInt(100);
+      const dto: CreateExamStatDto = {
+        date: getDaysBackFromDate(today, num),
+        examTime: 100 + num,
+        passed: num > 30,
+      };
+      const createdStat = await this.statsService.createExamStat(dto);
+      unitStatsCreated.push(createdStat);
+    }
+    for (let i = 0; i < 7; i++) {
       const dto: CreateExamStatDto = {
         date: getDaysBackFromDate(today, i),
         examTime: 100 + 10 * i,
-        passed: false,
+        passed: i % 2 === 0,
       };
       const createdStat = await this.statsService.createExamStat(dto);
       unitStatsCreated.push(createdStat);
     }
-
-    for (let i = 0; i < 8; i++) {
-      const dto: CreateExamStatDto = {
-        date: getDaysBackFromDate(today, i),
-        examTime: 50 + 10 * i,
-        passed: true,
-      };
-      const createdStat = await this.statsService.createExamStat(dto);
-      unitStatsCreated.push(createdStat);
-    }
-
     return unitStatsCreated;
   }
 
@@ -147,28 +151,17 @@ export class LoaderService implements OnApplicationBootstrap {
 
     const userStatsCreated: UserStat[] = [];
 
-    for (let i = 0; i < 7; i++) {
+    for (let i = 0; i < 300; i++) {
+      const num = getRandomInt(100);
       const dto: CreateUserStatDto = {
         userId: 800 + i,
         exercisesDone: 1,
       };
       const createdStat = await this.statsService.createUserStat(
         dto,
-        getDaysBackFromDate(today, i),
+        getDaysBackFromDate(today, num),
       );
       userStatsCreated.push(createdStat);
-
-      if (i % 2 === 0) {
-        const anotherDto: CreateUserStatDto = {
-          userId: 900 + i,
-          exercisesDone: 1,
-        };
-        const anotherCreated = await this.statsService.createUserStat(
-          anotherDto,
-          getDaysBackFromDate(today, i),
-        );
-        userStatsCreated.push(anotherCreated);
-      }
     }
     return userStatsCreated;
   }
